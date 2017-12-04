@@ -1,19 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { NodesApp } from './components/NotesApp'
-
-class App extends React.Component {
-    render() {
-        return (
-            <div>
-                <NodesApp/>
-            </div>
-        );
-    }
-}
+import NotesApp from './components/NotesApp';
 
 ReactDOM.render(
-    <App />,
-    document.getElementById('mount-point')
+  <NotesApp />,
+  document.getElementById('mount-point')
 );

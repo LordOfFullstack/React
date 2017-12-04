@@ -27,6 +27,12 @@ module.exports = {
                 include: SRC_DIR,
                 loader: 'babel-loader',
                 exclude: /node_modules/
+            },
+            {
+                test: /\.css/,
+                include: SRC_DIR,
+                loader: 'style-loader!css-loader!autoprefixer-loader!less-loader',
+                exclude: /node_modules/
             }
         ]
     }
