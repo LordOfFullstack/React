@@ -1,0 +1,13 @@
+.search {
+  justify-content: center;
+}
+.search p {
+  margin: 0;
+}
+
+.note-search > input[type=search] {
+  height: 30px;
+  border-radius: 2px;
+  margin-left: 5px;
+  width: 300px
+}
