@@ -19,9 +19,9 @@ class NotesApp extends React.Component {
     }
   }
 
-  // componentDidUpdate() {
-  //   this._updateLocalStorage();
-  // }
+  componentDidUpdate() {
+    this._updateLocalStorage();
+  }
 
   handleNoteDelete = note => {
     var noteId = note.id;
@@ -56,10 +56,10 @@ class NotesApp extends React.Component {
     );
   }
 
-  // _updateLocalStorage = () => {
-  //   var notes = JSON.stringify(this.state.notes);
-  //   localStorage.setItem('notes', notes);
-  // }
+  _updateLocalStorage = () => {
+    var notes = JSON.stringify(this.state.notes);
+    localStorage.setItem('notes', notes);
+  }
 }
 
 export default NotesApp;
