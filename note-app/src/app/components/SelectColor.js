@@ -17,7 +17,6 @@ class Color extends React.Component {
     let theColor = theInput.value;
 
     this.setState({ color: theColor }, () => this.props.color(this.state.color));
-
   }
 
   render() {

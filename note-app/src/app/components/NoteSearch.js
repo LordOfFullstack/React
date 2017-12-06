@@ -18,7 +18,6 @@ class NoteSearch extends React.Component{
   }
 
   handleSearchKey = event => {
-    console.log(localStorage);
     let array = [];
 
     setTimeout( () => {
