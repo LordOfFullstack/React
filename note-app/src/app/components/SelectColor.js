@@ -4,7 +4,7 @@ class Color extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      color: '#ff0000'
+      color: '#ffff99'
     };
   }
 

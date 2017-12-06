@@ -20,7 +20,7 @@ class NotesApp extends React.Component {
   }
 
   componentDidUpdate() {
-    this._updateLocalStorage();
+    //this._updateLocalStorage();
   }
 
   handleNoteDelete = note => {
@@ -29,14 +29,15 @@ class NotesApp extends React.Component {
       return note.id !== noteId;
     });
     this.setState({ notes: newNotes });
+    this._updateLocalStorage(newNotes)
   };
 
   handleNoteAdd = newNote => {
     var newNotes = this.state.notes.slice();
     newNotes.unshift(newNote);
     this.setState({ notes: newNotes });
+    this._updateLocalStorage(newNotes)
   };
-
 
   handleSearch = item => {
     this.setState({notes:  item });
@@ -48,7 +49,7 @@ class NotesApp extends React.Component {
         <h2 className="app-header">NotesApp</h2>
         <div className='search flex'>
           <p>Найти:</p>
-          <NoteSearch notesArray={this.state.notes} searchArray={this.handleSearch} storage={this._updateLocalStorage}/>
+          <NoteSearch notesArray={this.state.notes} searchArray={this.handleSearch} storage={this._updateLocalStorage} />
         </div>
         <NoteEditor onNoteAdd={this.handleNoteAdd} />
         <NotesGrid notes={this.state.notes} onNoteDelete={this.handleNoteDelete} />
@@ -56,8 +57,8 @@ class NotesApp extends React.Component {
     );
   }
 
-  _updateLocalStorage = () => {
-    var notes = JSON.stringify(this.state.notes);
+  _updateLocalStorage = array => {
+    var notes = JSON.stringify(array);
     localStorage.setItem('notes', notes);
   }
 }
