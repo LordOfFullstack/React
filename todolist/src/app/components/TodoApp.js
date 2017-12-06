@@ -51,7 +51,7 @@ class TodoApp extends React.Component {
   }
 
   componentDidMount() {
-    var localList = JSON.parse(localStorage.getItem('list'));
+    let localList = JSON.parse(localStorage.getItem('list'));
     if (localList) {
       this.setState({ items: localList });
     }
@@ -66,19 +66,32 @@ class TodoApp extends React.Component {
     if (!this.state.text.length) {
       return;
     }
+
     const newItem = {
       text: this.state.text,
       id: Date.now()
     };
+
     this.setState(prevState => ({
       items: prevState.items.concat(newItem),
       text: ''
     }));
   }
 
+  handleItemOutline = item => {
+    let itemId = item.id;
+    let newItems = this.state.items.filter(function(item) {
+      return item.id !== itemId;
+    });
+
+    console.log(itemId);
+
+    //this.setState({ items: newItems });
+  };
+
   handleItemDelete = item => {
-    var itemId = item.id;
-    var newItems = this.state.items.filter(function(item) {
+    let itemId = item.id;
+    let newItems = this.state.items.filter(function(item) {
       return item.id !== itemId;
     });
 
@@ -88,7 +101,7 @@ class TodoApp extends React.Component {
   };
 
   _updateLocalStorage = () => {
-    var list = JSON.stringify(this.state.items);
+    let list = JSON.stringify(this.state.items);
     localStorage.setItem('list', list);
   }
 
@@ -100,6 +113,7 @@ class TodoApp extends React.Component {
           items={this.state.items}
           point={this.state.items.length}
           onItemDelete={this.handleItemDelete}
+          onItemOutline={this.handleItemOutline}
         />
         <p className="new__todo" style={styles.new}>Задание №{this.state.items.length + 1}</p>
         <form onSubmit={this.handleSubmit} style={styles.form}>
