@@ -2,7 +2,9 @@
   margin: 0 auto;
   width: 500px
 }
-
+#mount-point {
+  display:flex
+}
 .input {
   width: 350px;
   height: 30px;

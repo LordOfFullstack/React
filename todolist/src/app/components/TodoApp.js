@@ -29,14 +29,14 @@ class TodoApp extends React.Component {
     }
 
     let a = JSON.parse(localStorage.getItem('new_tasks'));
-     if (a) {
-       this.setState({ new_tasks: a });
-     }
+    if (a) {
+      this.setState({ new_tasks: a });
+    }
 
-     let v = JSON.parse(localStorage.getItem('finished_tasks'));
-      if (v) {
-        this.setState({finished_tasks: a });
-      }
+    let v = JSON.parse(localStorage.getItem('finished_tasks'));
+    if (v) {
+      this.setState({finished_tasks: v });
+    }
   }
 
   handleChange = e => {
@@ -68,7 +68,6 @@ class TodoApp extends React.Component {
       new_tasks: prevState.new_tasks.concat(newItem),
       text: ''
     }), () => {
-      this._updateLocalStorage(this.state.finished_tasks, 'finished_tasks')
       this._updateLocalStorage(this.state.items, 'list')
       this._updateLocalStorage(this.state.new_tasks, 'new_tasks')
     });
@@ -79,28 +78,21 @@ class TodoApp extends React.Component {
     ? (object.done = 'finished', object.button_text = "Возобновить")
     : (object.done = 'unfinished', object.button_text = "Завершить") )
 
-    let localList = JSON.parse(localStorage.getItem('finished_tasks'));
-    if (localList) {
-      this.setState({ finished_tasks: localList });
-    }
-
-    // let a = JSON.parse(localStorage.getItem('new_tasks'));
-    // if (a) {
-    //   this.setState({ new_tasks: a });
-    // }
-
     this.setState(prevState => ({
       finished_tasks: prevState.finished_tasks.concat(object),
     }));
 
     setTimeout(() => {
-      let finishedArray = this.state.finished_tasks.filter(el => {
+      let finishedArray = this.state.items.filter(el => {
         return el.done === "finished";
       });
 
       let unFinishedArray = this.state.items.filter(el => {
         return el.done === "unfinished";
       });
+
+      console.log(finishedArray);
+      console.log(unFinishedArray);
 
       this.setState({
         finished_tasks: finishedArray,
@@ -120,8 +112,20 @@ class TodoApp extends React.Component {
     });
 
     this.setState({ items: newItems }, () => {
-      this._updateLocalStorage(this.state.items, 'list')
-      this._updateLocalStorage(this.state.finished_tasks, 'finished_tasks')
+      let finishedArray = this.state.finished_tasks.filter(el => {
+        return el.done === "finished";
+      });
+
+      let unFinishedArray = this.state.items.filter(el => {
+        return el.done === "unfinished";
+      });
+
+      this.setState({
+        new_tasks: unFinishedArray
+      }, () => {
+        this._updateLocalStorage(this.state.items, 'list')
+        this._updateLocalStorage(this.state.new_tasks, 'new_tasks')
+      });
     });
   };
 
