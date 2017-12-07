@@ -21,14 +21,28 @@ class TodoNav extends React.Component {
 
   handleFinished = () => {
     this.setFilter('finished')
+    let localList = JSON.parse(localStorage.getItem('finished_tasks'));
+    this.props.changeFilter(localList)
+  }
+
+  handleAll = () => {
+    this.setFilter('')
+    let localList = JSON.parse(localStorage.getItem('list'));
+    this.props.changeFilter(localList, "")
+  }
+
+  handleNew = () => {
+    this.setFilter('new')
+    let localList = JSON.parse(localStorage.getItem('new_tasks'));
+    this.props.changeFilter(localList)
   }
 
   render() {
     return (
       <div className="nav">
-        <button className={this.isActive('')} name="nav" onClick={this.setFilter.bind(this, '')}>Все</button>
+        <button className={this.isActive('')} name="nav" onClick={this.handleAll}>Все</button>
         <button className={this.isActive('finished')} name="nav" onClick={this.handleFinished}>Завершенные</button>
-        <button className={this.isActive('new')} name="nav" onClick={this.setFilter.bind(this, 'new')}>Новые</button>
+        <button className={this.isActive('new')} name="nav" onClick={this.handleNew}>Новые</button>
       </div>
     );
   }

@@ -11,6 +11,7 @@ class TodoApp extends React.Component {
       items: [],
       text: '',
       finished_tasks: [],
+      new_tasks: [],
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -18,7 +19,7 @@ class TodoApp extends React.Component {
   }
 
   componentDidUpdate() {
-    this._updateLocalStorage();
+    //this._updateLocalStorage();
   }
 
   componentDidMount() {
@@ -26,13 +27,30 @@ class TodoApp extends React.Component {
     if (localList) {
       this.setState({ items: localList });
     }
+
+    let a = JSON.parse(localStorage.getItem('new_tasks'));
+     if (a) {
+       this.setState({ new_tasks: a });
+     }
+
+     let v = JSON.parse(localStorage.getItem('finished_tasks'));
+      if (v) {
+        this.setState({finished_tasks: a });
+      }
   }
 
-  handleChange(e) {
+  handleChange = e => {
     this.setState({ text: e.target.value });
   }
 
-  handleSubmit(e) {
+  onChangeFilter = (filter, className = 'invisible') => {
+    this.setState({
+      items: filter,
+      isClosed: className
+    });
+  }
+
+  handleSubmit = e => {
     e.preventDefault();
     if (!this.state.text.length) {
       return;
@@ -47,14 +65,29 @@ class TodoApp extends React.Component {
 
     this.setState(prevState => ({
       items: prevState.items.concat(newItem),
+      new_tasks: prevState.new_tasks.concat(newItem),
       text: ''
-    }));
+    }), () => {
+      this._updateLocalStorage(this.state.finished_tasks, 'finished_tasks')
+      this._updateLocalStorage(this.state.items, 'list')
+      this._updateLocalStorage(this.state.new_tasks, 'new_tasks')
+    });
   }
 
   handleItemOutline = object => {
     ( ((object.done === "unfinished") && (object.button_text === "Завершить"))
     ? (object.done = 'finished', object.button_text = "Возобновить")
     : (object.done = 'unfinished', object.button_text = "Завершить") )
+
+    let localList = JSON.parse(localStorage.getItem('finished_tasks'));
+    if (localList) {
+      this.setState({ finished_tasks: localList });
+    }
+
+    // let a = JSON.parse(localStorage.getItem('new_tasks'));
+    // if (a) {
+    //   this.setState({ new_tasks: a });
+    // }
 
     this.setState(prevState => ({
       finished_tasks: prevState.finished_tasks.concat(object),
@@ -65,8 +98,17 @@ class TodoApp extends React.Component {
         return el.done === "finished";
       });
 
+      let unFinishedArray = this.state.items.filter(el => {
+        return el.done === "unfinished";
+      });
+
       this.setState({
         finished_tasks: finishedArray,
+        new_tasks: unFinishedArray
+      }, () => {
+        this._updateLocalStorage(this.state.finished_tasks, 'finished_tasks')
+        this._updateLocalStorage(this.state.items, 'list')
+        this._updateLocalStorage(this.state.new_tasks, 'new_tasks')
       });
     })
   };
@@ -77,38 +119,43 @@ class TodoApp extends React.Component {
       return item.id !== itemId;
     });
 
-    this.setState({ items: newItems });
-    //console.log(this.state.items);
-    //this._updateLocalStorage(newNotes)
+    this.setState({ items: newItems }, () => {
+      this._updateLocalStorage(this.state.items, 'list')
+      this._updateLocalStorage(this.state.finished_tasks, 'finished_tasks')
+    });
   };
 
-  _updateLocalStorage = () => {
-    let list = JSON.stringify(this.state.items);
-    localStorage.setItem('list', list);
+  _updateLocalStorage = (param, storage) => {
+    let list = JSON.stringify(param);
+    localStorage.setItem(storage, list);
   }
 
   render() {
     return (
       <div className="todo-list">
         <h3>Задания</h3>
-        <TodoNav />
+        <TodoNav
+          changeFilter = {this.onChangeFilter}
+          items={this.state.items}
+          finishedItems = {this.state.finished_tasks}
+        />
         <TodoList
           items={this.state.items}
-          finished = {this.state.button_text}
-          point={this.state.items.length}
           onItemDelete={this.handleItemDelete}
           onItemOutline={this.handleItemOutline}
         />
-        <p className="new__todo">Задание №{this.state.items.length + 1}</p>
-        <form onSubmit={this.handleSubmit}>
-          <input
-            className="input"
-            placeholder='Введите задание...'
-            onChange={this.handleChange}
-            value={this.state.text}
-          />
-          <button className="ad__button">Добавить</button>
-        </form>
+        <div className={this.state.isClosed}>
+          <p className="new__todo">Задание №{this.state.items.length + 1}</p>
+          <form onSubmit={this.handleSubmit}>
+            <input
+              className="input"
+              placeholder='Введите задание...'
+              onChange={this.handleChange}
+              value={this.state.text}
+            />
+            <button className="ad__button">Добавить</button>
+          </form>
+        </div>
       </div>
     );
   }

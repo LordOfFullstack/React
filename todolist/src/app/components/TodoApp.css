@@ -39,3 +39,6 @@ form {
 .finished {
   text-decoration: line-through;
 }
+.invisible {
+  display: none;
+}
