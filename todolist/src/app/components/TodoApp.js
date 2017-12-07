@@ -1,45 +1,16 @@
 import React from 'react';
-import TodoList from './TodoList'
+import TodoList from './TodoList';
+import TodoNav from './TodoNav';
 
-let styles = {
-  root: {
-    margin: '0 auto',
-    width: '400px'
-  },
-  input: {
-    width: '250px',
-    height: '30px',
-    borderRadius: '5px',
-    padding: '0 5px',
-    marginRight: '8px'
-  },
-  button: {
-    width: '120px',
-    height: '30px',
-    borderRadius: '5px',
-    background: '#333',
-    color: '#ff9933'
-  },
-  headers: {
-    textAlign: 'center'
-  },
-  new: {
-    fontSize: '18px',
-    fontWeight: 'bold',
-    marginBottom: '5px'
-  },
-  form: {
-    display: 'flex',
-    justifyContent: 'space-between'
-  }
-}
+import './TodoApp.css';
 
 class TodoApp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       items: [],
-      text: ''
+      text: '',
+      finished_tasks: [],
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -69,7 +40,9 @@ class TodoApp extends React.Component {
 
     const newItem = {
       text: this.state.text,
-      id: Date.now()
+      id: Date.now(),
+      done: 'unfinished',
+      button_text: 'Завершить'
     };
 
     this.setState(prevState => ({
@@ -78,20 +51,29 @@ class TodoApp extends React.Component {
     }));
   }
 
-  handleItemOutline = item => {
-    let itemId = item.id;
-    let newItems = this.state.items.filter(function(item) {
-      return item.id !== itemId;
-    });
+  handleItemOutline = object => {
+    ( ((object.done === "unfinished") && (object.button_text === "Завершить"))
+    ? (object.done = 'finished', object.button_text = "Возобновить")
+    : (object.done = 'unfinished', object.button_text = "Завершить") )
 
-    console.log(itemId);
+    this.setState(prevState => ({
+      finished_tasks: prevState.finished_tasks.concat(object),
+    }));
 
-    //this.setState({ items: newItems });
+    setTimeout(() => {
+      let finishedArray = this.state.finished_tasks.filter(el => {
+        return el.done === "finished";
+      });
+
+      this.setState({
+        finished_tasks: finishedArray,
+      });
+    })
   };
 
   handleItemDelete = item => {
     let itemId = item.id;
-    let newItems = this.state.items.filter(function(item) {
+    let newItems = this.state.items.filter(item => {
       return item.id !== itemId;
     });
 
@@ -107,25 +89,25 @@ class TodoApp extends React.Component {
 
   render() {
     return (
-      <div className="todo-list" style={styles.root}>
-        <h3 style={styles.headers}>TODO LIST</h3>
+      <div className="todo-list">
+        <h3>Задания</h3>
+        <TodoNav />
         <TodoList
           items={this.state.items}
+          finished = {this.state.button_text}
           point={this.state.items.length}
           onItemDelete={this.handleItemDelete}
           onItemOutline={this.handleItemOutline}
         />
-        <p className="new__todo" style={styles.new}>Задание №{this.state.items.length + 1}</p>
-        <form onSubmit={this.handleSubmit} style={styles.form}>
+        <p className="new__todo">Задание №{this.state.items.length + 1}</p>
+        <form onSubmit={this.handleSubmit}>
           <input
-            style={styles.input}
+            className="input"
             placeholder='Введите задание...'
             onChange={this.handleChange}
             value={this.state.text}
           />
-          <button style={styles.button}>
-            Добавить
-          </button>
+          <button className="ad__button">Добавить</button>
         </form>
       </div>
     );

@@ -1,0 +1,14 @@
+button[name=nav] {
+  width: 130px;
+  height: 30px;
+  font-weight: bold;
+  border-radius: 5px;
+}
+.active {
+  background-color: #F4FA58;
+}
+.nav {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}

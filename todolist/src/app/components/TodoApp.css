@@ -1,0 +1,41 @@
+.todo-list {
+  margin: 0 auto;
+  width: 500px
+}
+
+.input {
+  width: 350px;
+  height: 30px;
+  border-radius: 5px;
+  padding: 0 5px;
+  margin-right: 8px
+}
+.input:focus,
+button {
+  outline: none
+}
+.ad__button {
+  width: 120px;
+  height: 34px;
+  border-radius: 5px;
+  background: #31B404;
+  font-weight: bold;
+}
+h3 {
+  text-align: center;
+  font-size: 20px;
+  text-transform: uppercase;
+  text-decoration: underline
+}
+.new__todo {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 5px
+}
+form {
+  display: flex;
+  justify-content: space-between
+}
+.finished {
+  text-decoration: line-through;
+}
