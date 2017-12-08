@@ -1,12 +1,12 @@
 .todo-list {
   margin: 0 auto;
-  width: 500px
+  width: 600px
 }
 #mount-point {
   display:flex
 }
 .input {
-  width: 350px;
+  width: 450px;
   height: 30px;
   border-radius: 5px;
   padding: 0 5px;
@@ -20,8 +20,9 @@ button {
   width: 120px;
   height: 34px;
   border-radius: 5px;
-  background: #31B404;
+  background: #422095;
   font-weight: bold;
+  color: #fff
 }
 h3 {
   text-align: center;
@@ -38,9 +39,13 @@ form {
   display: flex;
   justify-content: space-between
 }
-.finished {
-  text-decoration: line-through;
-}
 .invisible {
   display: none;
+}
+button:hover {
+  box-shadow: 0 0 10px rgba(0,0,0,.5);
+}
+button[data-action=invisible] {
+  pointer-events: none;
+  background: #888;
 }

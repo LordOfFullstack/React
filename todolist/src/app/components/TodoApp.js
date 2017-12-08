@@ -18,10 +18,6 @@ class TodoApp extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  componentDidUpdate() {
-    //this._updateLocalStorage();
-  }
-
   componentDidMount() {
     let localList = JSON.parse(localStorage.getItem('list'));
     if (localList) {
@@ -60,7 +56,8 @@ class TodoApp extends React.Component {
       text: this.state.text,
       id: Date.now(),
       done: 'unfinished',
-      button_text: 'Завершить'
+      button_text: 'Завершить',
+      button_class: 'to_finish'
     };
 
     this.setState(prevState => ({
@@ -75,8 +72,8 @@ class TodoApp extends React.Component {
 
   handleItemOutline = object => {
     ( ((object.done === "unfinished") && (object.button_text === "Завершить"))
-    ? (object.done = 'finished', object.button_text = "Возобновить")
-    : (object.done = 'unfinished', object.button_text = "Завершить") )
+    ? (object.done = 'finished', object.button_text = "Возобновить", object.button_class = "to_start")
+    : (object.done = 'unfinished', object.button_text = "Завершить", object.button_class = "to_finish") )
 
     this.setState(prevState => ({
       finished_tasks: prevState.finished_tasks.concat(object),
@@ -90,9 +87,6 @@ class TodoApp extends React.Component {
       let unFinishedArray = this.state.items.filter(el => {
         return el.done === "unfinished";
       });
-
-      console.log(finishedArray);
-      console.log(unFinishedArray);
 
       this.setState({
         finished_tasks: finishedArray,
@@ -112,7 +106,7 @@ class TodoApp extends React.Component {
     });
 
     this.setState({ items: newItems }, () => {
-      let finishedArray = this.state.finished_tasks.filter(el => {
+      let finishedArray = this.state.items.filter(el => {
         return el.done === "finished";
       });
 
@@ -121,8 +115,10 @@ class TodoApp extends React.Component {
       });
 
       this.setState({
+        finished_tasks: finishedArray,
         new_tasks: unFinishedArray
       }, () => {
+        this._updateLocalStorage(this.state.finished_tasks, 'finished_tasks')
         this._updateLocalStorage(this.state.items, 'list')
         this._updateLocalStorage(this.state.new_tasks, 'new_tasks')
       });
@@ -142,11 +138,14 @@ class TodoApp extends React.Component {
           changeFilter = {this.onChangeFilter}
           items={this.state.items}
           finishedItems = {this.state.finished_tasks}
+          newItems = {this.state.new_tasks}
         />
         <TodoList
           items={this.state.items}
           onItemDelete={this.handleItemDelete}
           onItemOutline={this.handleItemOutline}
+          onChangeValue={this.state.text}
+          display={this.state.isClosed}
         />
         <div className={this.state.isClosed}>
           <p className="new__todo">Задание №{this.state.items.length + 1}</p>

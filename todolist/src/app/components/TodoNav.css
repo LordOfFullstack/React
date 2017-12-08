@@ -5,7 +5,7 @@ button[name=nav] {
   border-radius: 5px;
 }
 .active {
-  background-color: #F4FA58;
+  background-color: #1a9bc3;
 }
 .nav {
   display: flex;
