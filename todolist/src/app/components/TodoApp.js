@@ -12,6 +12,7 @@ class TodoApp extends React.Component {
       text: '',
       finished_tasks: [],
       new_tasks: [],
+      generalItems: []
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -19,19 +20,22 @@ class TodoApp extends React.Component {
   }
 
   componentDidMount() {
-    let localList = JSON.parse(localStorage.getItem('list'));
-    if (localList) {
-      this.setState({ items: localList });
+    let itemStorage = JSON.parse(localStorage.getItem('generalItems'));
+    if (itemStorage) {
+      this.setState({
+        generalItems: itemStorage,
+        items: itemStorage
+      });
     }
 
-    let a = JSON.parse(localStorage.getItem('new_tasks'));
-    if (a) {
-      this.setState({ new_tasks: a });
+    let newTaskStorage = JSON.parse(localStorage.getItem('new_tasks'));
+    if (newTaskStorage) {
+      this.setState({ new_tasks: newTaskStorage });
     }
 
-    let v = JSON.parse(localStorage.getItem('finished_tasks'));
-    if (v) {
-      this.setState({finished_tasks: v });
+    let finishedTaskStorage = JSON.parse(localStorage.getItem('finished_tasks'));
+    if (finishedTaskStorage) {
+      this.setState({finished_tasks: finishedTaskStorage });
     }
   }
 
@@ -63,28 +67,40 @@ class TodoApp extends React.Component {
     this.setState(prevState => ({
       items: prevState.items.concat(newItem),
       new_tasks: prevState.new_tasks.concat(newItem),
+      generalItems: prevState.generalItems.concat(newItem),
       text: ''
     }), () => {
+      this._updateLocalStorage(this.state.generalItems, 'generalItems')
       this._updateLocalStorage(this.state.items, 'list')
       this._updateLocalStorage(this.state.new_tasks, 'new_tasks')
     });
   }
 
   handleItemOutline = object => {
+    let taskId = object.id;
+    let newArray = this.state.generalItems.filter(task => {
+      return task.id === taskId;
+    });
+
     ( ((object.done === "unfinished") && (object.button_text === "Завершить"))
     ? (object.done = 'finished', object.button_text = "Возобновить", object.button_class = "to_start")
     : (object.done = 'unfinished', object.button_text = "Завершить", object.button_class = "to_finish") )
+
+    newArray.map(el => {
+      let index = this.state.generalItems.indexOf(el)
+      var removed = this.state.generalItems.splice(index, 1, object);
+    })
 
     this.setState(prevState => ({
       finished_tasks: prevState.finished_tasks.concat(object),
     }));
 
     setTimeout(() => {
-      let finishedArray = this.state.items.filter(el => {
+      let finishedArray = this.state.generalItems.filter(el => {
         return el.done === "finished";
       });
 
-      let unFinishedArray = this.state.items.filter(el => {
+      let unFinishedArray = this.state.generalItems.filter(el => {
         return el.done === "unfinished";
       });
 
@@ -92,6 +108,7 @@ class TodoApp extends React.Component {
         finished_tasks: finishedArray,
         new_tasks: unFinishedArray
       }, () => {
+        this._updateLocalStorage(this.state.generalItems, 'generalItems')
         this._updateLocalStorage(this.state.finished_tasks, 'finished_tasks')
         this._updateLocalStorage(this.state.items, 'list')
         this._updateLocalStorage(this.state.new_tasks, 'new_tasks')
@@ -105,12 +122,24 @@ class TodoApp extends React.Component {
       return item.id !== itemId;
     });
 
-    this.setState({ items: newItems }, () => {
-      let finishedArray = this.state.items.filter(el => {
+    let newArray = this.state.generalItems.filter(item => {
+      return item.id === itemId;
+    });
+
+    newArray.map(el => {
+      let index = this.state.generalItems.indexOf(el)
+      var removed = this.state.generalItems.splice(index, 1);
+    })
+
+    this.setState({
+      items: newItems,
+      generalItems: this.state.generalItems
+    }, () => {
+      let finishedArray = this.state.generalItems.filter(el => {
         return el.done === "finished";
       });
 
-      let unFinishedArray = this.state.items.filter(el => {
+      let unFinishedArray = this.state.generalItems.filter(el => {
         return el.done === "unfinished";
       });
 
@@ -118,6 +147,7 @@ class TodoApp extends React.Component {
         finished_tasks: finishedArray,
         new_tasks: unFinishedArray
       }, () => {
+        this._updateLocalStorage(this.state.generalItems, 'generalItems')
         this._updateLocalStorage(this.state.finished_tasks, 'finished_tasks')
         this._updateLocalStorage(this.state.items, 'list')
         this._updateLocalStorage(this.state.new_tasks, 'new_tasks')
@@ -135,6 +165,7 @@ class TodoApp extends React.Component {
       <div className="todo-list">
         <h3>Задания</h3>
         <TodoNav
+          ref={instance => { this.child = instance }}
           changeFilter = {this.onChangeFilter}
           items={this.state.items}
           finishedItems = {this.state.finished_tasks}
@@ -148,7 +179,7 @@ class TodoApp extends React.Component {
           display={this.state.isClosed}
         />
         <div className={this.state.isClosed}>
-          <p className="new__todo">Задание №{this.state.items.length + 1}</p>
+          <p className="new__todo">Добавить задание</p>
           <form onSubmit={this.handleSubmit}>
             <input
               className="input"
@@ -156,7 +187,7 @@ class TodoApp extends React.Component {
               onChange={this.handleChange}
               value={this.state.text}
             />
-            <button className="ad__button">Добавить</button>
+            <button className="ad__button" onClick={() => { this.child.handleAll() }}>Добавить</button>
           </form>
         </div>
       </div>

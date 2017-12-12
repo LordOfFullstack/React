@@ -22,19 +22,19 @@ class TodoNav extends React.Component {
   handleFinished = () => {
     this.setFilter('finished')
     let localList = JSON.parse(localStorage.getItem('finished_tasks'));
-    (localList) ? (this.props.changeFilter(localList)) : (this.props.changeFilter(this.props.finishedItems))
+    (localList) ? (this.props.changeFilter(localList, "")) : (this.props.changeFilter(this.props.finishedItems))
   }
 
   handleAll = () => {
     this.setFilter('')
-    let localList = JSON.parse(localStorage.getItem('list'));
+    let localList = JSON.parse(localStorage.getItem('generalItems'));
     (localList) ? (this.props.changeFilter(localList, "")) : (this.props.changeFilter([], ""))
   }
 
   handleNew = () => {
     this.setFilter('new')
     let localList = JSON.parse(localStorage.getItem('new_tasks'));
-    (localList) ? (this.props.changeFilter(localList)) : (this.props.changeFilter(this.props.newItems))
+    (localList) ? (this.props.changeFilter(localList, "")) : (this.props.changeFilter(this.props.newItems))
   }
 
   render() {

@@ -45,7 +45,7 @@ form {
 button:hover {
   box-shadow: 0 0 10px rgba(0,0,0,.5);
 }
-button[data-action=invisible] {
+/*button[data-action=invisible] {
   pointer-events: none;
   background: #888;
-}
+}*/
