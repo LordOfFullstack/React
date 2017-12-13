@@ -1,0 +1,134 @@
+.list__item {
+  padding: 15px 0;
+  border-bottom: 2px double #ccc;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  list-style-type: none;
+  position: relative;
+  height: 35px;
+}
+.finished::first-letter,
+.unfinished::first-letter {
+  text-transform: uppercase;
+}
+.todo__list {
+  list-style-position: inside;
+  -webkit-padding-start: 0;
+  margin-bottom: 40px;
+  counter-reset: list;
+}
+.select-btn {
+  width: 120px;
+  height: 30px;
+  border-radius: 5px;
+}
+.list__item:before {
+  counter-increment: list;
+  content: counter(list) ". ";
+  margin-right: 5px;
+}
+.edit__buttons {
+  position: absolute;
+  right: 0;
+}
+.delete {
+  background-color: #d75353;
+  font-weight: bold;
+}
+.finished {
+  text-decoration: line-through;
+}
+.edit__buttons button[name=to_start] {
+  background-color: #ebcb6c;
+  font-weight: bold;
+}
+.edit__buttons button[name=to_finish] {
+  background-color: #3dba51;
+  font-weight: bold;
+}
+p.hide {
+  display: none;
+}
+p.show {
+  display: block;
+}
+p[data-text=empty] {
+  font-weight: bold;
+  font-size: 20px;
+  text-align: center;
+}
+button[name=nav] {
+  width: 130px;
+  height: 30px;
+  font-weight: bold;
+  border-radius: 5px;
+}
+.active {
+  background-color: #1a9bc3;
+}
+.nav {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+.todo-list {
+  margin: 0 auto;
+  width: 600px;
+}
+#mount-point {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+.input {
+  width: 450px;
+  height: 30px;
+  border-radius: 5px;
+  padding: 0 5px;
+  margin-right: 8px;
+}
+.input:focus,
+button {
+  outline: none;
+}
+.ad__button {
+  width: 120px;
+  height: 34px;
+  border-radius: 5px;
+  background: #422095;
+  font-weight: bold;
+  color: #fff;
+}
+h3 {
+  text-align: center;
+  font-size: 20px;
+  text-transform: uppercase;
+  text-decoration: underline;
+}
+.new__todo {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+form {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+.invisible {
+  display: none;
+}
+button:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}

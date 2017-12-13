@@ -2,7 +2,7 @@ import React from 'react';
 import TodoList from './TodoList';
 import TodoNav from './TodoNav';
 
-import './TodoApp.css';
+import './TodoApp.less';
 
 class TodoApp extends React.Component {
   constructor(props) {

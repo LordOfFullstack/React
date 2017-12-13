@@ -1,5 +1,5 @@
 import React from 'react';
-import './TodoNav.css';
+import './TodoNav.less';
 
 class TodoNav extends React.Component {
   constructor(props) {
