@@ -1,11 +1,20 @@
 .list__item {
-  padding: 15px 0;
+  padding: 22px 0;
   border-bottom: 2px double #ccc;
   display: flex;
   align-items: center;
   list-style-type: none;
   position: relative;
-  height: 35px;
+
+  &:before {
+    counter-increment: list;
+    content: counter(list) ". ";
+    margin-right: 10px
+  }
+
+  span {
+    width: 300px;
+  }
 }
 .finished::first-letter,
 .unfinished::first-letter {
@@ -22,26 +31,28 @@
   height: 30px;
   border-radius: 5px;
 }
-.list__item:before {
-  counter-increment: list;
-  content: counter(list) ". ";
-  margin-right: 5px
-}
 .edit__buttons {
   position: absolute;
   right: 0;
-  
+
   button[name=to_start] {
     background-color: #ebcb6c;
     font-weight: bold;
   }
 
-  button[name=to_finish] {
+  button[name=to_finish],
+  .save {
     background-color: #3dba51;
     font-weight: bold;
   }
+
+  button[name=to_edit] {
+    background-color: #95d6f1;
+    font-weight: bold;
+  }
 }
-.delete {
+.delete,
+.reset {
   background-color: #d75353;
   font-weight: bold;
 }
@@ -58,4 +69,16 @@ p[data-text=empty] {
   font-weight: bold;
   font-size: 20px;
   text-align: center;
+}
+
+.edit__block {
+  textarea {
+    resize: none;
+    width: 415px;
+    overflow: hidden;
+    border-radius: 2px;
+    box-sizing: border-box;
+    min-height: 42px;
+    padding: 5px;
+  }
 }

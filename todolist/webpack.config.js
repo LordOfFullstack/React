@@ -24,6 +24,15 @@ module.exports = {
         },
       },
       {
+        test: /\.jsx$/,
+        include: SRC_DIR,
+        exclude: /node_modules/,
+        loader: "babel-loader",
+        options: {
+          presets: ['react', 'es2015', 'stage-2']
+        },
+      },
+      {
         test: /\.css$/,
         include: SRC_DIR,
         exclude: /node_modules/,

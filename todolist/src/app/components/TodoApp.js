@@ -61,7 +61,9 @@ class TodoApp extends React.Component {
       id: Date.now(),
       done: 'unfinished',
       button_text: 'Завершить',
-      button_class: 'to_finish'
+      button_class: 'to_finish',
+      editable: false,
+      display: 'flex'
     };
 
     this.setState(prevState => ({
@@ -74,6 +76,86 @@ class TodoApp extends React.Component {
       this._updateLocalStorage(this.state.items, 'list')
       this._updateLocalStorage(this.state.new_tasks, 'new_tasks')
     });
+  }
+
+  handleItemEdit = object => {
+
+    let itemId = object.id;
+    let editedItem = this.state.generalItems.filter(item => {
+      return item.id === itemId;
+    });
+
+    object.editable = true
+    object.display = 'none'
+
+    editedItem.map(el => {
+      let index = this.state.generalItems.indexOf(el)
+      let editable = this.state.generalItems.splice(index, 1, object);
+    })
+
+    setTimeout(() => {
+      this.setState({
+        generalItems: this.state.generalItems
+      })
+    })
+  }
+
+  handleItemReset = object => {
+    let itemId = object.id;
+    let editedItem = this.state.generalItems.filter(item => {
+      return item.id === itemId;
+    });
+
+    object.editable = false
+    object.display = 'flex'
+
+    editedItem.map(el => {
+      let index = this.state.generalItems.indexOf(el)
+      let editable = this.state.generalItems.splice(index, 1, object);
+    })
+
+    setTimeout(() => {
+      this.setState({
+        generalItems: this.state.generalItems
+      })
+    })
+  }
+
+  handleItemSave = object => {
+    let itemId = object.id;
+    let editedText = this.list.getNewText();
+    let savedItem = this.state.generalItems.filter(item => {
+      return item.id === itemId;
+    });
+
+    object.editable = false;
+    object.text = editedText;
+    object.display = 'flex';
+
+    savedItem.map(el => {
+      let index = this.state.generalItems.indexOf(el)
+      let editable = this.state.generalItems.splice(index, 1, object);
+    })
+
+    setTimeout(() => {
+      let finishedArray = this.state.generalItems.filter(el => {
+        return el.done === "finished";
+      });
+
+      let unFinishedArray = this.state.generalItems.filter(el => {
+        return el.done === "unfinished";
+      });
+
+      this.setState({
+        finished_tasks: finishedArray,
+        new_tasks: unFinishedArray
+      }, () => {
+        this._updateLocalStorage(this.state.generalItems, 'generalItems')
+        this._updateLocalStorage(this.state.finished_tasks, 'finished_tasks')
+        this._updateLocalStorage(this.state.items, 'list')
+        this._updateLocalStorage(this.state.new_tasks, 'new_tasks')
+      });
+    })
   }
 
   handleItemOutline = object => {
@@ -112,6 +194,8 @@ class TodoApp extends React.Component {
         this._updateLocalStorage(this.state.finished_tasks, 'finished_tasks')
         this._updateLocalStorage(this.state.items, 'list')
         this._updateLocalStorage(this.state.new_tasks, 'new_tasks')
+
+        this.child.startFunction()
       });
     })
   };
@@ -172,24 +256,26 @@ class TodoApp extends React.Component {
           newItems = {this.state.new_tasks}
         />
         <TodoList
+          ref={instance => { this.list = instance }}
           items={this.state.items}
           onItemDelete={this.handleItemDelete}
           onItemOutline={this.handleItemOutline}
+          onItemEdit={this.handleItemEdit}
+          onItemReset={this.handleItemReset}
+          onItemSave={this.handleItemSave}
           onChangeValue={this.state.text}
           display={this.state.isClosed}
         />
-        <div className={this.state.isClosed}>
-          <p className="new__todo">Добавить задание</p>
-          <form onSubmit={this.handleSubmit}>
-            <input
-              className="input"
-              placeholder='Введите задание...'
-              onChange={this.handleChange}
-              value={this.state.text}
-            />
-            <button className="ad__button" onClick={() => { this.child.handleAll() }}>Добавить</button>
-          </form>
-        </div>
+        <p className="new__todo">Добавить задание</p>
+        <form onSubmit={this.handleSubmit}>
+          <input
+            className="input"
+            placeholder='Введите задание...'
+            onChange={this.handleChange}
+            value={this.state.text}
+          />
+          <button className="ad__button" onClick={() => { this.child.handleAll() }}>Добавить</button>
+        </form>
       </div>
     );
   }
