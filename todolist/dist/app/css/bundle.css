@@ -1,5 +1,5 @@
 .list__item {
-  padding: 15px 0;
+  padding: 22px 0;
   border-bottom: 2px double #ccc;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -9,7 +9,14 @@
   align-items: center;
   list-style-type: none;
   position: relative;
-  height: 35px;
+}
+.list__item:before {
+  counter-increment: list;
+  content: counter(list) ". ";
+  margin-right: 10px;
+}
+.list__item span {
+  width: 300px;
 }
 .finished::first-letter,
 .unfinished::first-letter {
@@ -26,11 +33,6 @@
   height: 30px;
   border-radius: 5px;
 }
-.list__item:before {
-  counter-increment: list;
-  content: counter(list) ". ";
-  margin-right: 5px;
-}
 .edit__buttons {
   position: absolute;
   right: 0;
@@ -39,11 +41,17 @@
   background-color: #ebcb6c;
   font-weight: bold;
 }
-.edit__buttons button[name=to_finish] {
+.edit__buttons button[name=to_finish],
+.edit__buttons .save {
   background-color: #3dba51;
   font-weight: bold;
 }
-.delete {
+.edit__buttons button[name=to_edit] {
+  background-color: #95d6f1;
+  font-weight: bold;
+}
+.delete,
+.reset {
   background-color: #d75353;
   font-weight: bold;
 }
@@ -61,6 +69,15 @@ p[data-text=empty] {
   font-size: 20px;
   text-align: center;
 }
+.edit__block textarea {
+  resize: none;
+  width: 415px;
+  overflow: hidden;
+  border-radius: 2px;
+  box-sizing: border-box;
+  min-height: 42px;
+  padding: 5px;
+}
 button[name=nav] {
   width: 130px;
   height: 30px;
@@ -68,7 +85,7 @@ button[name=nav] {
   border-radius: 5px;
 }
 .active {
-  background-color: #1a9bc3;
+  background-color: #95d6f1;
 }
 .nav {
   display: -webkit-box;
@@ -81,7 +98,7 @@ button[name=nav] {
 }
 .todo-list {
   margin: 0 auto;
-  width: 600px;
+  width: 700px;
 }
 #mount-point {
   display: -webkit-box;
@@ -89,7 +106,7 @@ button[name=nav] {
   display: flex;
 }
 .input {
-  width: 450px;
+  width: 550px;
   height: 30px;
   border-radius: 5px;
   padding: 0 5px;
@@ -131,4 +148,12 @@ form {
 }
 button:hover {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+.flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
 }

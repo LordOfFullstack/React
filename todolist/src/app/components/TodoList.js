@@ -32,6 +32,7 @@ class TodoList extends React.Component {
   setHeight = () => {
     setTimeout(()=>{
       let scrollHeight = this.refs.newText.scrollHeight;
+      console.log(scrollHeight);
 
       this.setState({
         height: scrollHeight
@@ -64,7 +65,7 @@ class TodoList extends React.Component {
                 )
               }
               <div className="edit__buttons" style={{display: item.display}}>
-                <button className="select-btn" name="to_edit" onClick={this.props.onItemEdit.bind(this, item)}>Редактировать</button>
+                <button className="select-btn" name="to_edit" style={{display: item.buttonDisplay}} onClick={this.props.onItemEdit.bind(this, item)}>Редактировать</button>
                 <button className="select-btn" name={item.button_class} data-action={this.props.display} style={styles.items} onClick={this.props.onItemOutline.bind(null, item)}>{item.button_text}</button>
                 <button className="select-btn delete" style={styles.items} data-action={this.props.display} onClick={this.props.onItemDelete.bind(null, item)}>Удалить</button>
               </div>

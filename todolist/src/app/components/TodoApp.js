@@ -63,7 +63,8 @@ class TodoApp extends React.Component {
       button_text: 'Завершить',
       button_class: 'to_finish',
       editable: false,
-      display: 'flex'
+      display: 'flex',
+      buttonDisplay: 'block'
     };
 
     this.setState(prevState => ({
@@ -79,6 +80,10 @@ class TodoApp extends React.Component {
   }
 
   handleItemEdit = object => {
+    this.state.generalItems.map(el => {
+      el.editable = false
+      el.display = 'flex'
+    })
 
     let itemId = object.id;
     let editedItem = this.state.generalItems.filter(item => {
@@ -165,8 +170,8 @@ class TodoApp extends React.Component {
     });
 
     ( ((object.done === "unfinished") && (object.button_text === "Завершить"))
-    ? (object.done = 'finished', object.button_text = "Возобновить", object.button_class = "to_start")
-    : (object.done = 'unfinished', object.button_text = "Завершить", object.button_class = "to_finish") )
+    ? (object.done = 'finished', object.button_text = "Возобновить", object.button_class = "to_start", object.buttonDisplay = "none")
+    : (object.done = 'unfinished', object.button_text = "Завершить", object.button_class = "to_finish", object.buttonDisplay = "block") )
 
     newArray.map(el => {
       let index = this.state.generalItems.indexOf(el)
