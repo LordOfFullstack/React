@@ -11,12 +11,6 @@ class TodoList extends React.Component {
   }
 
   componentWillReceiveProps() {
-    // let scrollHeight = this.refs.newText.scrollHeight;
-    //
-    // this.setState({
-    //   height: scrollHeight
-    // })
-
     this.setState({ classChange: this.state.classChange}, () => {
       (this.ul.childNodes.length == 0)
       ? (this.setState({ classChange: 'show'}))
@@ -31,8 +25,11 @@ class TodoList extends React.Component {
 
   setHeight = () => {
     setTimeout(()=>{
+      this.setState({
+        height: ''
+      })
+
       let scrollHeight = this.refs.newText.scrollHeight;
-      console.log(scrollHeight);
 
       this.setState({
         height: scrollHeight
@@ -56,7 +53,7 @@ class TodoList extends React.Component {
                 ? (<span className={item.done}>{item.text}</span>)
                 : (
                   <div className="flex edit__block">
-                    <textarea autoFocus='true' style={{height: this.state.height}} defaultValue={item.text} ref="newText" onChange={this.setHeight} onFocus={this.setHeight}></textarea>
+                    <textarea autoFocus='true' style={{height: this.state.height}} defaultValue={item.text} ref="newText" onInput={this.setHeight} onFocus={this.setHeight}></textarea>
                     <div className="edit__buttons">
                       <button className="select-btn save" style={styles.items} onClick={this.props.onItemSave.bind(null, item)}>Сохранить</button>
                       <button className="select-btn reset" style={styles.items} onClick={this.props.onItemReset.bind(null, item)}>Отменить</button>

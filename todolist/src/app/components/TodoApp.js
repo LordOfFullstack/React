@@ -281,6 +281,7 @@ class TodoApp extends React.Component {
           />
           <button className="ad__button" onClick={() => { this.child.handleAll() }}>Добавить</button>
         </form>
+        <span className='warning__message'></span>
       </div>
     );
   }

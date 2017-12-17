@@ -9,5 +9,29 @@
 <body>
   <div id='mount-point'></div>
   <!-- <script src="/app/bundle.js"></script> МОЖНО НЕ ПИСАТЬ-->
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script>
+  $(document).ready(() => {
+    $('.ad__button').on('click', e => {
+      if ( $.trim( $('input.input').val() ) === "") {
+        e.preventDefault()
+        $('.warning__message').text('Введите задание')
+        $('input.input')
+        .css({
+          'box-shadow': '0 0 10px rgba(255, 1, 1, 0.5)'
+        })
+        .focus()
+        return false;
+      }
+      else {
+        $('.warning__message').text('')
+        $('input.input').css({
+          'box-shadow': 'none'
+        })
+      }
+    })
+  });
+</script>
 </body>
 </html>

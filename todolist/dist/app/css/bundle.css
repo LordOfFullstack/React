@@ -17,6 +17,7 @@
 }
 .list__item span {
   width: 300px;
+  overflow-wrap: break-word;
 }
 .finished::first-letter,
 .unfinished::first-letter {
@@ -57,6 +58,7 @@
 }
 .finished {
   text-decoration: line-through;
+  color: #827e7c;
 }
 p.hide {
   display: none;
@@ -111,6 +113,7 @@ button[name=nav] {
   border-radius: 5px;
   padding: 0 5px;
   margin-right: 8px;
+  margin-bottom: 3px;
 }
 .input:focus,
 button {
@@ -156,4 +159,8 @@ button:hover {
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+}
+.warning__message {
+  color: #f02c2c;
+  font-weight: bold;
 }
