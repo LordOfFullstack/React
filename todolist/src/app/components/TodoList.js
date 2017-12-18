@@ -1,12 +1,14 @@
 import React from 'react';
 import './TodoList.less';
 
+import TextareaAutosize from "react-textarea-autosize";
+
 class TodoList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       classChange: '',
-      height: ''
+      targetValue: ''
     }
   }
 
@@ -19,22 +21,12 @@ class TodoList extends React.Component {
   }
 
   getNewText = () => {
-    let val = this.refs.newText.value;
+    let val = this.state.targetValue;
     return val
   }
 
-  setHeight = () => {
-    setTimeout(()=>{
-      this.setState({
-        height: ''
-      })
-
-      let scrollHeight = this.refs.newText.scrollHeight;
-
-      this.setState({
-        height: scrollHeight
-      })
-    })
+  getValue = e => {
+    this.setState({ targetValue: e.target.value })
   }
 
   render() {
@@ -50,10 +42,16 @@ class TodoList extends React.Component {
           {this.props.items.map(item => (
             <li className="list__item" key={item.id}>
               {!item.editable
-                ? (<span className={item.done}>{item.text}</span>)
+                ? (<span ref="newSpan" className={item.done}>{item.text}</span>)
                 : (
                   <div className="flex edit__block">
-                    <textarea autoFocus='true' style={{height: this.state.height}} defaultValue={item.text} ref="newText" onInput={this.setHeight} onFocus={this.setHeight}></textarea>
+                    <TextareaAutosize
+                      rows={4}
+                      defaultValue={item.text}
+                      onChange={this.getValue}
+                      onFocus={this.getValue}
+                      autoFocus='true'
+                    />
                     <div className="edit__buttons">
                       <button className="select-btn save" style={styles.items} onClick={this.props.onItemSave.bind(null, item)}>Сохранить</button>
                       <button className="select-btn reset" style={styles.items} onClick={this.props.onItemReset.bind(null, item)}>Отменить</button>
