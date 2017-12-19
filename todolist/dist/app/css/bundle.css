@@ -19,6 +19,28 @@
   width: 300px;
   overflow-wrap: break-word;
 }
+.list__item .edit__buttons {
+  position: absolute;
+  right: 0;
+}
+.list__item .edit__buttons .select-btn {
+  width: 120px;
+  height: 30px;
+  border-radius: 5px;
+}
+.list__item .edit__buttons .to_start {
+  background-color: #ebcb6c;
+  font-weight: bold;
+}
+.list__item .edit__buttons .to_finish,
+.list__item .edit__buttons .save {
+  background-color: #3dba51;
+  font-weight: bold;
+}
+.list__item .edit__buttons .to_edit {
+  background-color: #95d6f1;
+  font-weight: bold;
+}
 .finished::first-letter,
 .unfinished::first-letter {
   text-transform: uppercase;
@@ -28,28 +50,6 @@
   -webkit-padding-start: 0;
   margin-bottom: 40px;
   counter-reset: list;
-}
-.select-btn {
-  width: 120px;
-  height: 30px;
-  border-radius: 5px;
-}
-.edit__buttons {
-  position: absolute;
-  right: 0;
-}
-.edit__buttons button[name=to_start] {
-  background-color: #ebcb6c;
-  font-weight: bold;
-}
-.edit__buttons button[name=to_finish],
-.edit__buttons .save {
-  background-color: #3dba51;
-  font-weight: bold;
-}
-.edit__buttons button[name=to_edit] {
-  background-color: #95d6f1;
-  font-weight: bold;
 }
 .delete,
 .reset {
@@ -66,7 +66,7 @@ p.hide {
 p.show {
   display: block;
 }
-p[data-text=empty] {
+p.empty {
   font-weight: bold;
   font-size: 20px;
   text-align: center;
@@ -81,16 +81,7 @@ p[data-text=empty] {
   padding: 5px;
   outline: none;
 }
-button[name=nav] {
-  width: 130px;
-  height: 30px;
-  font-weight: bold;
-  border-radius: 5px;
-}
-.active {
-  background-color: #95d6f1;
-}
-.nav {
+.navi {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -98,6 +89,15 @@ button[name=nav] {
   -ms-flex-pack: justify;
   justify-content: space-between;
   margin-bottom: 40px;
+}
+.navi button {
+  width: 130px;
+  height: 30px;
+  font-weight: bold;
+  border-radius: 5px;
+}
+.navi .active {
+  background-color: #95d6f1;
 }
 .todo-list {
   margin: 0 auto;

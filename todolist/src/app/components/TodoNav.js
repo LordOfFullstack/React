@@ -1,5 +1,6 @@
 import React from 'react';
 import './TodoNav.less';
+import PropTypes from 'prop-types';
 
 class TodoNav extends React.Component {
   constructor(props) {
@@ -48,13 +49,17 @@ class TodoNav extends React.Component {
 
   render() {
     return (
-      <div className="nav">
-        <button className={this.isActive('')} name="nav" onClick={this.handleAll}>Все</button>
-        <button className={this.isActive('finished')} name="nav" onClick={this.handleFinished}>Завершенные</button>
-        <button className={this.isActive('new')} name="nav" onClick={this.handleNew}>Новые</button>
+      <div className="navi">
+        <button className={this.isActive('')} onClick={this.handleAll}>Все</button>
+        <button className={this.isActive('finished')} onClick={this.handleFinished}>Завершенные</button>
+        <button className={this.isActive('new')} onClick={this.handleNew}>Новые</button>
       </div>
     );
   }
 }
 
 export default TodoNav
+
+TodoNav.propTypes = {
+  changeFilter: PropTypes.func
+};

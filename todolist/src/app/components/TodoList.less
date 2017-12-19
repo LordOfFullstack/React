@@ -1,87 +1,84 @@
-.list__item {
-  padding: 22px 0;
-  border-bottom: 2px double #ccc;
-  display: flex;
-  align-items: center;
-  list-style-type: none;
-  position: relative;
-
-  &:before {
-    counter-increment: list;
-    content: counter(list) ". ";
-    margin-right: 10px
-  }
-
-  span {
-    width: 300px;
-    overflow-wrap: break-word;
-  }
-}
-.finished::first-letter,
-.unfinished::first-letter {
-  text-transform: uppercase;
-}
 .todo__list {
   list-style-position: inside;
   -webkit-padding-start: 0;
   margin-bottom: 40px;
   counter-reset: list;
-}
-.select-btn {
-  width: 120px;
-  height: 30px;
-  border-radius: 5px;
-}
-.edit__buttons {
-  position: absolute;
-  right: 0;
 
-  button[name=to_start] {
-    background-color: #ebcb6c;
-    font-weight: bold;
-  }
+  .list__item {
+    padding: 22px 0;
+    border-bottom: 2px double #ccc;
+    display: flex;
+    align-items: center;
+    list-style-type: none;
+    position: relative;
 
-  button[name=to_finish],
-  .save {
-    background-color: #3dba51;
-    font-weight: bold;
-  }
+    &:before {
+      counter-increment: list;
+      content: counter(list) ". ";
+      margin-right: 10px
+    }
 
-  button[name=to_edit] {
-    background-color: #95d6f1;
-    font-weight: bold;
-  }
-}
-.delete,
-.reset {
-  background-color: #d75353;
-  font-weight: bold;
-}
-.finished {
-  text-decoration: line-through;
-  color: rgb(130, 126, 124)
-}
-p.hide {
-  display: none;
-}
-p.show {
-  display: block;
-}
-p[data-text=empty] {
-  font-weight: bold;
-  font-size: 20px;
-  text-align: center;
-}
+    span {
+      width: 300px;
+      overflow-wrap: break-word;
 
-.edit__block {
-  textarea {
-    resize: none;
-    width: 415px;
-    overflow: hidden;
-    border-radius: 5px;
-    box-sizing: border-box;
-    min-height: 42px;
-    padding: 5px;
-    outline: none
+      &::first-letter{
+        text-transform: uppercase;
+      }
+    }
+
+    .finished {
+      text-decoration: line-through;
+      color: rgb(130, 126, 124)
+    }
+
+    .edit__block {
+      textarea {
+        resize: none;
+        width: 415px;
+        overflow: hidden;
+        border-radius: 5px;
+        box-sizing: border-box;
+        min-height: 42px;
+        padding: 5px;
+        outline: none
+      }
+    }
+
+    .edit__buttons {
+      position: absolute;
+      right: 0;
+
+      .select-btn {
+        width: 135px;
+        border-radius: 5px;
+
+        &:focus {
+          outline: none
+        }
+      }
+
+      .to_start {
+        background-color: #ebcb6c;
+        font-weight: bold;
+      }
+
+      .to_finish,
+      .save {
+        background-color: #3dba51;
+        font-weight: bold;
+      }
+
+      .to_edit {
+        background-color: #95d6f1;
+        font-weight: bold;
+      }
+
+      .delete,
+      .reset {
+        background-color: #d75353;
+        font-weight: bold;
+      }
+    }
   }
 }

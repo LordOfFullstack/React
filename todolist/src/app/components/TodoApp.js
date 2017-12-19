@@ -279,7 +279,7 @@ class TodoApp extends React.Component {
             onChange={this.handleChange}
             value={this.state.text}
           />
-          <button className="ad__button" onClick={() => { this.child.handleAll() }}>Добавить</button>
+          <button className="btn ad__button" onClick={() => { this.child.handleAll() }}>Добавить</button>
         </form>
         <span className='warning__message'></span>
       </div>

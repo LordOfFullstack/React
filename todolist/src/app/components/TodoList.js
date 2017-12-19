@@ -2,6 +2,7 @@ import React from 'react';
 import './TodoList.less';
 
 import TextareaAutosize from "react-textarea-autosize";
+import PropTypes from 'prop-types';
 
 class TodoList extends React.Component {
   constructor(props) {
@@ -10,6 +11,8 @@ class TodoList extends React.Component {
       classChange: '',
       targetValue: ''
     }
+
+    this.display = props.display
   }
 
   componentWillReceiveProps() {
@@ -37,7 +40,7 @@ class TodoList extends React.Component {
     }
     return (
       <div className="tasks">
-        <p className={this.state.classChange} data-text="empty">Нет заданий</p>
+        <p className={`empty ${this.state.classChange}`}>Нет заданий</p>
         <ol className="todo__list" ref = {el => this.ul = el}>
           {this.props.items.map(item => (
             <li className="list__item" key={item.id}>
@@ -53,16 +56,16 @@ class TodoList extends React.Component {
                       autoFocus='true'
                     />
                     <div className="edit__buttons">
-                      <button className="select-btn save" style={styles.items} onClick={this.props.onItemSave.bind(null, item)}>Сохранить</button>
-                      <button className="select-btn reset" style={styles.items} onClick={this.props.onItemReset.bind(null, item)}>Отменить</button>
+                      <button className="select-btn btn save" style={styles.items} onClick={this.props.onItemSave.bind(null, item)}>Сохранить</button>
+                      <button className="select-btn btn reset" style={styles.items} onClick={this.props.onItemReset.bind(null, item)}>Отменить</button>
                     </div>
                   </div>
                 )
               }
               <div className="edit__buttons" style={{display: item.display}}>
-                <button className="select-btn" name="to_edit" style={{display: item.buttonDisplay}} onClick={this.props.onItemEdit.bind(this, item)}>Редактировать</button>
-                <button className="select-btn" name={item.button_class} data-action={this.props.display} style={styles.items} onClick={this.props.onItemOutline.bind(null, item)}>{item.button_text}</button>
-                <button className="select-btn delete" style={styles.items} data-action={this.props.display} onClick={this.props.onItemDelete.bind(null, item)}>Удалить</button>
+                <button className="select-btn btn to_edit" style={{display: item.buttonDisplay}} onClick={e => this.props.onItemEdit(item, e)}>Редактировать</button>
+                <button className={`select-btn btn ${item.button_class}`} data-action={this.display} style={styles.items} onClick={this.props.onItemOutline.bind(null, item)}>{item.button_text}</button>
+                <button className="select-btn btn delete" style={styles.items} data-action={this.display} onClick={e => this.props.onItemDelete(item, e)}>Удалить</button>
               </div>
             </li>
           ))}
@@ -73,3 +76,8 @@ class TodoList extends React.Component {
 }
 
 export default TodoList
+
+TodoList.propTypes = {
+  items: PropTypes.array,
+  onItemSave: PropTypes.func
+};

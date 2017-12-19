@@ -5,34 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>TodoList</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
 </head>
 <body>
   <div id='mount-point'></div>
   <!-- <script src="/app/bundle.js"></script> МОЖНО НЕ ПИСАТЬ-->
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script>
-  $(document).ready(() => {
-    $('input.input').on('blur', function() {
-      $('.warning__message').text('')
-      $(this).css('box-shadow', 'none')
-    })
-
-    $('.ad__button').on('click', e => {
-      if ( $.trim( $('input.input').val() ) === "") {
-        e.preventDefault()
-        $('.warning__message').text('Введите задание')
-        $('input.input')
-        .css('box-shadow', '0 0 10px rgba(255, 1, 1, 0.5)')
-        .focus()
-        return false;
-      }
-      else {
-        $('.warning__message').text('')
-        $('input.input').css('box-shadow', 'none')
-      }
-    })
-  });
-</script>
 </body>
 </html>
