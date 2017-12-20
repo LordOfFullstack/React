@@ -1,12 +1,14 @@
+@import "./variables.less";
+
 .todo__list {
   list-style-position: inside;
   -webkit-padding-start: 0;
-  margin-bottom: 40px;
+  margin-bottom: @margin * 4;
   counter-reset: list;
 
   .list__item {
     padding: 22px 0;
-    border-bottom: 2px double #ccc;
+    border-bottom: 2px double @grey;
     display: flex;
     align-items: center;
     list-style-type: none;
@@ -15,11 +17,11 @@
     &:before {
       counter-increment: list;
       content: counter(list) ". ";
-      margin-right: 10px
+      margin-right: @margin
     }
 
-    span {
-      width: 300px;
+    .item {
+      width: 360px;
       overflow-wrap: break-word;
 
       &::first-letter{
@@ -29,13 +31,13 @@
 
     .finished {
       text-decoration: line-through;
-      color: rgb(130, 126, 124)
+      color: @grey - #222
     }
 
     .edit__block {
       textarea {
         resize: none;
-        width: 415px;
+        width: 450px;
         overflow: hidden;
         border-radius: 5px;
         box-sizing: border-box;
@@ -48,37 +50,6 @@
     .edit__buttons {
       position: absolute;
       right: 0;
-
-      .select-btn {
-        width: 135px;
-        border-radius: 5px;
-
-        &:focus {
-          outline: none
-        }
-      }
-
-      .to_start {
-        background-color: #ebcb6c;
-        font-weight: bold;
-      }
-
-      .to_finish,
-      .save {
-        background-color: #3dba51;
-        font-weight: bold;
-      }
-
-      .to_edit {
-        background-color: #95d6f1;
-        font-weight: bold;
-      }
-
-      .delete,
-      .reset {
-        background-color: #d75353;
-        font-weight: bold;
-      }
     }
   }
 }

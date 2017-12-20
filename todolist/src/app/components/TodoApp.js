@@ -2,7 +2,7 @@ import React from 'react';
 import TodoList from './TodoList';
 import TodoNav from './TodoNav';
 
-import './TodoApp.less';
+import '../css/TodoApp.less';
 
 class TodoApp extends React.Component {
   constructor(props) {
@@ -60,8 +60,8 @@ class TodoApp extends React.Component {
       text: this.state.text,
       id: Date.now(),
       done: 'unfinished',
-      button_text: 'Завершить',
-      button_class: 'to_finish',
+      button_text: 'glyphicon-ok',
+      button_class: 'btn-success',
       editable: false,
       display: 'flex',
       buttonDisplay: 'block'
@@ -169,9 +169,9 @@ class TodoApp extends React.Component {
       return task.id === taskId;
     });
 
-    ( ((object.done === "unfinished") && (object.button_text === "Завершить"))
-    ? (object.done = 'finished', object.button_text = "Возобновить", object.button_class = "to_start", object.buttonDisplay = "none")
-    : (object.done = 'unfinished', object.button_text = "Завершить", object.button_class = "to_finish", object.buttonDisplay = "block") )
+    ( ((object.done === "unfinished") && (object.button_text === "glyphicon-ok"))
+    ? (object.done = 'finished', object.button_text = "glyphicon-refresh", object.button_class = "btn-warning", object.buttonDisplay = "none")
+    : (object.done = 'unfinished', object.button_text = "glyphicon-ok", object.button_class = "btn-success", object.buttonDisplay = "block") )
 
     newArray.map(el => {
       let index = this.state.generalItems.indexOf(el)
@@ -279,7 +279,7 @@ class TodoApp extends React.Component {
             onChange={this.handleChange}
             value={this.state.text}
           />
-          <button className="btn ad__button" onClick={() => { this.child.handleAll() }}>Добавить</button>
+          <button id="ad_item" className="btn btn-primary ad__button" onClick={() => { this.child.handleAll() }}><span className="glyphicon glyphicon-plus"></span></button>
         </form>
         <span className='warning__message'></span>
       </div>

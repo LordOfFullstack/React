@@ -1,4 +1,10 @@
-.list__item {
+.todo__list {
+  list-style-position: inside;
+  -webkit-padding-start: 0;
+  margin-bottom: 40px;
+  counter-reset: list;
+}
+.todo__list .list__item {
   padding: 22px 0;
   border-bottom: 2px double #ccc;
   display: -webkit-box;
@@ -10,76 +16,35 @@
   list-style-type: none;
   position: relative;
 }
-.list__item:before {
+.todo__list .list__item:before {
   counter-increment: list;
   content: counter(list) ". ";
   margin-right: 10px;
 }
-.list__item span {
-  width: 300px;
+.todo__list .list__item .item {
+  width: 360px;
   overflow-wrap: break-word;
 }
-.list__item .edit__buttons {
-  position: absolute;
-  right: 0;
-}
-.list__item .edit__buttons .select-btn {
-  width: 120px;
-  height: 30px;
-  border-radius: 5px;
-}
-.list__item .edit__buttons .to_start {
-  background-color: #ebcb6c;
-  font-weight: bold;
-}
-.list__item .edit__buttons .to_finish,
-.list__item .edit__buttons .save {
-  background-color: #3dba51;
-  font-weight: bold;
-}
-.list__item .edit__buttons .to_edit {
-  background-color: #95d6f1;
-  font-weight: bold;
-}
-.finished::first-letter,
-.unfinished::first-letter {
+.todo__list .list__item .item::first-letter {
   text-transform: uppercase;
 }
-.todo__list {
-  list-style-position: inside;
-  -webkit-padding-start: 0;
-  margin-bottom: 40px;
-  counter-reset: list;
-}
-.delete,
-.reset {
-  background-color: #d75353;
-  font-weight: bold;
-}
-.finished {
+.todo__list .list__item .finished {
   text-decoration: line-through;
-  color: #827e7c;
+  color: #aaaaaa;
 }
-p.hide {
-  display: none;
-}
-p.show {
-  display: block;
-}
-p.empty {
-  font-weight: bold;
-  font-size: 20px;
-  text-align: center;
-}
-.edit__block textarea {
+.todo__list .list__item .edit__block textarea {
   resize: none;
-  width: 415px;
+  width: 450px;
   overflow: hidden;
   border-radius: 5px;
   box-sizing: border-box;
   min-height: 42px;
   padding: 5px;
   outline: none;
+}
+.todo__list .list__item .edit__buttons {
+  position: absolute;
+  right: 0;
 }
 .navi {
   display: -webkit-box;
@@ -90,68 +55,90 @@ p.empty {
   justify-content: space-between;
   margin-bottom: 40px;
 }
-.navi button {
-  width: 130px;
-  height: 30px;
-  font-weight: bold;
-  border-radius: 5px;
+.navi .btn {
+  width: 115px;
 }
-.navi .active {
-  background-color: #95d6f1;
+.navi .btn-default {
+  background-color: #f2f2f2;
 }
 .todo-list {
   margin: 0 auto;
   width: 700px;
+}
+.todo-list .new__todo {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 0;
+}
+.todo-list form {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+.todo-list form .input {
+  width: 600px;
+  height: 40px;
+  border-radius: 5px;
+  padding: 0 5px;
+  margin-right: 8px;
+}
+.todo-list form .input:focus {
+  outline: none;
+}
+.todo-list form .ad__button {
+  height: 40px;
+}
+.todo-list .tasks .empty {
+  font-weight: bold;
+  font-size: 20px;
+  text-align: center;
+}
+.todo-list .tasks .hide {
+  display: none;
+}
+.todo-list .tasks .show {
+  display: block;
+}
+.todo-list .warning__message {
+  color: #f02c2c;
+  font-weight: bold;
+  margin-top: 3.33333333px;
+  display: block;
 }
 #mount-point {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
 }
-.input {
-  width: 550px;
-  height: 30px;
-  border-radius: 5px;
-  padding: 0 5px;
-  margin-right: 8px;
-  margin-bottom: 3px;
-}
-.input:focus,
-button {
-  outline: none;
-}
-.ad__button {
-  width: 120px;
-  height: 34px;
-  border-radius: 5px;
-  background: #422095;
-  font-weight: bold;
-  color: #fff;
-}
-h3 {
+#mount-point h3 {
   text-align: center;
-  font-size: 20px;
+  font-size: 19px;
+  font-weight: bold;
   text-transform: uppercase;
   text-decoration: underline;
+  margin: 10px 0 20px 0;
 }
-.new__todo {
-  font-size: 18px;
+#mount-point .glyphicon {
+  line-height: inherit;
+  font-size: 16px;
+}
+.btn {
   font-weight: bold;
-  margin-bottom: 5px;
+  font-size: 12px;
+  border-radius: 5px;
+  width: 85px;
 }
-form {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-}
-.invisible {
-  display: none;
-}
-button:hover {
+.btn:hover {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+.btn:focus {
+  outline: none;
 }
 .flex {
   display: -webkit-box;
@@ -161,7 +148,6 @@ button:hover {
   -ms-flex-align: center;
   align-items: center;
 }
-.warning__message {
-  color: #f02c2c;
-  font-weight: bold;
+.invisible {
+  display: none;
 }

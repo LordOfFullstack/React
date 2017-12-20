@@ -1,5 +1,6 @@
 import React from 'react';
-import './TodoNav.less';
+import '../css/TodoNav.less';
+
 import PropTypes from 'prop-types';
 
 class TodoNav extends React.Component {
@@ -18,7 +19,7 @@ class TodoNav extends React.Component {
   }
 
   isActive = value => {
-    return 'btn ' + ((value === this.state.selected) ? 'active' : 'default');
+    return 'btn ' + ((value === this.state.selected) ? 'btn-info' : 'btn-default');
   }
 
   startFunction = () => {

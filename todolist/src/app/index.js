@@ -10,7 +10,7 @@ $(document).ready(() => {
     $(this).css('box-shadow', 'none')
   })
 
-  $('.ad__button').on('click', e => {
+  $('#ad_item').on('click', e => {
     if ( $.trim( $('input.input').val() ) === "") {
       e.preventDefault()
       $('.warning__message').text('Введите задание')

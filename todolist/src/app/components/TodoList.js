@@ -1,5 +1,5 @@
 import React from 'react';
-import './TodoList.less';
+import '../css/TodoList.less';
 
 import TextareaAutosize from "react-textarea-autosize";
 import PropTypes from 'prop-types';
@@ -45,7 +45,7 @@ class TodoList extends React.Component {
           {this.props.items.map(item => (
             <li className="list__item" key={item.id}>
               {!item.editable
-                ? (<span ref="newSpan" className={item.done}>{item.text}</span>)
+                ? (<span className={`item ${item.done}`}>{item.text}</span>)
                 : (
                   <div className="flex edit__block">
                     <TextareaAutosize
@@ -56,16 +56,16 @@ class TodoList extends React.Component {
                       autoFocus='true'
                     />
                     <div className="edit__buttons">
-                      <button className="select-btn btn save" style={styles.items} onClick={this.props.onItemSave.bind(null, item)}>Сохранить</button>
-                      <button className="select-btn btn reset" style={styles.items} onClick={this.props.onItemReset.bind(null, item)}>Отменить</button>
+                      <button className="select-btn btn btn-success" style={styles.items} onClick={e => this.props.onItemSave(item, e)}><span className="glyphicon glyphicon-floppy-disk"></span></button>
+                      <button className="select-btn btn btn-danger" style={styles.items} onClick={e => this.props.onItemReset(item, e)}><span className="glyphicon glyphicon-remove"></span></button>
                     </div>
                   </div>
                 )
               }
               <div className="edit__buttons" style={{display: item.display}}>
-                <button className="select-btn btn to_edit" style={{display: item.buttonDisplay}} onClick={e => this.props.onItemEdit(item, e)}>Редактировать</button>
-                <button className={`select-btn btn ${item.button_class}`} data-action={this.display} style={styles.items} onClick={this.props.onItemOutline.bind(null, item)}>{item.button_text}</button>
-                <button className="select-btn btn delete" style={styles.items} data-action={this.display} onClick={e => this.props.onItemDelete(item, e)}>Удалить</button>
+                <button className="select-btn btn btn-info" style={{display: item.buttonDisplay}} onClick={e => this.props.onItemEdit(item, e)}><span className="glyphicon glyphicon-pencil"></span></button>
+                <button className={`select-btn btn ${item.button_class}`} data-action={this.display} style={styles.items} onClick={e => this.props.onItemOutline(item, e)}><span className={`glyphicon ${item.button_text}`}></span></button>
+                <button className="select-btn btn btn-danger" style={styles.items} data-action={this.display} onClick={e => this.props.onItemDelete(item, e)}><span className="glyphicon glyphicon-trash"></span></button>
               </div>
             </li>
           ))}
