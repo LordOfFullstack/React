@@ -1,0 +1,25 @@
+@import "./variables.less";
+
+.search {
+  margin-bottom: @margin * 4;
+  justify-content: space-between;
+
+  input {
+    height: 25px;
+    width: 250px;
+    margin-left: 4px;
+    border-radius: @brdRadius;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    -webkit-appearance: searchfield;
+
+    &:focus {
+      outline: none
+    }
+
+    &::-webkit-search-cancel-button {
+      -webkit-appearance: searchfield-cancel-button;
+    }
+  }
+}

@@ -34,7 +34,7 @@
 }
 .todo__list .list__item .edit__block textarea {
   resize: none;
-  width: 450px;
+  width: 480px;
   overflow: hidden;
   border-radius: 5px;
   box-sizing: border-box;
@@ -53,13 +53,25 @@
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
-  margin-bottom: 40px;
 }
 .navi .btn {
   width: 115px;
+  margin-right: 5px;
 }
 .navi .btn-default {
   background-color: #f2f2f2;
+}
+.search {
+  margin-bottom: 40px;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+.search input {
+  height: 30px;
+  width: 250px;
+  margin-left: 4px;
+  border-radius: 5px;
 }
 .todo-list {
   margin: 0 auto;

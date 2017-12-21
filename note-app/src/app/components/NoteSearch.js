@@ -19,20 +19,18 @@ class NoteSearch extends React.Component{
 
   handleSearchKey = event => {
     let array = [];
-
-    setTimeout( () => {
-      array = JSON.parse(localStorage.getItem('notes'));
-      this.setState({ displayedNotes: array })
-    })
+    array = JSON.parse(localStorage.getItem('notes'));
 
     const searchQuery = event.target.value.toLowerCase()
-    const displayedNotes = this.state.displayedNotes.filter(el => {
-      const searchValue = el.text.toLowerCase();
-      return searchValue.indexOf(searchQuery) !== -1;
-    })
 
-    this.props.searchArray(displayedNotes)
-    this.setState({ displayedNotes: array });
+    this.setState({ displayedNotes: array }, () => {
+      const displayedNotes = this.state.displayedNotes.filter(el => {
+        const searchValue = el.text.toLowerCase();
+        return searchValue.indexOf(searchQuery) !== -1;
+      })
+
+      this.props.searchArray(displayedNotes)
+    })
   }
 
   render() {

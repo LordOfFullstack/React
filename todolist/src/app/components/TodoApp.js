@@ -1,6 +1,7 @@
 import React from 'react';
 import TodoList from './TodoList';
 import TodoNav from './TodoNav';
+import Search from './Search';
 
 import '../css/TodoApp.less';
 
@@ -48,6 +49,8 @@ class TodoApp extends React.Component {
       items: filter,
       isClosed: className
     });
+
+    this.searchChild.handleUpdateState(filter, '')
   }
 
   handleSubmit = e => {
@@ -76,6 +79,8 @@ class TodoApp extends React.Component {
       this._updateLocalStorage(this.state.generalItems, 'generalItems')
       this._updateLocalStorage(this.state.items, 'list')
       this._updateLocalStorage(this.state.new_tasks, 'new_tasks')
+
+      this.searchChild.handleUpdateState(this.state.items)
     });
   }
 
@@ -128,7 +133,7 @@ class TodoApp extends React.Component {
 
   handleItemSave = object => {
     let itemId = object.id;
-    let editedText = this.list.getNewText();
+    let editedText = this.listChild.state.targetValue;
     let savedItem = this.state.generalItems.filter(item => {
       return item.id === itemId;
     });
@@ -175,7 +180,7 @@ class TodoApp extends React.Component {
 
     newArray.map(el => {
       let index = this.state.generalItems.indexOf(el)
-      var removed = this.state.generalItems.splice(index, 1, object);
+      let removed = this.state.generalItems.splice(index, 1, object);
     })
 
     this.setState(prevState => ({
@@ -200,8 +205,16 @@ class TodoApp extends React.Component {
         this._updateLocalStorage(this.state.items, 'list')
         this._updateLocalStorage(this.state.new_tasks, 'new_tasks')
 
-        this.child.startFunction()
+        this.navChild.state.function()
       });
+
+      const searchQuery = this.searchChild.state.inputVal.toLowerCase()
+      const displayedTasks = this.state.items.filter(el => {
+        const searchValue = el.text.toLowerCase();
+        return searchValue.indexOf(searchQuery) !== -1;
+      })
+
+      this.onChangeView(displayedTasks)
     })
   };
 
@@ -217,7 +230,7 @@ class TodoApp extends React.Component {
 
     newArray.map(el => {
       let index = this.state.generalItems.indexOf(el)
-      var removed = this.state.generalItems.splice(index, 1);
+      let removed = this.state.generalItems.splice(index, 1);
     })
 
     this.setState({
@@ -240,9 +253,15 @@ class TodoApp extends React.Component {
         this._updateLocalStorage(this.state.finished_tasks, 'finished_tasks')
         this._updateLocalStorage(this.state.items, 'list')
         this._updateLocalStorage(this.state.new_tasks, 'new_tasks')
+
+        this.navChild.state.function()
       });
     });
   };
+
+  onChangeView = items => {
+    this.setState({items: items})
+  }
 
   _updateLocalStorage = (param, storage) => {
     let list = JSON.stringify(param);
@@ -253,15 +272,22 @@ class TodoApp extends React.Component {
     return (
       <div className="todo-list">
         <h3>Задания</h3>
-        <TodoNav
-          ref={instance => { this.child = instance }}
-          changeFilter = {this.onChangeFilter}
-          items={this.state.items}
-          finishedItems = {this.state.finished_tasks}
-          newItems = {this.state.new_tasks}
-        />
+        <div className="flex search">
+          <TodoNav
+            ref={instance => { this.navChild = instance }}
+            changeFilter = {this.onChangeFilter}
+            items={this.state.items}
+            finishedItems = {this.state.finished_tasks}
+            newItems = {this.state.new_tasks}
+          />
+          <Search
+            ref={instance => { this.searchChild = instance }}
+            handleChangeView={this.onChangeView}
+            items={this.state.items}
+          />
+        </div>
         <TodoList
-          ref={instance => { this.list = instance }}
+          ref={instance => { this.listChild = instance }}
           items={this.state.items}
           onItemDelete={this.handleItemDelete}
           onItemOutline={this.handleItemOutline}
@@ -279,7 +305,7 @@ class TodoApp extends React.Component {
             onChange={this.handleChange}
             value={this.state.text}
           />
-          <button id="ad_item" className="btn btn-primary ad__button" onClick={() => { this.child.handleAll() }}><span className="glyphicon glyphicon-plus"></span></button>
+          <button id="ad_item" className="btn btn-primary ad__button" onClick={() => { this.navChild.handleAll() }}><span className="glyphicon glyphicon-plus"></span></button>
         </form>
         <span className='warning__message'></span>
       </div>

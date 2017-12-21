@@ -22,11 +22,6 @@ class TodoNav extends React.Component {
     return 'btn ' + ((value === this.state.selected) ? 'btn-info' : 'btn-default');
   }
 
-  startFunction = () => {
-    let func = this.state.function
-    func()
-  }
-
   handleFinished = () => {
     this.setState({ function: this.handleFinished})
     this.setFilter('finished')

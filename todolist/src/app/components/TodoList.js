@@ -23,11 +23,6 @@ class TodoList extends React.Component {
     })
   }
 
-  getNewText = () => {
-    let val = this.state.targetValue;
-    return val
-  }
-
   getValue = e => {
     this.setState({ targetValue: e.target.value })
   }
@@ -51,7 +46,7 @@ class TodoList extends React.Component {
                     <TextareaAutosize
                       rows={4}
                       defaultValue={item.text}
-                      onChange={this.getValue}
+                      onInput={this.getValue}
                       onFocus={this.getValue}
                       autoFocus='true'
                     />
