@@ -6,6 +6,11 @@
   margin-bottom: @margin * 4;
   counter-reset: list;
 
+  .before:before {
+    text-decoration: line-through;
+    color: @grey - #222
+  }
+
   .list__item {
     padding: 22px 0;
     border-bottom: 2px double @grey;
@@ -14,19 +19,30 @@
     list-style-type: none;
     position: relative;
 
+    .date {
+      font-size: 10px;
+      margin-top: 5px;
+      text-align: right;
+    }
+
     &:before {
       counter-increment: list;
       content: counter(list) ". ";
       margin-right: @margin
     }
 
-    .item {
-      width: 360px;
-      overflow-wrap: break-word;
+    .text {
+      width: 380px;
 
       &::first-letter{
         text-transform: uppercase;
       }
+    }
+
+    .item {
+      overflow-wrap: break-word;
+      display: flex;
+      flex-direction: column;
     }
 
     .finished {

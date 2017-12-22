@@ -20,6 +20,9 @@ class Search extends React.Component {
   }
 
   componentWillReceiveProps() {
+    if (this.input.value) {
+      this.setState({ inputVal: '' })
+    }
     this.setState({ inputVal: this.input.value })
   }
 

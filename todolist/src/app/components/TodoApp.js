@@ -74,7 +74,8 @@ class TodoApp extends React.Component {
       button_class: 'btn-success',
       editable: false,
       display: 'flex',
-      buttonDisplay: 'block'
+      buttonDisplay: 'block',
+      class: ''
     };
 
     this.setState(prevState => ({
@@ -88,6 +89,7 @@ class TodoApp extends React.Component {
       this._updateLocalStorage(this.state.new_tasks, 'new_tasks')
 
       this.searchChild.handleUpdateState(this.state.items)
+      this.navChild.handleAll()
     })
   }
 
@@ -145,6 +147,10 @@ class TodoApp extends React.Component {
       return item.id === itemId;
     });
 
+    if(!editedText) {
+      return
+    }
+
     object.editable = false;
     object.text = editedText;
     object.display = 'flex';
@@ -182,8 +188,8 @@ class TodoApp extends React.Component {
     });
 
     ( ((object.done === "unfinished") && (object.button_text === "glyphicon-ok"))
-    ? (object.done = 'finished', object.button_text = "glyphicon-repeat", object.button_class = "btn-warning", object.buttonDisplay = "none")
-    : (object.done = 'unfinished', object.button_text = "glyphicon-ok", object.button_class = "btn-success", object.buttonDisplay = "block") )
+    ? (object.done = 'finished', object.button_text = "glyphicon-repeat", object.button_class = "btn-warning", object.buttonDisplay = "none", object.class = "before")
+    : (object.done = 'unfinished', object.button_text = "glyphicon-ok", object.button_class = "btn-success", object.buttonDisplay = "block", object.class = "") )
 
     newArray.map(el => {
       let index = this.state.generalItems.indexOf(el)
@@ -330,7 +336,7 @@ class TodoApp extends React.Component {
             onBlur={this.inputOnBlur}
             onInput={this.inputOnBlur}
           />
-          <button id="ad_item" className="btn btn-primary ad__button" onClick={() => { this.navChild.handleAll() }}><span className="glyphicon glyphicon-plus"></span></button>
+          <button id="ad_item" className="btn btn-primary ad__button"><span className="glyphicon glyphicon-plus"></span></button>
         </form>
         <span style={{display: this.state.warningMessage}} className='warning__message'>Введите задание</span>
       </div>

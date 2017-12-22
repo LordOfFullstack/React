@@ -4,6 +4,10 @@
   margin-bottom: 40px;
   counter-reset: list;
 }
+.todo__list .before:before {
+  text-decoration: line-through;
+  color: #aaaaaa;
+}
 .todo__list .list__item {
   padding: 22px 0;
   border-bottom: 2px double #ccc;
@@ -16,17 +20,31 @@
   list-style-type: none;
   position: relative;
 }
+.todo__list .list__item .date {
+  font-size: 10px;
+  margin-top: 5px;
+  text-align: right;
+}
 .todo__list .list__item:before {
   counter-increment: list;
   content: counter(list) ". ";
   margin-right: 10px;
 }
-.todo__list .list__item .item {
-  width: 360px;
-  overflow-wrap: break-word;
+.todo__list .list__item .text {
+  width: 380px;
 }
-.todo__list .list__item .item::first-letter {
+.todo__list .list__item .text::first-letter {
   text-transform: uppercase;
+}
+.todo__list .list__item .item {
+  overflow-wrap: break-word;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
 }
 .todo__list .list__item .finished {
   text-decoration: line-through;
@@ -173,4 +191,24 @@
 }
 .box-shadow {
   box-shadow: 0 0 10px rgba(255, 1, 1, 0.5);
+}
+@-webkit-keyframes yellowfade {
+  from {
+    background: #f5eda9;
+  }
+  to {
+    background: transparent;
+  }
+}
+@keyframes yellowfade {
+  from {
+    background: #f5eda9;
+  }
+  to {
+    background: transparent;
+  }
+}
+.item-highlight {
+  -webkit-animation: yellowfade 1.5s;
+  animation: yellowfade 1.5s;
 }
