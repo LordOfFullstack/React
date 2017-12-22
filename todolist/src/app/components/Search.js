@@ -19,14 +19,12 @@ class Search extends React.Component {
     }
   }
 
-  handleUpdateState = (filter, inputVal) => {
-    console.log(this.state.inputVal);
-    this.setState({
-      tasks: filter,
-      //inputVal: inputVal
-    })
+  componentWillReceiveProps() {
+    this.setState({ inputVal: this.input.value })
+  }
 
-    //this.input.value = ""
+  handleUpdateState = (filter) => {
+    this.setState({ tasks: filter })
   }
 
   handleSearchKey = event => {
@@ -46,6 +44,7 @@ class Search extends React.Component {
       <div className="input__search">
         <label>Найти:</label>
         <input
+          className='search_input'
           type ='search'
           onChange = {this.handleSearchKey}
           ref={el => this.input = el}

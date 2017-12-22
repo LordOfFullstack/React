@@ -13,7 +13,9 @@ class TodoApp extends React.Component {
       text: '',
       finished_tasks: [],
       new_tasks: [],
-      generalItems: []
+      generalItems: [],
+      warningMessage: 'none',
+      boxShadow: ''
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -50,12 +52,17 @@ class TodoApp extends React.Component {
       isClosed: className
     });
 
-    this.searchChild.handleUpdateState(filter, '')
+    this.searchChild.handleUpdateState(filter)
   }
 
   handleSubmit = e => {
     e.preventDefault();
     if (!this.state.text.length) {
+      this.setState({
+        warningMessage: 'block',
+        boxShadow: 'box-shadow'
+      })
+
       return;
     }
 
@@ -81,7 +88,7 @@ class TodoApp extends React.Component {
       this._updateLocalStorage(this.state.new_tasks, 'new_tasks')
 
       this.searchChild.handleUpdateState(this.state.items)
-    });
+    })
   }
 
   handleItemEdit = object => {
@@ -175,7 +182,7 @@ class TodoApp extends React.Component {
     });
 
     ( ((object.done === "unfinished") && (object.button_text === "glyphicon-ok"))
-    ? (object.done = 'finished', object.button_text = "glyphicon-refresh", object.button_class = "btn-warning", object.buttonDisplay = "none")
+    ? (object.done = 'finished', object.button_text = "glyphicon-repeat", object.button_class = "btn-warning", object.buttonDisplay = "none")
     : (object.done = 'unfinished', object.button_text = "glyphicon-ok", object.button_class = "btn-success", object.buttonDisplay = "block") )
 
     newArray.map(el => {
@@ -254,13 +261,28 @@ class TodoApp extends React.Component {
         this._updateLocalStorage(this.state.items, 'list')
         this._updateLocalStorage(this.state.new_tasks, 'new_tasks')
 
-        this.navChild.state.function()
-      });
-    });
-  };
+        //this.navChild.state.function()
+      })
 
-  onChangeView = items => {
-    this.setState({items: items})
+      const searchQuery = this.searchChild.state.inputVal.toLowerCase()
+      const displayedTasks = this.state.items.filter(el => {
+        const searchValue = el.text.toLowerCase();
+        return searchValue.indexOf(searchQuery) !== -1;
+      })
+
+      this.onChangeView(displayedTasks)
+    })
+  }
+
+  onChangeView = (items) => {
+    this.setState({ items: items })
+  }
+
+  inputOnBlur = () => {
+    this.setState({
+      warningMessage: 'none',
+      boxShadow: ''
+    })
   }
 
   _updateLocalStorage = (param, storage) => {
@@ -276,6 +298,7 @@ class TodoApp extends React.Component {
           <TodoNav
             ref={instance => { this.navChild = instance }}
             changeFilter = {this.onChangeFilter}
+            changeState = {this.onUpdateState}
             items={this.state.items}
             finishedItems = {this.state.finished_tasks}
             newItems = {this.state.new_tasks}
@@ -300,14 +323,16 @@ class TodoApp extends React.Component {
         <p className="new__todo">Добавить задание</p>
         <form onSubmit={this.handleSubmit}>
           <input
-            className="input"
+            className={`input ${this.state.boxShadow}`}
             placeholder='Введите задание...'
             onChange={this.handleChange}
             value={this.state.text}
+            onBlur={this.inputOnBlur}
+            onInput={this.inputOnBlur}
           />
           <button id="ad_item" className="btn btn-primary ad__button" onClick={() => { this.navChild.handleAll() }}><span className="glyphicon glyphicon-plus"></span></button>
         </form>
-        <span className='warning__message'></span>
+        <span style={{display: this.state.warningMessage}} className='warning__message'>Введите задание</span>
       </div>
     );
   }

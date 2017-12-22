@@ -68,10 +68,18 @@
   justify-content: space-between;
 }
 .search input {
-  height: 30px;
+  height: 25px;
   width: 250px;
   margin-left: 4px;
   border-radius: 5px;
+  box-sizing: content-box;
+  -webkit-appearance: searchfield;
+}
+.search input:focus {
+  outline: none;
+}
+.search input::-webkit-search-cancel-button {
+  -webkit-appearance: searchfield-cancel-button;
 }
 .todo-list {
   margin: 0 auto;
@@ -162,4 +170,7 @@
 }
 .invisible {
   display: none;
+}
+.box-shadow {
+  box-shadow: 0 0 10px rgba(255, 1, 1, 0.5);
 }
