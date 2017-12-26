@@ -3,6 +3,8 @@ import TodoList from './TodoList';
 import TodoNav from './TodoNav';
 import Search from './Search';
 
+var moment = require('moment');
+
 import '../css/TodoApp.less';
 
 class TodoApp extends React.Component {
@@ -15,7 +17,8 @@ class TodoApp extends React.Component {
       new_tasks: [],
       generalItems: [],
       warningMessage: 'none',
-      boxShadow: ''
+      boxShadow: '',
+      checked: false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -59,12 +62,14 @@ class TodoApp extends React.Component {
     e.preventDefault();
     if (!this.state.text.length) {
       this.setState({
-        warningMessage: 'block',
+        warningMessage: 'inline-block',
         boxShadow: 'box-shadow'
       })
 
       return;
     }
+
+    const date = moment().format('DD.MM.YYYY')
 
     const newItem = {
       text: this.state.text,
@@ -74,9 +79,12 @@ class TodoApp extends React.Component {
       button_class: 'btn-success',
       editable: false,
       display: 'flex',
-      buttonDisplay: 'block',
-      class: ''
-    };
+      buttonDisplay: 'inline-block',
+      class: '',
+      date: date,
+      important: this.input.checked ? 'Важное' : '',
+      background: this.input.checked ? 'item-background' : ''
+    }
 
     this.setState(prevState => ({
       items: prevState.items.concat(newItem),
@@ -189,7 +197,7 @@ class TodoApp extends React.Component {
 
     ( ((object.done === "unfinished") && (object.button_text === "glyphicon-ok"))
     ? (object.done = 'finished', object.button_text = "glyphicon-repeat", object.button_class = "btn-warning", object.buttonDisplay = "none", object.class = "before")
-    : (object.done = 'unfinished', object.button_text = "glyphicon-ok", object.button_class = "btn-success", object.buttonDisplay = "block", object.class = "") )
+    : (object.done = 'unfinished', object.button_text = "glyphicon-ok", object.button_class = "btn-success", object.buttonDisplay = "inline-block", object.class = "") )
 
     newArray.map(el => {
       let index = this.state.generalItems.indexOf(el)
@@ -280,15 +288,28 @@ class TodoApp extends React.Component {
     })
   }
 
-  onChangeView = (items) => {
-    this.setState({ items: items })
-  }
-
   inputOnBlur = () => {
     this.setState({
       warningMessage: 'none',
       boxShadow: ''
     })
+  }
+
+  _filter = () => {
+    this.setState({ checked: !this.state.checked})
+    if (this.filter.checked) {
+      let importantItems = this.state.items.filter(el => {
+        return el.important === "Важное";
+      })
+      this.onChangeView(importantItems)
+    }
+    else {
+      this.navChild.state.function()
+    }
+  }
+
+  onChangeView = (items) => {
+    this.setState({ items: items })
   }
 
   _updateLocalStorage = (param, storage) => {
@@ -298,47 +319,56 @@ class TodoApp extends React.Component {
 
   render() {
     return (
-      <div className="todo-list">
-        <h3>Задания</h3>
-        <div className="flex search">
-          <TodoNav
-            ref={instance => { this.navChild = instance }}
-            changeFilter = {this.onChangeFilter}
-            changeState = {this.onUpdateState}
+      <div className="wrapper">
+        <div className="todo-list">
+          <h3>Задания</h3>
+          <div className="flex search">
+            <TodoNav
+              ref={instance => { this.navChild = instance }}
+              changeFilter = {this.onChangeFilter}
+              changeState = {this.onUpdateState}
+              items={this.state.items}
+              finishedItems = {this.state.finished_tasks}
+              newItems = {this.state.new_tasks}
+              onCheck = {this.state.checked}
+            />
+            <Search
+              ref={instance => { this.searchChild = instance }}
+              handleChangeView={this.onChangeView}
+              items={this.state.items}
+            />
+          </div>
+          <TodoList
+            ref={instance => { this.listChild = instance }}
             items={this.state.items}
-            finishedItems = {this.state.finished_tasks}
-            newItems = {this.state.new_tasks}
+            onItemDelete={this.handleItemDelete}
+            onItemOutline={this.handleItemOutline}
+            onItemEdit={this.handleItemEdit}
+            onItemReset={this.handleItemReset}
+            onItemSave={this.handleItemSave}
+            onChangeValue={this.state.text}
+            display={this.state.isClosed}
           />
-          <Search
-            ref={instance => { this.searchChild = instance }}
-            handleChangeView={this.onChangeView}
-            items={this.state.items}
-          />
+          <p className="new__todo">Добавить задание</p>
+          <form onSubmit={this.handleSubmit}>
+            <input
+              className={`input ${this.state.boxShadow}`}
+              placeholder='Введите задание...'
+              onChange={this.handleChange}
+              value={this.state.text}
+              onBlur={this.inputOnBlur}
+              onInput={this.inputOnBlur}
+            />
+            <button id="ad_item" className="btn btn-primary ad__button"><span className="glyphicon glyphicon-plus"></span></button>
+          </form>
+          <div className="message__block">
+            <span style={{display: this.state.warningMessage}} className='warning__message'>Введите задание</span>
+            <span className='important text-right'><input ref={instance => { this.input = instance }} type="checkbox" name="important" />Отметить как важное</span>
+          </div>
         </div>
-        <TodoList
-          ref={instance => { this.listChild = instance }}
-          items={this.state.items}
-          onItemDelete={this.handleItemDelete}
-          onItemOutline={this.handleItemOutline}
-          onItemEdit={this.handleItemEdit}
-          onItemReset={this.handleItemReset}
-          onItemSave={this.handleItemSave}
-          onChangeValue={this.state.text}
-          display={this.state.isClosed}
-        />
-        <p className="new__todo">Добавить задание</p>
-        <form onSubmit={this.handleSubmit}>
-          <input
-            className={`input ${this.state.boxShadow}`}
-            placeholder='Введите задание...'
-            onChange={this.handleChange}
-            value={this.state.text}
-            onBlur={this.inputOnBlur}
-            onInput={this.inputOnBlur}
-          />
-          <button id="ad_item" className="btn btn-primary ad__button"><span className="glyphicon glyphicon-plus"></span></button>
-        </form>
-        <span style={{display: this.state.warningMessage}} className='warning__message'>Введите задание</span>
+        <div className="sort">
+          <input name="filter" ref={instance => { this.filter = instance }} onChange={this._filter} type="checkbox" name="sort" />Показывать только важные
+        </div>
       </div>
     );
   }

@@ -1,17 +1,18 @@
 import React from 'react';
 import '../css/TodoList.less';
 
-import Moment from 'react-moment';
-
 import TextareaAutosize from "react-textarea-autosize";
 import PropTypes from 'prop-types';
+
+import Moment from 'react-moment';
 
 class TodoList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       classChange: '',
-      targetValue: ''
+      targetValue: '',
+      backGround: ''
     }
 
     this.display = props.display
@@ -40,8 +41,8 @@ class TodoList extends React.Component {
         <p className={`empty ${this.state.classChange}`}>Нет заданий</p>
         <ol className="todo__list" ref = {el => this.ul = el}>
           {this.props.items.map(item => (
-            <li className={`list__item ${item.class}`} key={item.id}>
-              <div ref = {el => this.div = el} className={`item ${item.done}`}>
+            <li className={`list__item ${item.class} ${item.background}`} key={item.id}>
+              <div className={`item ${item.done}`}>
                 {!item.editable
                   ? (<span className='text'>{item.text}</span>)
                   : (
@@ -62,7 +63,12 @@ class TodoList extends React.Component {
                     </div>
                   )
                 }
-                <Moment format="DD.MM.YYYY" className="date" />
+                <div className="date">
+                  <span ref = {el => this.span = el} className="importance">{item.important}</span>
+                  <span>{item.date}</span>
+                </div>
+
+
               </div>
               <div className="edit__buttons" style={{display: item.display}}>
                 <button className="select-btn btn btn-info" style={{display: item.buttonDisplay}} onClick={e => this.props.onItemEdit(item, e)}><span className="glyphicon glyphicon-pencil"></span></button>

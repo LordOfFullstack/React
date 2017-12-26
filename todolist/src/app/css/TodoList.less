@@ -12,7 +12,7 @@
   }
 
   .list__item {
-    padding: 22px 0;
+    padding: 22px 8px;
     border-bottom: 2px double @grey;
     display: flex;
     align-items: center;
@@ -29,6 +29,12 @@
       counter-increment: list;
       content: counter(list) ". ";
       margin-right: @margin
+    }
+
+    .importance {
+      margin-right: 5px;
+      font-weight: bold;
+      font-size: 11px
     }
 
     .text {
@@ -65,7 +71,7 @@
 
     .edit__buttons {
       position: absolute;
-      right: 0;
+      right: 8px;
     }
   }
 }

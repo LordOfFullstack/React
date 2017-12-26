@@ -27,6 +27,34 @@ class TodoNav extends React.Component {
     this.setFilter('finished')
     let localList = JSON.parse(localStorage.getItem('finished_tasks'));
     (localList) ? (this.props.changeFilter(localList, "")) : (this.props.changeFilter(this.props.finishedItems))
+
+
+     if (this.props.onCheck) {
+    //
+    //
+    //
+    //
+    //   let importantItems = localList.filter(el => {
+    //     return el.important === "Важное";
+    //   })
+    //
+    //
+    //
+    console.log('true');
+    //
+    //   this.props.changeFilter(importantItems, "")
+     }
+    //
+    // if (!this.state.checked) {
+    //
+    //
+    //   //console.log("false");
+    //
+    //   //let localList = JSON.parse(localStorage.getItem('finished_tasks'));
+    //
+    //   //(localList) ? (this.props.changeFilter(localList, "")) : (this.props.changeFilter(this.props.finishedItems))
+    //   this.props.changeFilter(localList, "")
+    // }
   }
 
   handleAll = () => {
