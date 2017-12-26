@@ -8,7 +8,8 @@ class TodoNav extends React.Component {
     super(props);
     this.state = {
       selected: '',
-      function: this.handleAll
+      function: this.handleAll,
+      checked: false
     }
 
     this.setFilter = this.setFilter.bind(this)
@@ -22,53 +23,65 @@ class TodoNav extends React.Component {
     return 'btn ' + ((value === this.state.selected) ? 'btn-info' : 'btn-default');
   }
 
+  _updateState = () => {
+    this.setState({ checked: this.props.onCheck })
+  }
+
   handleFinished = () => {
     this.setState({ function: this.handleFinished})
     this.setFilter('finished')
     let localList = JSON.parse(localStorage.getItem('finished_tasks'));
-    (localList) ? (this.props.changeFilter(localList, "")) : (this.props.changeFilter(this.props.finishedItems))
 
+    setTimeout(() => {
+      if (this.state.checked) {
+        let importantItems = localList.filter(el => {
+          return el.important === "Важное";
+        })
 
-     if (this.props.onCheck) {
-    //
-    //
-    //
-    //
-    //   let importantItems = localList.filter(el => {
-    //     return el.important === "Важное";
-    //   })
-    //
-    //
-    //
-    console.log('true');
-    //
-    //   this.props.changeFilter(importantItems, "")
-     }
-    //
-    // if (!this.state.checked) {
-    //
-    //
-    //   //console.log("false");
-    //
-    //   //let localList = JSON.parse(localStorage.getItem('finished_tasks'));
-    //
-    //   //(localList) ? (this.props.changeFilter(localList, "")) : (this.props.changeFilter(this.props.finishedItems))
-    //   this.props.changeFilter(localList, "")
-    // }
+        this.props.changeFilter(importantItems, "")
+      }
+      else {
+        (localList) ? (this.props.changeFilter(localList, "")) : (this.props.changeFilter(this.props.finishedItems))
+      }
+    })
   }
 
   handleAll = () => {
     this.setState({ function: this.handleAll})
     this.setFilter('')
     let localList = JSON.parse(localStorage.getItem('generalItems'));
-    (localList) ? (this.props.changeFilter(localList, "")) : (this.props.changeFilter([], ""))
+
+    setTimeout(() => {
+      if (this.state.checked) {
+        let importantItems = localList.filter(el => {
+          return el.important === "Важное";
+        })
+
+        this.props.changeFilter(importantItems, "")
+      }
+      else {
+        (localList) ? (this.props.changeFilter(localList, "")) : (this.props.changeFilter([], ""))
+      }
+    })
   }
 
   handleNew = () => {
     this.setState({ function: this.handleNew})
     this.setFilter('new')
     let localList = JSON.parse(localStorage.getItem('new_tasks'));
-    (localList) ? (this.props.changeFilter(localList, "")) : (this.props.changeFilter(this.props.newItems))
+
+    setTimeout(() => {
+      if (this.state.checked) {
+        let importantItems = localList.filter(el => {
+          return el.important === "Важное";
+        })
+
+        this.props.changeFilter(importantItems, "")
+      }
+      else {
+        (localList) ? (this.props.changeFilter(localList, "")) : (this.props.changeFilter(this.props.newItems))
+      }
+    })
   }
 
   render() {

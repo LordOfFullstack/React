@@ -278,13 +278,7 @@ class TodoApp extends React.Component {
         //this.navChild.state.function()
       })
 
-      const searchQuery = this.searchChild.state.inputVal.toLowerCase()
-      const displayedTasks = this.state.items.filter(el => {
-        const searchValue = el.text.toLowerCase();
-        return searchValue.indexOf(searchQuery) !== -1;
-      })
-
-      this.onChangeView(displayedTasks)
+      this.searchFilter()
     })
   }
 
@@ -296,16 +290,44 @@ class TodoApp extends React.Component {
   }
 
   _filter = () => {
-    this.setState({ checked: !this.state.checked})
+    this.setState({ checked: !this.state.checked}, () => {
+      this.navChild._updateState()
+    })
+
     if (this.filter.checked) {
       let importantItems = this.state.items.filter(el => {
         return el.important === "Важное";
       })
-      this.onChangeView(importantItems)
+
+      this.setState({ items: importantItems }, () => {
+        this.searchChild.handleUpdateState(this.state.items)
+
+        const searchQuery = this.searchChild.state.inputVal.toLowerCase()
+        const displayedTasks = this.state.items.filter(el => {
+          const searchValue = el.text.toLowerCase();
+          return searchValue.indexOf(searchQuery) !== -1;
+        })
+
+        this.onChangeView(displayedTasks)
+      })
     }
     else {
       this.navChild.state.function()
+
+      setTimeout(() => {
+        this.searchFilter()
+      })
     }
+  }
+
+  searchFilter = () => {
+    const searchQuery = this.searchChild.state.inputVal.toLowerCase()
+    const displayedTasks = this.state.items.filter(el => {
+      const searchValue = el.text.toLowerCase();
+      return searchValue.indexOf(searchQuery) !== -1;
+    })
+
+    this.onChangeView(displayedTasks)
   }
 
   onChangeView = (items) => {

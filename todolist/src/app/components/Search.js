@@ -23,6 +23,7 @@ class Search extends React.Component {
     if (this.input.value) {
       this.setState({ inputVal: '' })
     }
+
     this.setState({ inputVal: this.input.value })
   }
 
@@ -43,6 +44,7 @@ class Search extends React.Component {
   }
 
   render() {
+    console.log(this.state.tasks);
     return (
       <div className="input__search">
         <label>Найти:</label>
