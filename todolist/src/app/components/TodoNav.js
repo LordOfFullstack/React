@@ -9,7 +9,8 @@ class TodoNav extends React.Component {
     this.state = {
       selected: '',
       function: this.handleAll,
-      checked: false
+      checked: false,
+      sort: false
     }
 
     this.setFilter = this.setFilter.bind(this)
@@ -24,7 +25,10 @@ class TodoNav extends React.Component {
   }
 
   _updateState = () => {
-    this.setState({ checked: this.props.onCheck })
+    this.setState({
+      checked: this.props.onCheck,
+      sort: this.props.onSort
+    })
   }
 
   handleFinished = () => {
@@ -61,6 +65,15 @@ class TodoNav extends React.Component {
       }
       else {
         (localList) ? (this.props.changeFilter(localList, "")) : (this.props.changeFilter([], ""))
+      }
+    })
+
+    setTimeout(() => {
+      if (this.state.sort) {
+        alert(1)
+      }
+      else {
+        alert(2)
       }
     })
   }

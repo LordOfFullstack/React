@@ -19,7 +19,9 @@ class TodoApp extends React.Component {
       warningMessage: 'none',
       boxShadow: '',
       checked: false,
-      importantTasks: []
+      sort: false,
+      importantTasks: [],
+      sortedArray: []
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -316,36 +318,78 @@ class TodoApp extends React.Component {
   }
 
   _filter = () => {
-    this.setState({ checked: !this.state.checked}, () => {
-      this.navChild._updateState()
-    })
-
-    let localList = JSON.parse(localStorage.getItem('importantTasks'));
-
-    if (this.filter.checked) {
-      let importantItems = this.state.items.filter(el => {
-        return el.important === "Важное";
+    if (this.sort.checked && this.filter.checked) {
+      this.sort.checked = !this.sort.checked
+      this._sort()
+    }
+    setTimeout(() => {
+      this.setState({ checked: !this.state.checked}, () => {
+        this.navChild._updateState()
       })
 
-      this.setState({ items: importantItems }, () => {
-        this.searchChild.handleUpdateState(this.state.items)
+      let localList = JSON.parse(localStorage.getItem('importantTasks'));
 
-        const searchQuery = this.searchChild.state.inputVal.toLowerCase()
-        const displayedTasks = this.state.items.filter(el => {
-          const searchValue = el.text.toLowerCase();
-          return searchValue.indexOf(searchQuery) !== -1;
+      if (this.filter.checked) {
+        let importantItems = this.state.items.filter(el => {
+          return el.important === "Важное";
         })
 
-        this.onChangeView(displayedTasks)
-      })
-    }
-    else {
-      this.navChild.state.function()
+        this.setState({ items: importantItems }, () => {
+          this.searchChild.handleUpdateState(this.state.items)
 
-      setTimeout(() => {
-        this.searchFilter()
-      })
+          const searchQuery = this.searchChild.state.inputVal.toLowerCase()
+          const displayedTasks = this.state.items.filter(el => {
+            const searchValue = el.text.toLowerCase();
+            return searchValue.indexOf(searchQuery) !== -1;
+          })
+
+          this.onChangeView(displayedTasks)
+        })
+      }
+      else {
+        this.navChild.state.function()
+
+        setTimeout(() => {
+          this.searchFilter()
+          this.setState({ sortedArray: this.state.items })
+        })
+      }
+    })
+  }
+
+  _sort = () => {
+    if (this.filter.checked && this.sort.checked) {
+      this.filter.checked = !this.filter.checked
+      this._filter()
     }
+
+    setTimeout(() => {
+      this.setState({ sort: !this.state.sort}, () => {
+        this.navChild._updateState()
+      })
+
+      if (this.sort.checked) {
+        setTimeout(() => {
+          var sortedArray = this.state.items.slice(0);
+          sortedArray.sort(function(a,b) {
+            var x = a.important.toLowerCase();
+            var y = b.important.toLowerCase();
+            return x > y ? -1 : x < y ? 1 : 0;
+          });
+          this.setState({ items: sortedArray}, () => {
+            this._updateLocalStorage(sortedArray, 'sortedArray')
+          })
+        })
+      }
+
+      else {
+        this.navChild.state.function()
+
+        setTimeout(() => {
+          this.searchFilter()
+        })
+      }
+    })
   }
 
   searchFilter = () => {
@@ -380,6 +424,7 @@ class TodoApp extends React.Component {
               finishedItems = {this.state.finished_tasks}
               newItems = {this.state.new_tasks}
               onCheck = {this.state.checked}
+              onSort = {this.state.sortedArray}
             />
             <Search
               ref={instance => { this.searchChild = instance }}
@@ -417,8 +462,11 @@ class TodoApp extends React.Component {
             <span className='important text-right'><input ref={instance => { this.input = instance }} type="checkbox" name="important" />Отметить как важное</span>
           </div>
         </div>
-        <div className="sort">
-          <input name="filter" ref={instance => { this.filter = instance }} onChange={this._filter} type="checkbox" name="sort" />Показывать только важные
+        <div className="sort flex">
+          <h3 className="new__todo">Фильтры</h3>
+          <div className='flex'><input id="important" name="filter" ref={instance => { this.filter = instance }} onChange={this._filter} type="checkbox" /><label htmlFor="important">Показывать только важные</label></div>
+          <div className='flex'><input id="importantStart" name="sort" ref={instance => { this.sort = instance }} onChange={this._sort} type="checkbox" /><label htmlFor="importantStart">Важные в начале</label></div>
+          <div className='flex'><input id="importantEnd" disabled='disabled' name="sort" ref={instance => { this.sortEnd = instance }} onChange={this._sortEnd} type="checkbox" /><label htmlFor="importantEnd">Важные в конце</label></div>
         </div>
       </div>
     );
