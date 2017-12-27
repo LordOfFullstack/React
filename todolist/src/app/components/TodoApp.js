@@ -18,7 +18,8 @@ class TodoApp extends React.Component {
       generalItems: [],
       warningMessage: 'none',
       boxShadow: '',
-      checked: false
+      checked: false,
+      importantTasks: []
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -42,6 +43,11 @@ class TodoApp extends React.Component {
     let finishedTaskStorage = JSON.parse(localStorage.getItem('finished_tasks'));
     if (finishedTaskStorage) {
       this.setState({finished_tasks: finishedTaskStorage });
+    }
+
+    let importantTasks = JSON.parse(localStorage.getItem('importantTasks'));
+    if (importantTasks) {
+      this.setState({importantTasks: importantTasks });
     }
   }
 
@@ -98,6 +104,14 @@ class TodoApp extends React.Component {
 
       this.searchChild.handleUpdateState(this.state.items)
       this.navChild.handleAll()
+
+      let importantItems = this.state.generalItems.filter(el => {
+        return el.important === "Важное";
+      })
+
+      this.setState({ importantTasks: importantItems}, () => {
+        this._updateLocalStorage(this.state.importantTasks, 'importantTasks')
+      })
     })
   }
 
@@ -226,6 +240,12 @@ class TodoApp extends React.Component {
         this._updateLocalStorage(this.state.items, 'list')
         this._updateLocalStorage(this.state.new_tasks, 'new_tasks')
 
+        let importantItems = this.state.generalItems.filter(el => {
+          return el.important === "Важное";
+        })
+
+        this._updateLocalStorage(importantItems, 'importantTasks')
+
         this.navChild.state.function()
       });
 
@@ -275,7 +295,13 @@ class TodoApp extends React.Component {
         this._updateLocalStorage(this.state.items, 'list')
         this._updateLocalStorage(this.state.new_tasks, 'new_tasks')
 
-        //this.navChild.state.function()
+        let importantItems = this.state.generalItems.filter(el => {
+          return el.important === "Важное";
+        })
+
+        this.setState({ importantTasks: importantItems}, () => {
+          this._updateLocalStorage(this.state.importantTasks, 'importantTasks')
+        })
       })
 
       this.searchFilter()
@@ -293,6 +319,8 @@ class TodoApp extends React.Component {
     this.setState({ checked: !this.state.checked}, () => {
       this.navChild._updateState()
     })
+
+    let localList = JSON.parse(localStorage.getItem('importantTasks'));
 
     if (this.filter.checked) {
       let importantItems = this.state.items.filter(el => {
@@ -338,7 +366,6 @@ class TodoApp extends React.Component {
     let list = JSON.stringify(param);
     localStorage.setItem(storage, list);
   }
-
   render() {
     return (
       <div className="wrapper">
@@ -358,6 +385,8 @@ class TodoApp extends React.Component {
               ref={instance => { this.searchChild = instance }}
               handleChangeView={this.onChangeView}
               items={this.state.items}
+              importantItems={this.state.importantTasks}
+              onCheckedState={this.state.checked}
             />
           </div>
           <TodoList

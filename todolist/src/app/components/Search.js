@@ -8,7 +8,8 @@ class Search extends React.Component {
     super(props);
     this.state = {
       tasks: [],
-      inputVal: ''
+      inputVal: '',
+      importantItems: []
     }
   }
 
@@ -17,6 +18,10 @@ class Search extends React.Component {
     if (itemStorage) {
       this.setState({ tasks: itemStorage });
     }
+
+    setTimeout(() => {
+      this.setState({ importantItems: this.props.importantItems });
+    })
   }
 
   componentWillReceiveProps() {
@@ -25,10 +30,22 @@ class Search extends React.Component {
     }
 
     this.setState({ inputVal: this.input.value })
+
+    if (this.props.onCheckedState === true) {
+      this.setState({ tasks: this.state.importantItems });
+    }
   }
 
   handleUpdateState = (filter) => {
-    this.setState({ tasks: filter })
+    this.setState({ tasks: filter }, () => {
+
+      let importantItems = this.state.tasks.filter(el => {
+        return el.important === "Важное";
+      })
+
+      this.setState({ importantItems: importantItems}, () => {
+      })
+    })
   }
 
   handleSearchKey = event => {
@@ -42,9 +59,7 @@ class Search extends React.Component {
 
     this.props.handleChangeView(displayedTasks)
   }
-
   render() {
-    console.log(this.state.tasks);
     return (
       <div className="input__search">
         <label>Найти:</label>
