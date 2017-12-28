@@ -34,6 +34,8 @@ class TodoApp extends React.Component {
       this.setState({
         generalItems: itemStorage,
         items: itemStorage
+      }, () => {
+        this._updateLocalStorage(this.state.items, 'currentItems')
       });
     }
 
@@ -277,6 +279,13 @@ class TodoApp extends React.Component {
       let removed = this.state.generalItems.splice(index, 1);
     })
 
+    let curItems = JSON.parse(localStorage.getItem('currentItems'));
+    let newCurItems = curItems.filter(item => {
+      return item.id !== itemId;
+    });
+
+    this._updateLocalStorage(newCurItems, 'currentItems')
+
     this.setState({
       items: newItems,
       generalItems: this.state.generalItems
@@ -486,6 +495,7 @@ class TodoApp extends React.Component {
               importantItems={this.state.importantTasks}
               onCheckedState={this.state.checked}
               onSortFirstState={this.state.sortFirst}
+              onSortLastState={this.state.sortLast}
             />
           </div>
           <TodoList

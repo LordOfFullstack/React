@@ -14,7 +14,7 @@ class Search extends React.Component {
   }
 
   componentDidMount() {
-    let itemStorage = JSON.parse(localStorage.getItem('generalItems'));
+    let itemStorage = JSON.parse(localStorage.getItem('currentItems'));
 
     if (itemStorage) {
       this.setState({ tasks: itemStorage });
@@ -29,8 +29,12 @@ class Search extends React.Component {
 
   componentWillReceiveProps() {
     let items = JSON.parse(localStorage.getItem('currentItems'))
+    console.log(items);
 
     if(items) {
+
+      this.setState({ tasks: items });
+
       var sortedArrayFirst = items.slice(0);
       sortedArrayFirst.sort(function(a, b) {
         var x = a.important.toLowerCase();
