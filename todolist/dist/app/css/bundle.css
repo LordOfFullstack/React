@@ -121,9 +121,17 @@ html {
   align-items: baseline;
 }
 .wrapper input[type=checkbox] {
-  -webkit-transform: scale(1.3);
-  transform: scale(1.3);
+  -webkit-transform: scale(1.5);
+  transform: scale(1.5);
   margin-right: 5px;
+}
+.wrapper input[type=radio] {
+  -webkit-transform: scale(1.5);
+  transform: scale(1.5);
+  margin: 0 5px 0 10px;
+}
+.wrapper label {
+  margin-bottom: 0;
 }
 .wrapper .sort {
   -webkit-box-orient: vertical;
@@ -134,11 +142,11 @@ html {
   -ms-flex-align: start;
   align-items: flex-start;
 }
+.wrapper .sort .flex {
+  margin: 5px 0;
+}
 .wrapper .sort input[type=checkbox] {
   margin: 5px 5px 5px 0;
-}
-.wrapper .sort label {
-  margin-bottom: 0;
 }
 .todo-list {
   width: 700px;
@@ -240,11 +248,14 @@ html {
   box-shadow: 0 0 10px rgba(255, 1, 1, 0.5);
 }
 .item-highlight {
-  -webkit-animation: yellowfade 1s;
-  animation: yellowfade 1s;
+  -webkit-animation: yellowfade .5s;
+  animation: yellowfade .5s;
 }
-.item-background {
+.item-background-red {
   background-color: #fef4f4;
+}
+.item-background-yellow {
+  background-color: #fdfaea;
 }
 .message__block {
   position: relative;
@@ -253,7 +264,7 @@ html {
 }
 @-webkit-keyframes yellowfade {
   from {
-    background: #f5eda9;
+    background: #9feed4;
   }
   to {
     background: transparent;
@@ -261,7 +272,7 @@ html {
 }
 @keyframes yellowfade {
   from {
-    background: #f5eda9;
+    background: #9feed4;
   }
   to {
     background: transparent;

@@ -12,20 +12,29 @@ html {
   align-items: baseline;
 
   input[type=checkbox] {
-    transform: scale(1.3);
+    transform: scale(1.5);
     margin-right: 5px;
+  }
+
+  input[type=radio] {
+    transform: scale(1.5);
+    margin: 0 5px 0 10px;
+  }
+
+  label {
+    margin-bottom: 0
   }
 
   .sort {
     flex-direction: column;
     align-items: flex-start;
 
+    .flex {
+      margin: 5px 0
+    }
+
     input[type=checkbox] {
       margin: 5px 5px 5px 0;
-    }
-    
-    label {
-      margin-bottom: 0
     }
   }
 }
@@ -132,10 +141,13 @@ html {
   box-shadow: 0 0 10px rgba(255, 1, 1, 0.5)
 }
 .item-highlight {
-  animation: yellowfade 1s;
+  animation: yellowfade .5s;
 }
-.item-background {
+.item-background-red {
   background-color: lighten(@red, 42%);
+}
+.item-background-yellow {
+  background-color: lighten(@yellow, 42%);
 }
 .message__block {
   position: relative;
@@ -145,7 +157,7 @@ html {
 
 @keyframes yellowfade {
   from {
-    background:rgb(245, 237, 169);
+    background:rgb(159, 238, 212);
   }
   to {
     background: transparent;

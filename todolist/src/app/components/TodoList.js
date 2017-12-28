@@ -67,8 +67,6 @@ class TodoList extends React.Component {
                   <span ref = {el => this.span = el} className="importance">{item.important}</span>
                   <span>{item.date}</span>
                 </div>
-
-
               </div>
               <div className="edit__buttons" style={{display: item.display}}>
                 <button className="select-btn btn btn-info" title="Редактировать задание" style={{display: item.buttonDisplay}} onClick={e => this.props.onItemEdit(item, e)}><span className="glyphicon glyphicon-pencil"></span></button>

@@ -3,7 +3,7 @@ import TodoList from './TodoList';
 import TodoNav from './TodoNav';
 import Search from './Search';
 
-var moment = require('moment');
+import moment from 'moment';
 
 import '../css/TodoApp.less';
 
@@ -21,7 +21,9 @@ class TodoApp extends React.Component {
       checked: false,
       sortFirst: false,
       importantTasks: [],
-      sortedArrayFirst: []
+      sortedArrayFirst: [],
+      priority: 'Низкий',
+      rating: '0'
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -70,6 +72,12 @@ class TodoApp extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
+
+    if (this.filter.checked) {
+      this.filter.checked = !this.filter.checked
+      this._filter()
+    }
+
     if (!this.state.text.length) {
       this.setState({
         warningMessage: 'inline-block',
@@ -80,7 +88,6 @@ class TodoApp extends React.Component {
     }
 
     const date = moment().format('DD.MM.YYYY')
-
     const newItem = {
       text: this.state.text,
       id: Date.now(),
@@ -93,8 +100,9 @@ class TodoApp extends React.Component {
       buttonDisplay: 'inline-block',
       class: '',
       date: date,
-      important: this.input.checked ? 'Важное' : '',
-      background: this.input.checked ? 'item-background' : ''
+      rating: (this.highPriority.checked ? '3' : '') || (this.middlePriority.checked ? '2' : '') || (this.lowPriority.checked ? '1' : ''),
+      important: this.state.priority,
+      background: (this.highPriority.checked ? 'item-background-red' : '') || (this.middlePriority.checked ? 'item-background-yellow' : '')
     }
 
     this.setState(prevState => ({
@@ -111,7 +119,7 @@ class TodoApp extends React.Component {
       this.navChild.handleAll()
 
       let importantItems = this.state.generalItems.filter(el => {
-        return el.important === "Важное";
+        return el.important === "Высокий";
       })
 
       this.setState({ importantTasks: importantItems}, () => {
@@ -246,7 +254,7 @@ class TodoApp extends React.Component {
         this._updateLocalStorage(this.state.new_tasks, 'new_tasks')
 
         let importantItems = this.state.generalItems.filter(el => {
-          return el.important === "Важное";
+          return el.important === "Высокий";
         })
 
         this._updateLocalStorage(importantItems, 'importantTasks')
@@ -308,7 +316,7 @@ class TodoApp extends React.Component {
         this._updateLocalStorage(this.state.new_tasks, 'new_tasks')
 
         let importantItems = this.state.generalItems.filter(el => {
-          return el.important === "Важное";
+          return el.important === "Высокий";
         })
 
         this.setState({ importantTasks: importantItems}, () => {
@@ -347,7 +355,7 @@ class TodoApp extends React.Component {
 
       if (this.filter.checked) {
         let importantItems = this.state.items.filter(el => {
-          return el.important === "Важное";
+          return el.important === "Высокий";
         })
 
         this.setState({ items: importantItems }, () => {
@@ -390,10 +398,10 @@ class TodoApp extends React.Component {
 
       if (this.sortFirst.checked) {
         setTimeout(() => {
-          var sortedArray = this.state.items.slice(0);
-          sortedArray.sort(function(a,b) {
-            var x = a.important.toLowerCase();
-            var y = b.important.toLowerCase();
+          let sortedArray = this.state.items.slice(0);
+          sortedArray.sort(function(a, b) {
+            let x = a.rating.toLowerCase();
+            let y = b.rating.toLowerCase();
             return x > y ? -1 : x < y ? 1 : 0;
           });
 
@@ -431,12 +439,13 @@ class TodoApp extends React.Component {
 
       if (this.sortLast.checked) {
         setTimeout(() => {
-          var sortedArray = this.state.items.slice(0);
-          sortedArray.sort(function(a,b) {
-            var x = a.important.toLowerCase();
-            var y = b.important.toLowerCase();
+          let sortedArray = this.state.items.slice(0);
+          sortedArray.sort(function(a, b) {
+            let x = a.rating.toLowerCase();
+            let y = b.rating.toLowerCase();
             return x < y ? -1 : x > y ? 1 : 0;
           });
+
           this.setState({ items: sortedArray}, () => {
             this._updateLocalStorage(sortedArray, 'sortedArrayLast')
           })
@@ -471,7 +480,19 @@ class TodoApp extends React.Component {
     let list = JSON.stringify(param);
     localStorage.setItem(storage, list);
   }
+
+  setPriority(event) {
+    this.setState({
+      priority: event.target.value
+    })
+  }
+
   render() {
+    let styles = {
+      marginRight: {
+        marginRight:'5px'
+      }
+    }
     return (
       <div className="wrapper">
         <div className="todo-list">
@@ -523,14 +544,30 @@ class TodoApp extends React.Component {
           </form>
           <div className="message__block">
             <span style={{display: this.state.warningMessage}} className='warning__message'>Введите задание</span>
-            <span className='important text-right'><input ref={instance => { this.input = instance }} type="checkbox" name="important" />Отметить как важное</span>
+            <div className='important text-right'>
+              <div className='flex' onChange={this.setPriority.bind(this)}>
+                <span style={styles.marginRight}>Приоритет:</span>
+                <input id="low" ref={instance => { this.lowPriority = instance }} type="radio" defaultChecked value="Низкий" name="Priority" rating='0' /><label htmlFor="low">Низкий</label>
+                <input id="middle" ref={instance => { this.middlePriority = instance }} type="radio" value="Средний" name="Priority" rating='1' /><label htmlFor="middle">Средний</label>
+                <input id="high" ref={instance => { this.highPriority = instance }} type="radio" value="Высокий" name="Priority" rating='2' /><label htmlFor="high">Высокий</label>
+              </div>
+            </div>
           </div>
         </div>
         <div className="sort flex">
           <h3 className="new__todo">Фильтры</h3>
-          <div className='flex'><input id="important" name="filter" ref={instance => { this.filter = instance }} onChange={this._filter} type="checkbox" /><label htmlFor="important">Показывать только важные</label></div>
-          <div className='flex'><input id="importantFirst" name="sort" ref={instance => { this.sortFirst = instance }} onChange={this._sortFirst} type="checkbox" /><label htmlFor="importantFirst">Важные в начале</label></div>
-          <div className='flex'><input id="importantLast" name="sort" ref={instance => { this.sortLast = instance }} onChange={this._sortLast} type="checkbox" /><label htmlFor="importantLast">Важные в конце</label></div>
+          <div className='flex'>
+            <input id="important" name="filter" ref={instance => { this.filter = instance }} onChange={this._filter} type="checkbox" />
+            <label htmlFor="important">Показывать только с высоким приоритетом</label>
+          </div>
+          <div className='flex'>
+            <input id="importantFirst" name="sort" ref={instance => { this.sortFirst = instance }} onChange={this._sortFirst} type="checkbox" />
+            <label htmlFor="importantFirst">Сначала с высокий приоритетом</label>
+          </div>
+          <div className='flex'>
+            <input id="importantLast" name="sort" ref={instance => { this.sortLast = instance }} onChange={this._sortLast} type="checkbox" />
+            <label htmlFor="importantLast">Сначала с низким приоритетом</label>
+          </div>
         </div>
       </div>
     );

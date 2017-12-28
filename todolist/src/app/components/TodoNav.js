@@ -43,7 +43,7 @@ class TodoNav extends React.Component {
       if (this.state.checked) {
         if (localList) {
           let importantItems = localList.filter(el => {
-            return el.important === "Важное";
+            return el.important === "Высокий";
           })
 
           this.props.changeFilter(importantItems, "")
@@ -68,7 +68,7 @@ class TodoNav extends React.Component {
       if (this.state.checked) {
         if (localList) {
           let importantItems = localList.filter(el => {
-            return el.important === "Важное";
+            return el.important === "Высокий";
           })
 
           this.props.changeFilter(importantItems, "")
@@ -93,7 +93,7 @@ class TodoNav extends React.Component {
       if (this.state.checked) {
         if (localList) {
           let importantItems = localList.filter(el => {
-            return el.important === "Важное";
+            return el.important === "Высокий";
           })
 
           this.props.changeFilter(importantItems, "")
@@ -111,10 +111,10 @@ class TodoNav extends React.Component {
   _sortFirst = storage => {
     if (storage) {
       setTimeout(() => {
-        var sortedArray = storage.slice(0);
+        let sortedArray = storage.slice(0);
         sortedArray.sort(function(a, b) {
-          var x = a.important.toLowerCase();
-          var y = b.important.toLowerCase();
+          let x = a.rating.toLowerCase();
+          let y = b.rating.toLowerCase();
           return x > y ? -1 : x < y ? 1 : 0;
         });
 
@@ -132,10 +132,10 @@ class TodoNav extends React.Component {
       setTimeout(() => {
         if (this.state.sortLast) {
 
-          var sortedArray = storage.slice(0);
+          let sortedArray = storage.slice(0);
           sortedArray.sort(function(a, b) {
-            var x = a.important.toLowerCase();
-            var y = b.important.toLowerCase();
+            let x = a.rating.toLowerCase();
+            let y = b.rating.toLowerCase();
             return x < y ? -1 : x > y ? 1 : 0;
           });
 

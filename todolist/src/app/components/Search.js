@@ -29,16 +29,13 @@ class Search extends React.Component {
 
   componentWillReceiveProps() {
     let items = JSON.parse(localStorage.getItem('currentItems'))
-    console.log(items);
 
     if(items) {
-
       this.setState({ tasks: items });
-
-      var sortedArrayFirst = items.slice(0);
+      let sortedArrayFirst = items.slice(0);
       sortedArrayFirst.sort(function(a, b) {
-        var x = a.important.toLowerCase();
-        var y = b.important.toLowerCase();
+        let x = a.rating.toLowerCase();
+        let y = b.rating.toLowerCase();
         return x > y ? -1 : x < y ? 1 : 0;
       })
 
@@ -46,10 +43,10 @@ class Search extends React.Component {
         this.setState({ tasks: sortedArrayFirst });
       }
 
-      var sortedArrayLast = items.slice(0);
+      let sortedArrayLast = items.slice(0);
       sortedArrayLast.sort(function(a, b) {
-        var x = a.important.toLowerCase();
-        var y = b.important.toLowerCase();
+        let x = a.rating.toLowerCase();
+        let y = b.rating.toLowerCase();
         return x < y ? -1 : x > y ? 1 : 0;
       })
 
@@ -73,7 +70,7 @@ class Search extends React.Component {
     this.setState({ tasks: filter }, () => {
 
       let importantItems = this.state.tasks.filter(el => {
-        return el.important === "Важное";
+        return el.important === "Высокий";
       })
 
       this.setState({ importantItems: importantItems}, () => {
