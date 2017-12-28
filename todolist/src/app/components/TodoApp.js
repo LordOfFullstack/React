@@ -19,9 +19,9 @@ class TodoApp extends React.Component {
       warningMessage: 'none',
       boxShadow: '',
       checked: false,
-      sort: false,
+      sortFirst: false,
       importantTasks: [],
-      sortedArray: []
+      sortedArrayFirst: []
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -83,8 +83,9 @@ class TodoApp extends React.Component {
       text: this.state.text,
       id: Date.now(),
       done: 'unfinished',
-      button_text: 'glyphicon-ok',
+      button_symbol: 'glyphicon-ok',
       button_class: 'btn-success',
+      button_title: 'Завершить задание',
       editable: false,
       display: 'flex',
       buttonDisplay: 'inline-block',
@@ -211,9 +212,9 @@ class TodoApp extends React.Component {
       return task.id === taskId;
     });
 
-    ( ((object.done === "unfinished") && (object.button_text === "glyphicon-ok"))
-    ? (object.done = 'finished', object.button_text = "glyphicon-repeat", object.button_class = "btn-warning", object.buttonDisplay = "none", object.class = "before")
-    : (object.done = 'unfinished', object.button_text = "glyphicon-ok", object.button_class = "btn-success", object.buttonDisplay = "inline-block", object.class = "") )
+    ( ((object.done === "unfinished") && (object.button_symbol === "glyphicon-ok"))
+    ? (object.done = 'finished', object.button_symbol = "glyphicon-repeat", object.button_class = "btn-warning", object.buttonDisplay = "none", object.class = "before", object.button_title = "Возобновить задание")
+    : (object.done = 'unfinished', object.button_symbol = "glyphicon-ok", object.button_class = "btn-success", object.buttonDisplay = "inline-block", object.class = "", object.button_title = "Завершить задание") )
 
     newArray.map(el => {
       let index = this.state.generalItems.indexOf(el)
@@ -318,10 +319,16 @@ class TodoApp extends React.Component {
   }
 
   _filter = () => {
-    if (this.sort.checked && this.filter.checked) {
-      this.sort.checked = !this.sort.checked
-      this._sort()
+    if (this.sortFirst.checked && this.filter.checked) {
+      this.sortFirst.checked = !this.sortFirst.checked
+      this._sortFirst()
     }
+
+    if (this.sortLast.checked && this.filter.checked) {
+      this.sortLast.checked = !this.sortLast.checked
+      this._sortLast()
+    }
+
     setTimeout(() => {
       this.setState({ checked: !this.state.checked}, () => {
         this.navChild._updateState()
@@ -351,24 +358,28 @@ class TodoApp extends React.Component {
 
         setTimeout(() => {
           this.searchFilter()
-          this.setState({ sortedArray: this.state.items })
         })
       }
     })
   }
 
-  _sort = () => {
-    if (this.filter.checked && this.sort.checked) {
+  _sortFirst = () => {
+    if (this.filter.checked && this.sortFirst.checked) {
       this.filter.checked = !this.filter.checked
       this._filter()
     }
 
+    if (this.sortLast.checked && this.sortFirst.checked) {
+      this.sortLast.checked = !this.sortLast.checked
+      this._sortLast()
+    }
+
     setTimeout(() => {
-      this.setState({ sort: !this.state.sort}, () => {
+      this.setState({ sortFirst: !this.state.sortFirst}, () => {
         this.navChild._updateState()
       })
 
-      if (this.sort.checked) {
+      if (this.sortFirst.checked) {
         setTimeout(() => {
           var sortedArray = this.state.items.slice(0);
           sortedArray.sort(function(a,b) {
@@ -376,8 +387,49 @@ class TodoApp extends React.Component {
             var y = b.important.toLowerCase();
             return x > y ? -1 : x < y ? 1 : 0;
           });
+
           this.setState({ items: sortedArray}, () => {
-            this._updateLocalStorage(sortedArray, 'sortedArray')
+            this._updateLocalStorage(sortedArray, 'sortedArrayFirst')
+          })
+        })
+      }
+
+      else {
+        this.navChild.state.function()
+
+        setTimeout(() => {
+          this.searchFilter()
+        })
+      }
+    })
+  }
+
+  _sortLast = () => {
+    if (this.filter.checked && this.sortLast.checked) {
+      this.filter.checked = !this.filter.checked
+      this._filter()
+    }
+
+    if (this.sortFirst.checked && this.sortLast.checked) {
+      this.sortFirst.checked = !this.sortFirst.checked
+      this._sortFirst()
+    }
+
+    setTimeout(() => {
+      this.setState({ sortLast: !this.state.sortLast}, () => {
+        this.navChild._updateState()
+      })
+
+      if (this.sortLast.checked) {
+        setTimeout(() => {
+          var sortedArray = this.state.items.slice(0);
+          sortedArray.sort(function(a,b) {
+            var x = a.important.toLowerCase();
+            var y = b.important.toLowerCase();
+            return x < y ? -1 : x > y ? 1 : 0;
+          });
+          this.setState({ items: sortedArray}, () => {
+            this._updateLocalStorage(sortedArray, 'sortedArrayLast')
           })
         })
       }
@@ -424,7 +476,8 @@ class TodoApp extends React.Component {
               finishedItems = {this.state.finished_tasks}
               newItems = {this.state.new_tasks}
               onCheck = {this.state.checked}
-              onSort = {this.state.sortedArray}
+              onSortFirst = {this.state.sortFirst}
+              onSortLast = {this.state.sortLast}
             />
             <Search
               ref={instance => { this.searchChild = instance }}
@@ -432,6 +485,7 @@ class TodoApp extends React.Component {
               items={this.state.items}
               importantItems={this.state.importantTasks}
               onCheckedState={this.state.checked}
+              onSortFirstState={this.state.sortFirst}
             />
           </div>
           <TodoList
@@ -455,7 +509,7 @@ class TodoApp extends React.Component {
               onBlur={this.inputOnBlur}
               onInput={this.inputOnBlur}
             />
-            <button id="ad_item" className="btn btn-primary ad__button"><span className="glyphicon glyphicon-plus"></span></button>
+            <button id="ad_item" title="Добавить задание" className="btn btn-primary ad__button"><span className="glyphicon glyphicon-plus"></span></button>
           </form>
           <div className="message__block">
             <span style={{display: this.state.warningMessage}} className='warning__message'>Введите задание</span>
@@ -465,8 +519,8 @@ class TodoApp extends React.Component {
         <div className="sort flex">
           <h3 className="new__todo">Фильтры</h3>
           <div className='flex'><input id="important" name="filter" ref={instance => { this.filter = instance }} onChange={this._filter} type="checkbox" /><label htmlFor="important">Показывать только важные</label></div>
-          <div className='flex'><input id="importantStart" name="sort" ref={instance => { this.sort = instance }} onChange={this._sort} type="checkbox" /><label htmlFor="importantStart">Важные в начале</label></div>
-          <div className='flex'><input id="importantEnd" disabled='disabled' name="sort" ref={instance => { this.sortEnd = instance }} onChange={this._sortEnd} type="checkbox" /><label htmlFor="importantEnd">Важные в конце</label></div>
+          <div className='flex'><input id="importantFirst" name="sort" ref={instance => { this.sortFirst = instance }} onChange={this._sortFirst} type="checkbox" /><label htmlFor="importantFirst">Важные в начале</label></div>
+          <div className='flex'><input id="importantLast" name="sort" ref={instance => { this.sortLast = instance }} onChange={this._sortLast} type="checkbox" /><label htmlFor="importantLast">Важные в конце</label></div>
         </div>
       </div>
     );

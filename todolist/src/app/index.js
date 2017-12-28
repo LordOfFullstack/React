@@ -13,7 +13,9 @@ $(document).ready(() => {
     if ( $('.input').val() ) {
       $('.search_input').val('')
       setTimeout(() => {
-        $('.list__item').last().addClass('item-highlight');
+        $('.list__item').last().addClass('item-highlight').one("webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend", () => {
+          $('.list__item').removeClass('item-highlight')
+        }); ;
       })
     }
   })

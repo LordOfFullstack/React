@@ -15,16 +15,45 @@ class Search extends React.Component {
 
   componentDidMount() {
     let itemStorage = JSON.parse(localStorage.getItem('generalItems'));
+
     if (itemStorage) {
       this.setState({ tasks: itemStorage });
     }
 
     setTimeout(() => {
-      this.setState({ importantItems: this.props.importantItems });
+      this.setState({
+        importantItems: this.props.importantItems,
+      })
     })
   }
 
   componentWillReceiveProps() {
+    let items = JSON.parse(localStorage.getItem('currentItems'))
+
+    if(items) {
+      var sortedArrayFirst = items.slice(0);
+      sortedArrayFirst.sort(function(a, b) {
+        var x = a.important.toLowerCase();
+        var y = b.important.toLowerCase();
+        return x > y ? -1 : x < y ? 1 : 0;
+      })
+
+      if (this.props.onSortFirstState === true) {
+        this.setState({ tasks: sortedArrayFirst });
+      }
+
+      var sortedArrayLast = items.slice(0);
+      sortedArrayLast.sort(function(a, b) {
+        var x = a.important.toLowerCase();
+        var y = b.important.toLowerCase();
+        return x < y ? -1 : x > y ? 1 : 0;
+      })
+
+      if (this.props.onSortLastState === true) {
+        this.setState({ tasks: sortedArrayLast });
+      }
+    }
+
     if (this.input.value) {
       this.setState({ inputVal: '' })
     }
@@ -70,7 +99,7 @@ class Search extends React.Component {
           ref={el => this.input = el}
         />
       </div>
-    );
+    )
   }
 }
 

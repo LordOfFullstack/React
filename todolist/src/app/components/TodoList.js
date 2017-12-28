@@ -57,8 +57,8 @@ class TodoList extends React.Component {
                         placeholder="Введите задание..."
                       />
                       <div className="edit__buttons">
-                        <button className="select-btn btn btn-success save-button" style={styles.items} onClick={e => this.props.onItemSave(item, e)}><span className="glyphicon glyphicon-floppy-disk"></span></button>
-                        <button className="select-btn btn btn-danger" style={styles.items} onClick={e => this.props.onItemReset(item, e)}><span className="glyphicon glyphicon-remove"></span></button>
+                        <button className="select-btn btn btn-success save-button" title="Сохранить изменения" style={styles.items} onClick={e => this.props.onItemSave(item, e)}><span className="glyphicon glyphicon-floppy-disk"></span></button>
+                        <button className="select-btn btn btn-danger" title="Отменить изменения" style={styles.items} onClick={e => this.props.onItemReset(item, e)}><span className="glyphicon glyphicon-remove"></span></button>
                       </div>
                     </div>
                   )
@@ -71,9 +71,9 @@ class TodoList extends React.Component {
 
               </div>
               <div className="edit__buttons" style={{display: item.display}}>
-                <button className="select-btn btn btn-info" style={{display: item.buttonDisplay}} onClick={e => this.props.onItemEdit(item, e)}><span className="glyphicon glyphicon-pencil"></span></button>
-                <button className={`select-btn btn ${item.button_class}`} data-action={this.display} style={styles.items} onClick={e => this.props.onItemOutline(item, e)}><span className={`glyphicon ${item.button_text}`}></span></button>
-                <button className="select-btn btn btn-danger" style={styles.items} data-action={this.display} onClick={e => this.props.onItemDelete(item, e)}><span className="glyphicon glyphicon-trash"></span></button>
+                <button className="select-btn btn btn-info" title="Редактировать задание" style={{display: item.buttonDisplay}} onClick={e => this.props.onItemEdit(item, e)}><span className="glyphicon glyphicon-pencil"></span></button>
+                <button className={`select-btn btn ${item.button_class}`} title={item.button_title} data-action={this.display} style={styles.items} onClick={e => this.props.onItemOutline(item, e)}><span className={`glyphicon ${item.button_symbol}`}></span></button>
+                <button className="select-btn btn btn-danger" style={styles.items} title="Удалить задание" data-action={this.display} onClick={e => this.props.onItemDelete(item, e)}><span className="glyphicon glyphicon-trash"></span></button>
               </div>
             </li>
           ))}

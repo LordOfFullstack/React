@@ -10,7 +10,8 @@ class TodoNav extends React.Component {
       selected: '',
       function: this.handleAll,
       checked: false,
-      sort: false
+      sortFirst: false,
+      sortLast: false
     }
 
     this.setFilter = this.setFilter.bind(this)
@@ -27,7 +28,8 @@ class TodoNav extends React.Component {
   _updateState = () => {
     this.setState({
       checked: this.props.onCheck,
-      sort: this.props.onSort
+      sortFirst: this.props.onSortFirst,
+      sortLast: this.props.onSortLast
     })
   }
 
@@ -35,66 +37,121 @@ class TodoNav extends React.Component {
     this.setState({ function: this.handleFinished})
     this.setFilter('finished')
     let localList = JSON.parse(localStorage.getItem('finished_tasks'));
+    this._updateLocalStorage(localList, 'currentItems')
 
     setTimeout(() => {
       if (this.state.checked) {
-        let importantItems = localList.filter(el => {
-          return el.important === "Важное";
-        })
+        if (localList) {
+          let importantItems = localList.filter(el => {
+            return el.important === "Важное";
+          })
 
-        this.props.changeFilter(importantItems, "")
+          this.props.changeFilter(importantItems, "")
+        }
       }
       else {
         (localList) ? (this.props.changeFilter(localList, "")) : (this.props.changeFilter(this.props.finishedItems))
       }
     })
+
+    this._sortFirst(localList)
+    this._sortLast(localList)
   }
 
   handleAll = () => {
     this.setState({ function: this.handleAll})
     this.setFilter('')
     let localList = JSON.parse(localStorage.getItem('generalItems'));
+    this._updateLocalStorage(localList, 'currentItems')
 
     setTimeout(() => {
       if (this.state.checked) {
-        let importantItems = localList.filter(el => {
-          return el.important === "Важное";
-        })
+        if (localList) {
+          let importantItems = localList.filter(el => {
+            return el.important === "Важное";
+          })
 
-        this.props.changeFilter(importantItems, "")
+          this.props.changeFilter(importantItems, "")
+        }
       }
       else {
         (localList) ? (this.props.changeFilter(localList, "")) : (this.props.changeFilter([], ""))
       }
     })
 
-    setTimeout(() => {
-      if (this.state.sort) {
-        alert(1)
-      }
-      else {
-        alert(2)
-      }
-    })
+    this._sortFirst(localList)
+    this._sortLast(localList)
   }
 
   handleNew = () => {
     this.setState({ function: this.handleNew})
     this.setFilter('new')
     let localList = JSON.parse(localStorage.getItem('new_tasks'));
+    this._updateLocalStorage(localList, 'currentItems')
 
     setTimeout(() => {
       if (this.state.checked) {
-        let importantItems = localList.filter(el => {
-          return el.important === "Важное";
-        })
+        if (localList) {
+          let importantItems = localList.filter(el => {
+            return el.important === "Важное";
+          })
 
-        this.props.changeFilter(importantItems, "")
+          this.props.changeFilter(importantItems, "")
+        }
       }
       else {
         (localList) ? (this.props.changeFilter(localList, "")) : (this.props.changeFilter(this.props.newItems))
       }
     })
+
+    this._sortFirst(localList)
+    this._sortLast(localList)
+  }
+
+  _sortFirst = storage => {
+    if (storage) {
+      setTimeout(() => {
+        var sortedArray = storage.slice(0);
+        sortedArray.sort(function(a, b) {
+          var x = a.important.toLowerCase();
+          var y = b.important.toLowerCase();
+          return x > y ? -1 : x < y ? 1 : 0;
+        });
+
+        this._updateLocalStorage(sortedArray, 'sortedArrayFirst')
+
+        if (this.state.sortFirst) {
+          this.props.changeFilter(sortedArray, "")
+        }
+      })
+    }
+  }
+
+  _sortLast = storage => {
+    if (storage) {
+      setTimeout(() => {
+        if (this.state.sortLast) {
+
+          var sortedArray = storage.slice(0);
+          sortedArray.sort(function(a, b) {
+            var x = a.important.toLowerCase();
+            var y = b.important.toLowerCase();
+            return x < y ? -1 : x > y ? 1 : 0;
+          });
+
+          this._updateLocalStorage(sortedArray, 'sortedArrayLast')
+
+          if (this.state.sortLast) {
+            this.props.changeFilter(sortedArray, "")
+          }
+        }
+      })
+    }
+  }
+
+  _updateLocalStorage = (param, storage) => {
+    let list = JSON.stringify(param);
+    localStorage.setItem(storage, list);
   }
 
   render() {
