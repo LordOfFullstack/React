@@ -3,7 +3,6 @@ import '../css/TodoList.less';
 
 import TextareaAutosize from "react-textarea-autosize";
 import PropTypes from 'prop-types';
-
 import Moment from 'react-moment';
 
 class TodoList extends React.Component {
@@ -15,7 +14,7 @@ class TodoList extends React.Component {
       backGround: ''
     }
 
-    this.display = props.display
+    this.display = props.display;
   }
 
   componentWillReceiveProps() {
@@ -24,6 +23,67 @@ class TodoList extends React.Component {
       ? (this.setState({ classChange: 'show'}))
       : (this.setState({ classChange: 'hide'}))
     })
+  }
+
+  dropDownViewChange = item => {
+    item.dropDownView === "none" ? item.dropDownView = "block" : item.dropDownView = "none"
+    this.setState({ classChange: this.state.classChange })
+  }
+
+  handleChangePriority = (item, e) => {
+    let itemStorage = JSON.parse(localStorage.getItem('generalItems'));
+    let CurrItemsStorage = JSON.parse(localStorage.getItem('currentItems'));
+    let taskId = item.id;
+    let newArray = itemStorage.filter(task => {
+      return task.id === taskId;
+    });
+
+    let currArray = CurrItemsStorage.filter(task => {
+      return task.id === taskId;
+    });
+
+    item.important = e.target.innerText;
+
+    (item.important === "Высокий" ? (item.background = 'item-background-red', item.rating = '3') : '') ||
+    (item.important === "Средний" ? (item.background = 'item-background-yellow', item.rating = '2') : '') ||
+    (item.important === "Низкий" ? (item.background = '', item.rating = '1') : '')
+
+    newArray.map(el => {
+      let index = itemStorage.indexOf(el)
+      let removed = itemStorage.splice(index, 1, item);
+    })
+
+    currArray.map(el => {
+      let curIndex = CurrItemsStorage.indexOf(el)
+      let curRemoved = CurrItemsStorage.splice(curIndex, 1, item);
+    })
+
+    this.props.onSearch(CurrItemsStorage)
+
+    setTimeout(() => {
+      this.setState({ backGround: this.state.backGround }, () => {
+        this.props.onUpdateStorage(itemStorage, 'generalItems')
+         this.props.onUpdateStorage(CurrItemsStorage, 'currentItems')
+
+        let importantItems = itemStorage.filter(el => {
+          return el.important === "Высокий";
+        })
+
+        let finishedArray = itemStorage.filter(el => {
+          return el.done === "finished";
+        });
+
+        let unFinishedArray = itemStorage.filter(el => {
+          return el.done === "unfinished";
+        });
+
+        this.props.onUpdateStorage(importantItems, 'importantTasks')
+        this.props.onUpdateStorage(finishedArray, 'finished_tasks')
+        this.props.onUpdateStorage(unFinishedArray, 'new_tasks')
+      });
+    })
+
+    this.dropDownViewChange(item)
   }
 
   getValue = e => {
@@ -64,7 +124,14 @@ class TodoList extends React.Component {
                   )
                 }
                 <div className="date">
-                  <span ref = {el => this.span = el} className="importance">{item.important}</span>
+                  <div className="dropdown">
+                    <span title="Изменить приоритет" ref = {el => this.span = el} className="importance" onClick={e => this.dropDownViewChange(item, e)}>{item.important}</span>
+                    <div className={`dropdown-content ${item.dropDownView}`} style={{display: item.dropDownView}} onClick={e => this.handleChangePriority(item, e)} >
+                      <a className="text-left">Высокий</a>
+                      <a className="text-left border">Средний</a>
+                      <a className="text-left">Низкий</a>
+                    </div>
+                  </div>
                   <span>{item.date}</span>
                 </div>
               </div>

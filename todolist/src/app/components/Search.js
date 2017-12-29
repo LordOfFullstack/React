@@ -21,9 +21,7 @@ class Search extends React.Component {
     }
 
     setTimeout(() => {
-      this.setState({
-        importantItems: this.props.importantItems,
-      })
+      this.setState({ importantItems: this.props.importantItems })
     })
   }
 
@@ -68,7 +66,6 @@ class Search extends React.Component {
 
   handleUpdateState = (filter) => {
     this.setState({ tasks: filter }, () => {
-
       let importantItems = this.state.tasks.filter(el => {
         return el.important === "Высокий";
       })
@@ -81,6 +78,8 @@ class Search extends React.Component {
   handleSearchKey = event => {
     const searchQuery = event.target.value.toLowerCase()
     this.setState({ inputVal: searchQuery })
+
+    console.log(this.state.tasks);
 
     const displayedTasks = this.state.tasks.filter(el => {
       const searchValue = el.text.toLowerCase();

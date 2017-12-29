@@ -28,6 +28,7 @@ class TodoApp extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.setPriority = this.setPriority.bind(this)
   }
 
   componentDidMount() {
@@ -83,7 +84,6 @@ class TodoApp extends React.Component {
         warningMessage: 'inline-block',
         boxShadow: 'box-shadow'
       })
-
       return;
     }
 
@@ -102,7 +102,8 @@ class TodoApp extends React.Component {
       date: date,
       rating: (this.highPriority.checked ? '3' : '') || (this.middlePriority.checked ? '2' : '') || (this.lowPriority.checked ? '1' : ''),
       important: this.state.priority,
-      background: (this.highPriority.checked ? 'item-background-red' : '') || (this.middlePriority.checked ? 'item-background-yellow' : '')
+      background: (this.highPriority.checked ? 'item-background-red' : '') || (this.middlePriority.checked ? 'item-background-yellow' : ''),
+      dropDownView: 'none'
     }
 
     this.setState(prevState => ({
@@ -148,9 +149,7 @@ class TodoApp extends React.Component {
     })
 
     setTimeout(() => {
-      this.setState({
-        generalItems: this.state.generalItems
-      })
+      this.setState({ generalItems: this.state.generalItems })
     })
   }
 
@@ -169,9 +168,7 @@ class TodoApp extends React.Component {
     })
 
     setTimeout(() => {
-      this.setState({
-        generalItems: this.state.generalItems
-      })
+      this.setState({ generalItems: this.state.generalItems })
     })
   }
 
@@ -328,6 +325,10 @@ class TodoApp extends React.Component {
     })
   }
 
+  _updateSearchTasks = items => {
+    this.searchChild.handleUpdateState(items)
+  }
+
   inputOnBlur = () => {
     this.setState({
       warningMessage: 'none',
@@ -481,7 +482,7 @@ class TodoApp extends React.Component {
     localStorage.setItem(storage, list);
   }
 
-  setPriority(event) {
+  setPriority(event, item) {
     this.setState({
       priority: event.target.value
     })
@@ -508,6 +509,7 @@ class TodoApp extends React.Component {
               onCheck = {this.state.checked}
               onSortFirst = {this.state.sortFirst}
               onSortLast = {this.state.sortLast}
+              onUpdateStorage={this._updateLocalStorage}
             />
             <Search
               ref={instance => { this.searchChild = instance }}
@@ -517,6 +519,7 @@ class TodoApp extends React.Component {
               onCheckedState={this.state.checked}
               onSortFirstState={this.state.sortFirst}
               onSortLastState={this.state.sortLast}
+              onUpdateStorage={this._updateLocalStorage}
             />
           </div>
           <TodoList
@@ -529,6 +532,8 @@ class TodoApp extends React.Component {
             onItemSave={this.handleItemSave}
             onChangeValue={this.state.text}
             display={this.state.isClosed}
+            onSearch={this._updateSearchTasks}
+            onUpdateStorage={this._updateLocalStorage}
           />
           <p className="new__todo">Добавить задание</p>
           <form onSubmit={this.handleSubmit}>
@@ -545,7 +550,7 @@ class TodoApp extends React.Component {
           <div className="message__block">
             <span style={{display: this.state.warningMessage}} className='warning__message'>Введите задание</span>
             <div className='important text-right'>
-              <div className='flex' onChange={this.setPriority.bind(this)}>
+              <div className='flex' onChange={this.setPriority} >
                 <span style={styles.marginRight}>Приоритет:</span>
                 <input id="low" ref={instance => { this.lowPriority = instance }} type="radio" defaultChecked value="Низкий" name="Priority" rating='0' /><label htmlFor="low">Низкий</label>
                 <input id="middle" ref={instance => { this.middlePriority = instance }} type="radio" value="Средний" name="Priority" rating='1' /><label htmlFor="middle">Средний</label>

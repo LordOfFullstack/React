@@ -37,7 +37,7 @@ class TodoNav extends React.Component {
     this.setState({ function: this.handleFinished})
     this.setFilter('finished')
     let localList = JSON.parse(localStorage.getItem('finished_tasks'));
-    this._updateLocalStorage(localList, 'currentItems')
+    this.props.onUpdateStorage(localList, 'currentItems')
 
     setTimeout(() => {
       if (this.state.checked) {
@@ -62,7 +62,7 @@ class TodoNav extends React.Component {
     this.setState({ function: this.handleAll})
     this.setFilter('')
     let localList = JSON.parse(localStorage.getItem('generalItems'));
-    this._updateLocalStorage(localList, 'currentItems')
+    this.props.onUpdateStorage(localList, 'currentItems')
 
     setTimeout(() => {
       if (this.state.checked) {
@@ -87,7 +87,7 @@ class TodoNav extends React.Component {
     this.setState({ function: this.handleNew})
     this.setFilter('new')
     let localList = JSON.parse(localStorage.getItem('new_tasks'));
-    this._updateLocalStorage(localList, 'currentItems')
+    this.props.onUpdateStorage(localList, 'currentItems')
 
     setTimeout(() => {
       if (this.state.checked) {
@@ -118,7 +118,7 @@ class TodoNav extends React.Component {
           return x > y ? -1 : x < y ? 1 : 0;
         });
 
-        this._updateLocalStorage(sortedArray, 'sortedArrayFirst')
+        this.props.onUpdateStorage(sortedArray, 'sortedArrayFirst')
 
         if (this.state.sortFirst) {
           this.props.changeFilter(sortedArray, "")
@@ -139,7 +139,7 @@ class TodoNav extends React.Component {
             return x < y ? -1 : x > y ? 1 : 0;
           });
 
-          this._updateLocalStorage(sortedArray, 'sortedArrayLast')
+          this.props.onUpdateStorage(sortedArray, 'sortedArrayLast')
 
           if (this.state.sortLast) {
             this.props.changeFilter(sortedArray, "")
@@ -147,11 +147,6 @@ class TodoNav extends React.Component {
         }
       })
     }
-  }
-
-  _updateLocalStorage = (param, storage) => {
-    let list = JSON.stringify(param);
-    localStorage.setItem(storage, list);
   }
 
   render() {
