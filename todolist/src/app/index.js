@@ -19,6 +19,10 @@ $(document).ready(() => {
       })
     }
   })
+
+  $('.navi button').on('click', e => {
+    $('.search_input').val('')
+  })
 })
 
 ReactDOM.render(

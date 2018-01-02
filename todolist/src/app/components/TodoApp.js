@@ -329,10 +329,6 @@ class TodoApp extends React.Component {
     })
   }
 
-  clearInputValue = () => {
-    this.searchChild.getInputValue()
-  }
-
   _updateSearchTasks = items => {
     this.searchChild.handleUpdateState(items)
   }
@@ -518,7 +514,6 @@ class TodoApp extends React.Component {
               onSortFirst = {this.state.sortFirst}
               onSortLast = {this.state.sortLast}
               onUpdateStorage={this._updateLocalStorage}
-              onClearInputValue={this.clearInputValue}
             />
             <Search
               ref={instance => { this.searchChild = instance }}

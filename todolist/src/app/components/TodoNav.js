@@ -34,7 +34,6 @@ class TodoNav extends React.Component {
   }
 
   handleFinished = () => {
-    this.props.onClearInputValue()
     this.setState({ function: this.handleFinished})
     this.setFilter('finished')
     let localList = JSON.parse(localStorage.getItem('finished_tasks'));
@@ -60,7 +59,6 @@ class TodoNav extends React.Component {
   }
 
   handleAll = () => {
-    this.props.onClearInputValue()
     this.setState({ function: this.handleAll})
     this.setFilter('')
     let localList = JSON.parse(localStorage.getItem('generalItems'));
@@ -86,7 +84,6 @@ class TodoNav extends React.Component {
   }
 
   handleNew = () => {
-    this.props.onClearInputValue()
     this.setState({ function: this.handleNew})
     this.setFilter('new')
     let localList = JSON.parse(localStorage.getItem('new_tasks'));
