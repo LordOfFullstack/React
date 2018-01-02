@@ -19,17 +19,6 @@ $(document).ready(() => {
       })
     }
   })
-
-  $('.navi button').on('click', e => {
-    $('.search_input').val('')
-  })
-
-  $( "body" ).delegate(".save-button", "click", e => {
-    if ($('.textarea').val() == '') {
-      e.preventDefault()
-      $('.textarea').addClass('box-shadow')
-    }
-  })
 })
 
 ReactDOM.render(

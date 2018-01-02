@@ -69,6 +69,7 @@ class TodoApp extends React.Component {
     });
 
     this.searchChild.handleUpdateState(filter)
+    this.searchFilter()
   }
 
   handleSubmit = e => {
@@ -180,6 +181,7 @@ class TodoApp extends React.Component {
     });
 
     if(!editedText) {
+      this.listChild.textareaClass('box-shadow')
       return
     }
 
@@ -257,15 +259,17 @@ class TodoApp extends React.Component {
         this._updateLocalStorage(importantItems, 'importantTasks')
 
         this.navChild.state.function()
+
+        const searchQuery = this.searchChild.state.inputVal.toLowerCase()
+        const displayedTasks = this.state.items.filter(el => {
+          const searchValue = el.text.toLowerCase();
+          return searchValue.indexOf(searchQuery) !== -1;
+        })
+
+        this.onChangeView(displayedTasks)
       });
 
-      const searchQuery = this.searchChild.state.inputVal.toLowerCase()
-      const displayedTasks = this.state.items.filter(el => {
-        const searchValue = el.text.toLowerCase();
-        return searchValue.indexOf(searchQuery) !== -1;
-      })
 
-      this.onChangeView(displayedTasks)
     })
   };
 
@@ -323,6 +327,10 @@ class TodoApp extends React.Component {
 
       this.searchFilter()
     })
+  }
+
+  clearInputValue = () => {
+    this.searchChild.getInputValue()
   }
 
   _updateSearchTasks = items => {
@@ -510,6 +518,7 @@ class TodoApp extends React.Component {
               onSortFirst = {this.state.sortFirst}
               onSortLast = {this.state.sortLast}
               onUpdateStorage={this._updateLocalStorage}
+              onClearInputValue={this.clearInputValue}
             />
             <Search
               ref={instance => { this.searchChild = instance }}

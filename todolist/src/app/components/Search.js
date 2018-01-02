@@ -75,11 +75,13 @@ class Search extends React.Component {
     })
   }
 
+  getInputValue = () => {
+    this.input.value = '';
+  }
+
   handleSearchKey = event => {
     const searchQuery = event.target.value.toLowerCase()
     this.setState({ inputVal: searchQuery })
-
-    console.log(this.state.tasks);
 
     const displayedTasks = this.state.tasks.filter(el => {
       const searchValue = el.text.toLowerCase();

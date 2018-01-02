@@ -90,6 +90,10 @@ class TodoList extends React.Component {
     this.setState({ targetValue: e.target.value })
   }
 
+  textareaClass = item => {
+    this.setState({ textareaClass: item})
+  }
+
   render() {
     let styles = {
       items: {
@@ -108,7 +112,7 @@ class TodoList extends React.Component {
                   : (
                     <div className="flex edit__block">
                       <TextareaAutosize
-                        className='textarea'
+                        className={`textarea ${this.state.textareaClass}`}
                         rows={4}
                         defaultValue={item.text}
                         onInput={this.getValue}
