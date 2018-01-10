@@ -2,9 +2,10 @@ import React from 'react';
 import TodoList from './TodoList';
 import TodoNav from './TodoNav';
 import Search from './Search';
-
+import DatePicker from 'react-datepicker';
 import moment from 'moment';
 
+import '../css/DatePicker.less';
 import '../css/TodoApp.less';
 
 class TodoApp extends React.Component {
@@ -23,12 +24,14 @@ class TodoApp extends React.Component {
       importantTasks: [],
       sortedArrayFirst: [],
       priority: 'Низкий',
+      startDate: moment(),
       rating: '0'
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.setPriority = this.setPriority.bind(this)
+    this.setPriority = this.setPriority.bind(this);
+    this.handleChangeDate = this.handleChangeDate.bind(this)
   }
 
   componentDidMount() {
@@ -268,8 +271,6 @@ class TodoApp extends React.Component {
 
         this.onChangeView(displayedTasks)
       });
-
-
     })
   };
 
@@ -351,6 +352,15 @@ class TodoApp extends React.Component {
       this._sortLast()
     }
 
+    if (this.toggleCalendar.checked && this.filter.checked) {
+      this.toggleCalendar.checked = !this.toggleCalendar.checked
+      this._handleSelectDateOption()
+    }
+
+    this._toggleCheckBoxes(this.sortFirst, this.filter, this._sortFirst)
+    this._toggleCheckBoxes(this.sortLast, this.filter, this._sortLast)
+    this._toggleCheckBoxes(this.toggleCalendar, this.filter, this._handleSelectDateOption)
+
     setTimeout(() => {
       this.setState({ checked: !this.state.checked}, () => {
         this.navChild._updateState()
@@ -386,15 +396,9 @@ class TodoApp extends React.Component {
   }
 
   _sortFirst = () => {
-    if (this.filter.checked && this.sortFirst.checked) {
-      this.filter.checked = !this.filter.checked
-      this._filter()
-    }
-
-    if (this.sortLast.checked && this.sortFirst.checked) {
-      this.sortLast.checked = !this.sortLast.checked
-      this._sortLast()
-    }
+    this._toggleCheckBoxes(this.filter, this.sortFirst, this._filter)
+    this._toggleCheckBoxes(this.sortLast, this.sortFirst, this._sortLast)
+    this._toggleCheckBoxes(this.toggleCalendar, this.sortFirst, this._handleSelectDateOption)
 
     setTimeout(() => {
       this.setState({ sortFirst: !this.state.sortFirst}, () => {
@@ -427,15 +431,9 @@ class TodoApp extends React.Component {
   }
 
   _sortLast = () => {
-    if (this.filter.checked && this.sortLast.checked) {
-      this.filter.checked = !this.filter.checked
-      this._filter()
-    }
-
-    if (this.sortFirst.checked && this.sortLast.checked) {
-      this.sortFirst.checked = !this.sortFirst.checked
-      this._sortFirst()
-    }
+    this._toggleCheckBoxes(this.filter, this.sortLast, this._filter)
+    this._toggleCheckBoxes(this.sortFirst, this.sortLast, this._sortFirst)
+    this._toggleCheckBoxes(this.toggleCalendar, this.sortLast, this._handleSelectDateOption)
 
     setTimeout(() => {
       this.setState({ sortLast: !this.state.sortLast}, () => {
@@ -477,7 +475,7 @@ class TodoApp extends React.Component {
     this.onChangeView(displayedTasks)
   }
 
-  onChangeView = (items) => {
+  onChangeView = items => {
     this.setState({ items: items })
   }
 
@@ -486,9 +484,52 @@ class TodoApp extends React.Component {
     localStorage.setItem(storage, list);
   }
 
-  setPriority(event, item) {
-    this.setState({
-      priority: event.target.value
+  setPriority = (event, item) => {
+    this.setState({ priority: event.target.value })
+  }
+
+  _toggleCheckBoxes = (prev, cur, func) => {
+    if (prev.checked && cur.checked) {
+      prev.checked = !prev.checked
+      func()
+    }
+  }
+
+  _toggleCalendar = () => {
+    this._toggleCheckBoxes(this.filter, this.toggleCalendar, this._filter)
+    this._toggleCheckBoxes(this.sortFirst, this.toggleCalendar, this._sortFirst)
+    this._toggleCheckBoxes(this.sortLast, this.toggleCalendar, this._sortLast)
+    this._handleSelectDateOption()
+  }
+
+  _handleSelectDateOption = () => {
+    this.setState({ calendarDisplay: this.toggleCalendar.checked ? 'block' : 'none' })
+
+    if(!this.toggleCalendar.checked) {
+      this.setState({ selectedDate: undefined })
+      let itemStorage = JSON.parse(localStorage.getItem('generalItems'));
+      if (itemStorage) {
+        this.setState({
+          //generalItems: itemStorage,
+          items: itemStorage
+        }, () => {
+          this.searchFilter()
+          //this._updateLocalStorage(this.state.items, 'currentItems')
+        });
+      }
+    }
+  }
+
+  handleChangeDate = date => {
+    const selectedDate = moment(date).format('DD.MM.YYYY')
+    this.setState({ selectedDate: date }, ()=> {
+      let itemDate = this.state.generalItems.filter(item => {
+        return item.date === selectedDate;
+      });
+
+      this.setState({ items: itemDate }, () => {
+        this.searchFilter()
+      })
     })
   }
 
@@ -571,11 +612,26 @@ class TodoApp extends React.Component {
           </div>
           <div className='flex'>
             <input id="importantFirst" name="sort" ref={instance => { this.sortFirst = instance }} onChange={this._sortFirst} type="checkbox" />
-            <label htmlFor="importantFirst">Сначала с высокий приоритетом</label>
+            <label htmlFor="importantFirst">По снижению приоритета</label>
           </div>
           <div className='flex'>
             <input id="importantLast" name="sort" ref={instance => { this.sortLast = instance }} onChange={this._sortLast} type="checkbox" />
-            <label htmlFor="importantLast">Сначала с низким приоритетом</label>
+            <label htmlFor="importantLast">По возрастанию приоритета</label>
+          </div>
+          <div className='flex'>
+            <input id="toggle__calendar" name="sort" ref={instance => { this.toggleCalendar = instance }} onChange={this._toggleCalendar} type="checkbox" />
+            <label htmlFor="toggle__calendar">Выбрать задания по дате</label>
+          </div>
+          <div className="calendar" style={{display: this.state.calendarDisplay}}>
+            <DatePicker
+              inline
+              disabledKeyboardNavigation
+              selected={this.state.selectedDate}
+              onChange={this.handleChangeDate}
+              locale="ru"
+              maxDate={moment()}
+              todayButton={"Сегодня"}
+            />
           </div>
         </div>
       </div>

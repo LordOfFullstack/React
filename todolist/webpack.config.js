@@ -42,6 +42,15 @@ module.exports = {
         })
       },
       {
+        test: /\.scss$/,
+        include: SRC_DIR,
+        exclude: /node_modules/,
+        use: ExtractTextPlugin.extract({
+          fallback: "style-loader",
+          use: ["css-loader", "sass-loader", "autoprefixer-loader"]
+        })
+      },
+      {
         test: /\.less$/,
         include: SRC_DIR,
         exclude: /node_modules/,
