@@ -24,7 +24,7 @@ class TodoApp extends React.Component {
       importantTasks: [],
       sortedArrayFirst: [],
       priority: 'Низкий',
-      startDate: moment(),
+      itemsForDateFilter:[],
       rating: '0'
     };
 
@@ -39,7 +39,8 @@ class TodoApp extends React.Component {
     if (itemStorage) {
       this.setState({
         generalItems: itemStorage,
-        items: itemStorage
+        items: itemStorage,
+        itemsForDateFilter: itemStorage
       }, () => {
         this._updateLocalStorage(this.state.items, 'currentItems')
       });
@@ -66,13 +67,33 @@ class TodoApp extends React.Component {
   }
 
   onChangeFilter = (filter, className = 'invisible') => {
-    this.setState({
-      items: filter,
-      isClosed: className
-    });
+    if (this.toggleCalendar.checked) {
+      const selectedDate = moment(this.state.selectedDate).format('DD.MM.YYYY')
 
-    this.searchChild.handleUpdateState(filter)
-    this.searchFilter()
+      let itemDate = filter.filter(item => {
+        return item.date === selectedDate;
+      });
+
+      this.setState({
+        isClosed: className,
+        itemsForDateFilter: filter,
+        items: itemDate
+      }, () => {
+        this.searchFilter()
+        this._updateLocalStorage(itemDate, 'currentItems')
+        this.searchChild.handleUpdateState(itemDate)
+      })
+    }
+    else {
+      this.setState({
+        items: filter,
+        isClosed: className,
+        itemsForDateFilter: filter
+      });
+
+      this.searchChild.handleUpdateState(filter)
+      this.searchFilter()
+    }
   }
 
   handleSubmit = e => {
@@ -197,6 +218,8 @@ class TodoApp extends React.Component {
       let editable = this.state.generalItems.splice(index, 1, object);
     })
 
+    this.handleCurentItemSave(object)
+
     setTimeout(() => {
       let finishedArray = this.state.generalItems.filter(el => {
         return el.done === "finished";
@@ -216,6 +239,25 @@ class TodoApp extends React.Component {
         this._updateLocalStorage(this.state.new_tasks, 'new_tasks')
       });
     })
+  }
+
+  handleCurentItemSave = object => {
+    let currentItems = JSON.parse(localStorage.getItem('currentItems'))
+    let currentItemId = object.id;
+    let editedText = this.listChild.state.targetValue;
+
+    if (currentItems) {
+      let savedCurrentItem = currentItems.filter(item => {
+        return item.id === currentItemId;
+      });
+
+      savedCurrentItem.map(el => {
+        let index = currentItems.indexOf(el)
+        let editable = currentItems.splice(index, 1, object);
+      })
+
+      this._updateLocalStorage(currentItems, 'currentItems')
+    }
   }
 
   handleItemOutline = object => {
@@ -260,7 +302,6 @@ class TodoApp extends React.Component {
         })
 
         this._updateLocalStorage(importantItems, 'importantTasks')
-
         this.navChild.state.function()
 
         const searchQuery = this.searchChild.state.inputVal.toLowerCase()
@@ -419,7 +460,6 @@ class TodoApp extends React.Component {
           })
         })
       }
-
       else {
         this.navChild.state.function()
 
@@ -454,10 +494,8 @@ class TodoApp extends React.Component {
           })
         })
       }
-
       else {
         this.navChild.state.function()
-
         setTimeout(() => {
           this.searchFilter()
         })
@@ -503,32 +541,44 @@ class TodoApp extends React.Component {
   }
 
   _handleSelectDateOption = () => {
-    this.setState({ calendarDisplay: this.toggleCalendar.checked ? 'block' : 'none' })
+    this.setState({
+      calendarDisplay: this.toggleCalendar.checked ? 'block' : 'none',
+      selectedDate: moment()
+    })
+
+    const selectedDate = moment().format('DD.MM.YYYY')
+    this.setState({ selectedDate: moment() }, ()=> {
+      let itemDate = this.state.itemsForDateFilter.filter(item => {
+        return item.date === selectedDate;
+      });
+
+      this.setState({ items: itemDate }, () => {
+        this.searchFilter()
+        this._updateLocalStorage(this.state.items, 'currentItems')
+      })
+    })
 
     if(!this.toggleCalendar.checked) {
-      this.setState({ selectedDate: undefined })
-      let itemStorage = JSON.parse(localStorage.getItem('generalItems'));
-      if (itemStorage) {
-        this.setState({
-          //generalItems: itemStorage,
-          items: itemStorage
-        }, () => {
-          this.searchFilter()
-          //this._updateLocalStorage(this.state.items, 'currentItems')
-        });
-      }
+      this.setState({
+        selectedDate: undefined,
+        items: this.state.itemsForDateFilter
+      }, () => {
+        this.searchFilter()
+        this._updateLocalStorage(this.state.items, 'currentItems')
+      })
     }
   }
 
   handleChangeDate = date => {
     const selectedDate = moment(date).format('DD.MM.YYYY')
     this.setState({ selectedDate: date }, ()=> {
-      let itemDate = this.state.generalItems.filter(item => {
+      let itemDate = this.state.itemsForDateFilter.filter(item => {
         return item.date === selectedDate;
       });
 
       this.setState({ items: itemDate }, () => {
         this.searchFilter()
+        this._updateLocalStorage(this.state.items, 'currentItems')
       })
     })
   }

@@ -11,14 +11,15 @@ class TodoNav extends React.Component {
       function: this.handleAll,
       checked: false,
       sortFirst: false,
-      sortLast: false
+      sortLast: false,
+      itemsInCategory: JSON.parse(localStorage.getItem('generalItems'))
     }
 
     this.setFilter = this.setFilter.bind(this)
   }
 
   setFilter = filter => {
-    this.setState({selected  : filter})
+    this.setState({selected: filter})
   }
 
   isActive = value => {
@@ -34,9 +35,13 @@ class TodoNav extends React.Component {
   }
 
   handleFinished = () => {
-    this.setState({ function: this.handleFinished})
-    this.setFilter('finished')
     let localList = JSON.parse(localStorage.getItem('finished_tasks'));
+    this.setState({
+      function: this.handleFinished,
+      itemsInCategory: localList
+    })
+
+    this.setFilter('finished')
     this.props.onUpdateStorage(localList, 'currentItems')
 
     setTimeout(() => {
@@ -59,9 +64,13 @@ class TodoNav extends React.Component {
   }
 
   handleAll = () => {
-    this.setState({ function: this.handleAll})
-    this.setFilter('')
     let localList = JSON.parse(localStorage.getItem('generalItems'));
+    this.setState({
+      function: this.handleAll,
+      itemsInCategory: localList
+    })
+
+    this.setFilter('')
     this.props.onUpdateStorage(localList, 'currentItems')
 
     setTimeout(() => {
@@ -84,9 +93,13 @@ class TodoNav extends React.Component {
   }
 
   handleNew = () => {
-    this.setState({ function: this.handleNew})
-    this.setFilter('new')
     let localList = JSON.parse(localStorage.getItem('new_tasks'));
+    this.setState({
+      function: this.handleNew,
+      itemsInCategory: localList
+    })
+
+    this.setFilter('new')
     this.props.onUpdateStorage(localList, 'currentItems')
 
     setTimeout(() => {

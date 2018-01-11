@@ -70,8 +70,7 @@ class Search extends React.Component {
         return el.important === "Высокий";
       })
 
-      this.setState({ importantItems: importantItems}, () => {
-      })
+      this.setState({ importantItems: importantItems })
     })
   }
 
