@@ -383,21 +383,6 @@ class TodoApp extends React.Component {
   }
 
   _filter = () => {
-    if (this.sortFirst.checked && this.filter.checked) {
-      this.sortFirst.checked = !this.sortFirst.checked
-      this._sortFirst()
-    }
-
-    if (this.sortLast.checked && this.filter.checked) {
-      this.sortLast.checked = !this.sortLast.checked
-      this._sortLast()
-    }
-
-    if (this.toggleCalendar.checked && this.filter.checked) {
-      this.toggleCalendar.checked = !this.toggleCalendar.checked
-      this._handleSelectDateOption()
-    }
-
     this._toggleCheckBoxes(this.sortFirst, this.filter, this._sortFirst)
     this._toggleCheckBoxes(this.sortLast, this.filter, this._sortLast)
     this._toggleCheckBoxes(this.toggleCalendar, this.filter, this._handleSelectDateOption)
@@ -410,11 +395,11 @@ class TodoApp extends React.Component {
       let localList = JSON.parse(localStorage.getItem('importantTasks'));
 
       if (this.filter.checked) {
-        let importantItems = this.state.items.filter(el => {
+        let importantItems = this.state.itemsForDateFilter.filter(el => {
           return el.important === "Высокий";
         })
 
-        this.setState({ items: importantItems }, () => {
+        this.setState({ items: (this.sortLast.checked || this.sortFirst.checked || this.toggleCalendar.checked) ? this.state.items : importantItems }, () => {
           this.searchChild.handleUpdateState(this.state.items)
 
           const searchQuery = this.searchChild.state.inputVal.toLowerCase()
@@ -427,7 +412,7 @@ class TodoApp extends React.Component {
         })
       }
       else {
-        this.navChild.state.function()
+      //  this.navChild.state.function()
 
         setTimeout(() => {
           this.searchFilter()
@@ -448,20 +433,20 @@ class TodoApp extends React.Component {
 
       if (this.sortFirst.checked) {
         setTimeout(() => {
-          let sortedArray = this.state.items.slice(0);
+          let sortedArray = this.state.itemsForDateFilter.slice(0);
           sortedArray.sort(function(a, b) {
             let x = a.rating.toLowerCase();
             let y = b.rating.toLowerCase();
             return x > y ? -1 : x < y ? 1 : 0;
           });
 
-          this.setState({ items: sortedArray}, () => {
+          this.setState({ items: (this.filter.checked || this.sortLast.checked || this.toggleCalendar.checked) ? this.state.items : sortedArray}, () => {
             this._updateLocalStorage(sortedArray, 'sortedArrayFirst')
           })
         })
       }
       else {
-        this.navChild.state.function()
+      //  this.navChild.state.function()
 
         setTimeout(() => {
           this.searchFilter()
@@ -482,20 +467,20 @@ class TodoApp extends React.Component {
 
       if (this.sortLast.checked) {
         setTimeout(() => {
-          let sortedArray = this.state.items.slice(0);
+          let sortedArray = this.state.itemsForDateFilter.slice(0);
           sortedArray.sort(function(a, b) {
             let x = a.rating.toLowerCase();
             let y = b.rating.toLowerCase();
             return x < y ? -1 : x > y ? 1 : 0;
           });
 
-          this.setState({ items: sortedArray}, () => {
+          this.setState({ items: (this.filter.checked || this.sortFirst.checked || this.toggleCalendar.checked) ? this.state.items : sortedArray}, () => {
             this._updateLocalStorage(sortedArray, 'sortedArrayLast')
           })
         })
       }
       else {
-        this.navChild.state.function()
+      //  this.navChild.state.function()
         setTimeout(() => {
           this.searchFilter()
         })
@@ -561,7 +546,7 @@ class TodoApp extends React.Component {
     if(!this.toggleCalendar.checked) {
       this.setState({
         selectedDate: undefined,
-        items: this.state.itemsForDateFilter
+        items: (this.filter.checked || this.sortFirst.checked || this.sortLast.checked) ? this.state.items : this.state.itemsForDateFilter
       }, () => {
         this.searchFilter()
         this._updateLocalStorage(this.state.items, 'currentItems')
