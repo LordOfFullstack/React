@@ -53,12 +53,12 @@ class TodoApp extends React.Component {
 
     let finishedTaskStorage = JSON.parse(localStorage.getItem('finished_tasks'));
     if (finishedTaskStorage) {
-      this.setState({finished_tasks: finishedTaskStorage });
+      this.setState({ finished_tasks: finishedTaskStorage });
     }
 
     let importantTasks = JSON.parse(localStorage.getItem('importantTasks'));
     if (importantTasks) {
-      this.setState({importantTasks: importantTasks });
+      this.setState({ importantTasks: importantTasks });
     }
   }
 
@@ -67,6 +67,7 @@ class TodoApp extends React.Component {
   }
 
   onChangeFilter = (filter, className = 'invisible') => {
+
     if (this.toggleCalendar.checked) {
       const selectedDate = moment(this.state.selectedDate).format('DD.MM.YYYY')
 
@@ -303,14 +304,7 @@ class TodoApp extends React.Component {
 
         this._updateLocalStorage(importantItems, 'importantTasks')
         this.navChild.state.function()
-
-        const searchQuery = this.searchChild.state.inputVal.toLowerCase()
-        const displayedTasks = this.state.items.filter(el => {
-          const searchValue = el.text.toLowerCase();
-          return searchValue.indexOf(searchQuery) !== -1;
-        })
-
-        this.onChangeView(displayedTasks)
+        this.searchFilter()
       });
     })
   };
@@ -318,6 +312,10 @@ class TodoApp extends React.Component {
   handleItemDelete = item => {
     let itemId = item.id;
     let newItems = this.state.items.filter(item => {
+      return item.id !== itemId;
+    });
+
+    let itemsForDateFilter = this.state.itemsForDateFilter.filter(item => {
       return item.id !== itemId;
     });
 
@@ -339,6 +337,7 @@ class TodoApp extends React.Component {
 
     this.setState({
       items: newItems,
+      itemsForDateFilter: itemsForDateFilter,
       generalItems: this.state.generalItems
     }, () => {
       let finishedArray = this.state.generalItems.filter(el => {
@@ -399,22 +398,14 @@ class TodoApp extends React.Component {
           return el.important === "Высокий";
         })
 
-        this.setState({ items: (this.sortLast.checked || this.sortFirst.checked || this.toggleCalendar.checked) ? this.state.items : importantItems }, () => {
+        this.setState({ items: importantItems }, () => {
           this.searchChild.handleUpdateState(this.state.items)
-
-          const searchQuery = this.searchChild.state.inputVal.toLowerCase()
-          const displayedTasks = this.state.items.filter(el => {
-            const searchValue = el.text.toLowerCase();
-            return searchValue.indexOf(searchQuery) !== -1;
-          })
-
-          this.onChangeView(displayedTasks)
+          this.searchFilter()
         })
       }
       else {
-      //  this.navChild.state.function()
-
-        setTimeout(() => {
+        this.setState({ items: (this.sortFirst.checked || this.sortLast.checked || this.toggleCalendar.checked) ? this.state.items : this.state.itemsForDateFilter }, () => {
+          this.searchChild.handleUpdateState(this.state.items)
           this.searchFilter()
         })
       }
@@ -440,15 +431,16 @@ class TodoApp extends React.Component {
             return x > y ? -1 : x < y ? 1 : 0;
           });
 
-          this.setState({ items: (this.filter.checked || this.sortLast.checked || this.toggleCalendar.checked) ? this.state.items : sortedArray}, () => {
+          this.setState({ items: sortedArray }, () => {
             this._updateLocalStorage(sortedArray, 'sortedArrayFirst')
           })
+
+          this.searchFilter()
         })
       }
       else {
-      //  this.navChild.state.function()
-
-        setTimeout(() => {
+        this.setState({ items: (this.filter.checked || this.sortLast.checked || this.toggleCalendar.checked) ? this.state.items : this.state.itemsForDateFilter }, () => {
+          this.searchChild.handleUpdateState(this.state.items)
           this.searchFilter()
         })
       }
@@ -474,14 +466,16 @@ class TodoApp extends React.Component {
             return x < y ? -1 : x > y ? 1 : 0;
           });
 
-          this.setState({ items: (this.filter.checked || this.sortFirst.checked || this.toggleCalendar.checked) ? this.state.items : sortedArray}, () => {
+          this.setState({ items: sortedArray }, () => {
             this._updateLocalStorage(sortedArray, 'sortedArrayLast')
           })
+
+          this.searchFilter()
         })
       }
       else {
-      //  this.navChild.state.function()
-        setTimeout(() => {
+        this.setState({ items: (this.filter.checked || this.sortFirst.checked || this.toggleCalendar.checked) ? this.state.items : this.state.itemsForDateFilter }, () => {
+          this.searchChild.handleUpdateState(this.state.items)
           this.searchFilter()
         })
       }
