@@ -3,15 +3,11 @@ import React, { Component } from 'react';
 import MessagePreview from './MessagePreview.jsx';
 import {browserHistory} from 'react-router-dom';
 import messages from '../../messages.json';
+import PropTypes from 'prop-types';
 
 import '../styles/InboxPage.less';
 
 class InboxPage extends Component {
-  // contextTypes: {
-  //     router: React.PropTypes.object.isRequired
-  // },
-
-
   constructor(props){
     super(props);
     this.state = { messages: messages }
@@ -46,3 +42,7 @@ class InboxPage extends Component {
 };
 
 export default InboxPage;
+
+InboxPage.propTypes = {
+  messages: PropTypes.object
+}
