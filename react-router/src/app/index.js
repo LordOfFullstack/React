@@ -1,27 +1,21 @@
-import React from 'react';
 import ReactDOM from 'react-dom';
+import React from 'react';
 
 import {BrowserRouter, Route} from 'react-router-dom'
 
-import Root from './components/Root.jsx';
-import Home from './components/Home.jsx';
-import User from './components/User.jsx';
-
-class App extends React.Component {
-  render() {
-    return (
-      <BrowserRouter>
-        <div>
-          <Route path="/" component={Root} />
-          <Route path="/user/:id" component={User} />
-          <Route path="/home" component={Home} />
-        </div>
-      </BrowserRouter>
-    )
-  }
-}
+import AboutPage from './components/AboutPage.jsx';
+import InboxPage from './components/InboxPage.jsx';
+import App from '../App.jsx';
+import Message from './components/Message.jsx';
 
 ReactDOM.render(
-  <App />,
+  <BrowserRouter>
+    <div>
+      <Route path='/' component={App} />
+      <Route path='/about' component={AboutPage} />
+      <Route path='/inbox' component={InboxPage} />
+      <Route path='/inbox/messages/:messageId' component={Message} />
+    </div>
+  </BrowserRouter>,
   document.getElementById('root')
 );
