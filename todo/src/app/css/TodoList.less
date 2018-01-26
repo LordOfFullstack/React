@@ -1,0 +1,39 @@
+@import "./variables.less";
+
+.todo__list {
+  margin: 30px 0;
+  list-style-position: inside;
+  padding-inline-start: 0;
+  counter-reset: list;
+
+  .before:before {
+    text-decoration: line-through;
+  }
+
+  li {
+    padding: 20px 0;
+    display: flex;
+    border-bottom: 2px double @grey;
+    align-items: center;
+    list-style-type: none;
+    position: relative;
+
+    .text {
+      margin-left: 5px;
+    }
+
+    &:before {
+      counter-increment: list;
+      content: counter(list) ". ";
+    }
+  }
+}
+
+main {
+  .no-task-message {
+    margin: 30px 0;
+    font-weight: bold;
+    text-align: center;
+    font-size: 18px;
+  }
+}
