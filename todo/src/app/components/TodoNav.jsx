@@ -6,17 +6,30 @@ import '../css/TodoNav.less'
 class TodoNav extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      itemsList: [],
+      searchQuery: ''
+    }
   }
 
+  // componentDidMount() {
+  //   let itemStorage = JSON.parse(localStorage.getItem('currentItems'));
+  //
+  //   if (itemStorage) {
+  //     this.setState({ items: itemStorage });
+  //   }
+  // }
+
   componentWillReceiveProps(nextProps) {
-    this.setState({ items: nextProps.itemsArray })
+    this.setState({ itemsList: nextProps.itemsArray })
   }
 
   handleSearchKey = event => {
     const searchQuery = event.target.value.toLowerCase()
-    // this.setState({ inputVal: searchQuery })
+    this.setState({ searchQuery: searchQuery })
+     //this.setState({ inputVal: searchQuery })
 
-    const displayedTasks = this.state.items.filter(el => {
+    const displayedTasks = this.state.itemsList.filter(el => {
       const searchValue = el.text.toLowerCase();
       return searchValue.indexOf(searchQuery) !== -1;
     })
@@ -25,6 +38,7 @@ class TodoNav extends Component {
   }
 
   render() {
+  //  console.log(this.state.itemsList);
     return (
       <nav className="navbar navbar-dark bg-primary">
         <ul className="nav navbar-nav justify-content-center nav-pills nav-fill w-50">

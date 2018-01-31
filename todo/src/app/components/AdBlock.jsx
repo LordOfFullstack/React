@@ -35,6 +35,10 @@ class AdBlock extends Component {
     const newItem = {
       text: this.state.text,
       id: Date.now(),
+      done: 'unfinished',
+      button_symbol: 'fa-check',
+      button_class: 'btn-success',
+      button_title: "Завершить задание"
     }
 
     this.setState(prevState => ({
@@ -42,13 +46,13 @@ class AdBlock extends Component {
       text: ''
     }), () => {
       this.props.onUpdateLocalStorage(this.state.items)
-      this.props.handleUpdateState(this.state.items)
+      this.props.onAddItem(newItem)
     })
   }
 
-  setPriority = (event, item) => {
-    this.setState({ priority: event.target.value })
-  }
+  // setPriority = (event, item) => {
+  //   this.setState({ priority: event.target.value })
+  // }
   render() {
     return (
       <div className="block-to-add">

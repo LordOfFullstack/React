@@ -67,6 +67,12 @@
   counter-increment: list;
   content: counter(list) ". ";
 }
+.todo__list .edit-buttons button {
+  margin-left: 5px;
+}
+.todo__list .edit-buttons button .fa {
+  color: #fff;
+}
 main .no-task-message {
   margin: 30px 0;
   font-weight: bold;
