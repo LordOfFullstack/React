@@ -1,5 +1,5 @@
 .wrap {
-  width: 700px;
+  width: 1100px;
   margin: 0 auto;
 }
 .start-title {
@@ -21,6 +21,10 @@
 
 .btn {
   width: 40px;
+
+  &:hover {
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+  }
 }
 
 .input-group-append .btn, .input-group-prepend .btn {
@@ -30,10 +34,15 @@
 .btn-outline-info.focus, .btn-outline-info:focus {
   box-shadow: none;
 }
-.btn.focus, .btn:focus {
+.form-control:focus,
+.btn.focus,
+.btn:focus {
   outline: 0;
   box-shadow: none;
 }
 label {
   margin-bottom: 0
+}
+.box-shadow {
+  box-shadow: 0 0 10px rgba(255, 1, 1, 0.5)
 }

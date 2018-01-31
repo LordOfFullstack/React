@@ -8,33 +8,62 @@
 
   .before:before {
     text-decoration: line-through;
+    color: @grey - #222
   }
 
   li {
     padding: 20px 0;
-    display: flex;
     border-bottom: 2px double @grey;
     align-items: center;
     list-style-type: none;
     position: relative;
 
+    .item {
+      word-wrap: break-word;
+    }
+
     .text {
-      margin-left: 5px;
+      width: 500px;
+      margin: 0;
+
+      &:first-letter{
+        text-transform: uppercase;
+      }
+    }
+    .date {
+      font-size: 10px;
+       margin-top: 5px;
+      // margin-right: 15px;
+      text-align: right;
     }
 
     &:before {
       counter-increment: list;
       content: counter(list) ". ";
+      margin-right: 10px;
     }
   }
 
-  .edit-buttons {
+  .edit__buttons {
     button {
       margin-left: 5px;
-      
+
       .fa {
         color: #fff;
       }
+    }
+  }
+
+  .edit__block {
+    textarea {
+      resize: none;
+      width: 540px;
+      overflow: hidden;
+      border-radius: 5px;
+      box-sizing: border-box;
+      min-height: 42px;
+      padding: 5px;
+      outline: none
     }
   }
 }
@@ -45,5 +74,8 @@ main {
     font-weight: bold;
     text-align: center;
     font-size: 18px;
+  }
+  .main__content {
+    width: 700px;
   }
 }
