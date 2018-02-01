@@ -61,6 +61,7 @@ class AdBlock extends Component {
       editable: false,
       display: 'flex',
       buttonDisplay: 'inline-block',
+      dropDownView: 'none',
       important: this.state.priority
     }
 

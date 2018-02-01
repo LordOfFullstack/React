@@ -38,7 +38,7 @@ class TodoNav extends Component {
   }
 
   render() {
-  //  console.log(this.state.itemsList);
+  //console.log(this.state.itemsList);
     return (
       <nav className="navbar navbar-dark bg-primary">
         <ul className="nav navbar-nav justify-content-center nav-pills nav-fill w-50">

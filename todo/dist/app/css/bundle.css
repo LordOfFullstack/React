@@ -124,6 +124,27 @@ main .no-task-message {
 main .main__content {
   width: 700px;
 }
+.dropdown .importance {
+  cursor: pointer;
+  font-weight: bold;
+}
+.dropdown .dropdown-menu {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  overflow: auto;
+  -webkit-box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  left: initial;
+  right: 0;
+  font-size: 11px;
+  min-width: 0;
+  padding: 0;
+  cursor: default;
+}
+.dropdown .dropdown-menu .dropdown-item {
+  width: 70px;
+  padding: 5px;
+}
 .wrap {
   width: 1100px;
   margin: 0 auto;
