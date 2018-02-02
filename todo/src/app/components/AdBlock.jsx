@@ -80,6 +80,7 @@ class AdBlock extends Component {
   render() {
     return (
       <div className="block-to-add">
+        <h3 className="new__todo">Добавить задание</h3>
         <div className="input-group mb-3">
           <input
             type="text"

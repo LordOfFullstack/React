@@ -1,3 +1,9 @@
+@import "./css/variables.less";
+
+html {
+  overflow-x: hidden;
+  margin-right: calc(~"-1*(100vw - 100%)");
+}
 .wrap {
   width: 1100px;
   margin: 0 auto;
@@ -45,4 +51,15 @@ label {
 }
 .box-shadow {
   box-shadow: 0 0 10px rgba(255, 1, 1, 0.5)
+}
+.new__todo {
+  font-size: @fontSize + 2;
+  font-weight: bold;
+  margin-bottom: 5px
+}
+.alert-success {
+  display: none;
+  position: absolute;
+  width: 100%;
+  padding: 0.35rem 1.25rem;
 }

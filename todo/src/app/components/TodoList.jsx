@@ -39,6 +39,8 @@ class TodoList extends React.Component {
     if (unfinishedItemsStorage) {
       this.setState({ unfinishedItems: unfinishedItemsStorage })
     }
+
+    this.setState({ display: 'none' })
   }
 
   componentDidUpdate() {
@@ -63,6 +65,9 @@ class TodoList extends React.Component {
         itemsToDisplay: prevState.itemsToDisplay.concat(item),
         unfinishedItems: prevState.unfinishedItems.concat(item)
       }), () => { (this.props.route === 'new') ? this.searchQuery(this.state.unfinishedItems) : this.searchQuery(this.state.itemsCollection) })
+    }
+    else {
+      this.setState({ display: 'block' })
     }
   }
 
@@ -364,7 +369,6 @@ class TodoList extends React.Component {
         marginLeft:'5px'
       }
     }
-    //console.log(this.state.checkbox);
     return (
       <main className="d-flex justify-content-between">
         <div className="main__content">
@@ -379,6 +383,9 @@ class TodoList extends React.Component {
             }
             handleUpdateState={this._updateState}
           />
+          <div className="alert alert-success" style={{display:this.state.display}} role="alert">
+            Задание добавлено
+          </div>
           <p className={classes}>Нет заданий</p>
           <ol className="todo__list">
             {this.state.itemsToDisplay.map(item => (
@@ -444,7 +451,6 @@ class TodoList extends React.Component {
           <SortFilters
             ref={instance => { this.filters = instance }}
             sort={this.sortFilter}
-            filter="12"
           />
         </div>
       </main>
