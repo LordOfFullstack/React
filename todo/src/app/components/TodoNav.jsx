@@ -42,9 +42,9 @@ class TodoNav extends Component {
     return (
       <nav className="navbar navbar-dark bg-primary">
         <ul className="nav navbar-nav justify-content-center nav-pills nav-fill w-50">
-          <li className="nav-item"><NavLink to="/todolist/all" activeClassName='navbar-brand' className="nav-link" activeStyle={{ color: '#fff' }}>Все</NavLink></li>
-          <li className="nav-item"><NavLink to="/todolist/finished" activeClassName='navbar-brand' className="nav-link" activeStyle={{ color: '#fff' }}>Завершенные</NavLink></li>
-          <li className="nav-item"><NavLink to="/todolist/new" activeClassName='navbar-brand' className="nav-link" activeStyle={{ color: '#fff' }}>Новые</NavLink></li>
+          <li className="nav-item"><NavLink to="/all" activeClassName='navbar-brand' className="nav-link" activeStyle={{ color: '#fff' }}>Все</NavLink></li>
+          <li className="nav-item"><NavLink to="/finished" activeClassName='navbar-brand' className="nav-link" activeStyle={{ color: '#fff' }}>Завершенные</NavLink></li>
+          <li className="nav-item"><NavLink to="/new" activeClassName='navbar-brand' className="nav-link" activeStyle={{ color: '#fff' }}>Новые</NavLink></li>
         </ul>
         <input
           id="search"

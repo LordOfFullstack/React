@@ -13,7 +13,6 @@ class SortFilters extends Component {
   }
 
   render() {
-    // const { ret: this.filter.checked } = this.props
     return (
       <div className="sort d-flex flex-column">
         <h3 className="new__todo">Фильтры</h3>
@@ -27,7 +26,7 @@ class SortFilters extends Component {
           />
           <label htmlFor="important">Показывать только с высоким приоритетом</label>
         </div>
-        <div className='d-flex align-items-center'>
+        {/* <div className='d-flex align-items-center'>
           <input
             id="importantFirst"
             name="sort"
@@ -36,7 +35,7 @@ class SortFilters extends Component {
             type="checkbox"
           />
           <label htmlFor="importantFirst">По снижению приоритета</label>
-        </div>
+        </div> */}
         {/* <div className='flex'>
         <input id="importantLast" name="sort" ref={instance => { this.sortLast = instance }} onChange={this._sortLast} type="checkbox" />
         <label htmlFor="importantLast">По возрастанию приоритета</label>
