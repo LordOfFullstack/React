@@ -56,20 +56,109 @@ class TodoList extends React.Component {
     this._updateLocalStorage(unfinishedItems, 'unfinishedItems')
   }
 
+
+
   handleAddItem = (item) => {
     let itemStorage = JSON.parse(localStorage.getItem('items'));
-    this.setState({ itemsCollection: itemStorage })
+    this.setState({
+      itemsCollection: itemStorage,
+      display: 'block'
+    })
 
-    if(this.props.route !== 'finished') {
-      this.setState(prevState => ({
-        itemsToDisplay: prevState.itemsToDisplay.concat(item),
-        unfinishedItems: prevState.unfinishedItems.concat(item)
-      }), () => { (this.props.route === 'new') ? this.searchQuery(this.state.unfinishedItems) : this.searchQuery(this.state.itemsCollection) })
+    // if(this.props.route !== 'finished') {
+    //   this.setState(prevState => ({
+    //     itemsToDisplay: prevState.itemsToDisplay.concat(item),
+    //     unfinishedItems: prevState.unfinishedItems.concat(item)
+    //   }), () => { (this.props.route === 'new') ? this.searchQuery(this.state.unfinishedItems) : this.searchQuery(this.state.itemsCollection) })
+    // }
+    // else {
+    //   this.setState({ display: 'block' })
+    // }
+
+
+    // this.state.checkbox ? this.sortFilter() : this.state.itemsCollection
+    // this.state.importantFirstCheckbox ? this._importantItemsFirstFilter() : this.state.itemsCollection
+    // this.state.importantLastCheckbox ? this._importantItemsLastFilter() : this.state.itemsCollection
+
+
+
+
+    if(this.props.route === 'all') {
+
+      //if (this.state.importantFirstCheckbox) {
+      this.setState(prevState => ({ itemsToDisplay: prevState.itemsToDisplay.concat(item) }),
+      () => {
+        this.state.checkbox ? this.sortFilter() : ''
+        this.state.importantFirstCheckbox ? this._importantItemsFirstFilter() : ''
+        this.state.importantLastCheckbox ? this._importantItemsLastFilter() : ''
+
+        this.searchQuery(this.state.itemsCollection)
+      })
+
+      //  }
+      // else {
+      //   this.setState(prevState => ({ itemsToDisplay: prevState.itemsToDisplay.concat(item) }) )
+      // }
+
+      //this.state.checkbox ? (this.setState({ display: 'block' }), this.sortFilter()) : ( this.setState(prevState => ({ itemsToDisplay: prevState.itemsToDisplay.concat(item) }) ))
+      //this.state.importantFirstCheckbox ? this._importantItemsFirstFilter() : ( this.setState(prevState => ({ itemsToDisplay: prevState.itemsToDisplay.concat(item) }) ))
+      //this.state.importantLastCheckbox ? this._importantItemsLastFilter() : ( this.setState(prevState => ({ itemsToDisplay: prevState.itemsToDisplay.concat(item) }) ))
+
+      // this.setState(prevState => ({
+      //   //itemsToDisplay: prevState.itemsToDisplay.concat(item),
+      // //  unfinishedItems: prevState.unfinishedItems.concat(item)
+      // }), () => { (this.props.route === 'new') ? this.searchQuery(this.state.unfinishedItems) : this.searchQuery(this.state.itemsCollection) })
     }
-    else {
+
+    if(this.props.route === 'finished') {
       this.setState({ display: 'block' })
     }
+
+    if(this.props.route === 'new') {
+
+      //if (this.state.importantFirstCheckbox) {
+      this.setState(prevState => ({ itemsToDisplay: prevState.itemsToDisplay.concat(item), unfinishedItems: prevState.unfinishedItems.concat(item) }),
+      () => {
+        this.state.checkbox ? ( this.setState({ display: 'block' }), this.sortFilter() ) : ''
+        this.state.importantFirstCheckbox ? this._importantItemsFirstFilter() : ''
+        this.state.importantLastCheckbox ? this._importantItemsLastFilter() : ''
+      })
+
+      //  }
+      // else {
+      //   this.setState(prevState => ({ itemsToDisplay: prevState.itemsToDisplay.concat(item) }) )
+      // }
+
+      //this.state.checkbox ? (this.setState({ display: 'block' }), this.sortFilter()) : ( this.setState(prevState => ({ itemsToDisplay: prevState.itemsToDisplay.concat(item) }) ))
+      //this.state.importantFirstCheckbox ? this._importantItemsFirstFilter() : ( this.setState(prevState => ({ itemsToDisplay: prevState.itemsToDisplay.concat(item) }) ))
+      //this.state.importantLastCheckbox ? this._importantItemsLastFilter() : ( this.setState(prevState => ({ itemsToDisplay: prevState.itemsToDisplay.concat(item) }) ))
+
+      // this.setState(prevState => ({
+      //   //itemsToDisplay: prevState.itemsToDisplay.concat(item),
+      // //  unfinishedItems: prevState.unfinishedItems.concat(item)
+      // }), () => { (this.props.route === 'new') ? this.searchQuery(this.state.unfinishedItems) : this.searchQuery(this.state.itemsCollection) })
+    }
+
+
+
+
+
+    // else {
+    //   this.setState({ display: 'block' })
+    // }
+
+
+
+
+
+
+
+
+
   }
+
+
+
 
   handleItemDelete = item => {
     const itemId = item.id;
@@ -100,16 +189,6 @@ class TodoList extends React.Component {
 
         this._updateLocalStorage(this.state.itemsCollection, 'items')
       })
-
-      //console.log(this.state.finishedItems);
-
-      //
-      // const searchQuery = this.TodoNav.state.searchQuery
-      // const displayedTasks = this.state.itemsCollection.filter(el => {
-      //   const searchValue = el.text.toLowerCase();
-      //   return searchValue.indexOf(searchQuery) !== -1;
-      // })
-      // this._updateState(displayedTasks)
     })
   }
 
@@ -128,7 +207,10 @@ class TodoList extends React.Component {
     if (this.props.route === 'all') {
       this.setState({ itemsToDisplay: this.state.itemsCollection }, () => {
         this._updateLocalStorage(this.state.itemsCollection)
-        this.searchQuery(this.state.itemsCollection)
+
+        this.state.checkbox ? this.sortFilter() : this.state.itemsCollection
+        this.state.importantFirstCheckbox ? this._importantItemsFirstFilter() : this.state.itemsCollection
+        this.state.importantLastCheckbox ? this._importantItemsLastFilter() : this.state.itemsCollection
       })
     }
 
@@ -142,7 +224,10 @@ class TodoList extends React.Component {
         finishedItems: finishedItems
       }, () => {
         this._updateLocalStorage(this.state.itemsCollection)
-        this.searchQuery(this.state.finishedItems)
+
+        this.state.checkbox ? this.sortFilter() : this.state.finishedItems
+        this.state.importantFirstCheckbox ? this._importantItemsFirstFilter() : this.state.finishedItems
+        this.state.importantLastCheckbox ? this._importantItemsLastFilter() : this.state.finishedItems
       })
     }
 
@@ -156,7 +241,10 @@ class TodoList extends React.Component {
         unfinishedItems: unfinishedItems
       }, () => {
         this._updateLocalStorage(this.state.itemsCollection)
-        this.searchQuery(this.state.unfinishedItems)
+
+        this.state.checkbox ? this.sortFilter() : this.state.unfinishedItems
+        this.state.importantFirstCheckbox ? this._importantItemsFirstFilter() : this.state.unfinishedItems
+        this.state.importantLastCheckbox ? this._importantItemsLastFilter() : this.state.unfinishedItems
       })
     }
   }
@@ -255,23 +343,6 @@ class TodoList extends React.Component {
     })
   }
 
-  sortFunction = sortItems => {
-    const filter  = this.filters.state.sort
-    this.setState({ checkbox: filter})
-
-    if (filter) {
-      let importantItems = sortItems.filter(el => {
-        return el.important === "Высокий";
-      })
-
-      this.setState({ importantItems: importantItems})
-      this.searchQuery(importantItems)
-    }
-    else {
-      this.searchQuery(sortItems)
-    }
-  }
-
   dropDownViewChange = item => {
     event.preventDefault()
     if (item.done === 'unfinished') {
@@ -339,13 +410,172 @@ class TodoList extends React.Component {
     })
     //
     this.dropDownViewChange(item)
-    this.sortFilter()
+
+    this.state.checkbox ? this.sortFilter() : ''
+    this.state.importantFirstCheckbox ? this._importantItemsFirstFilter() : ''
+    this.state.importantLastCheckbox ? this._importantItemsLastFilter() : ''
+
   }
 
   sortFilter = () => {
     this.props.route === 'all' ? this.sortFunction(this.state.itemsCollection) : '' ||
     this.props.route === 'finished' ? this.sortFunction(this.state.finishedItems) : '' ||
     this.props.route === 'new' ? this.sortFunction(this.state.unfinishedItems) : ''
+  }
+
+  _importantItemsFirstFilter = field => {
+
+    field =
+    this.props.route === 'all' ? this.state.itemsCollection : '' ||
+    this.props.route === 'finished' ? this.state.finishedItems : '' ||
+    this.props.route === 'new' ? this.state.unfinishedItems : ''
+
+    const filter  = this.filters.state.importantItemsFirstCheckbox
+    this.setState({ importantFirstCheckbox: filter}, ()=> {
+    })
+
+    if (filter) {
+      let sortedArray = field.slice();
+      sortedArray.sort(function(a, b) {
+        let x = a.rating.toLowerCase();
+        let y = b.rating.toLowerCase();
+        return x > y ? -1 : x < y ? 1 : 0;
+      });
+
+      this.setState({ importantItemsFirst: sortedArray})
+      this.searchQuery(sortedArray)
+    }
+    else {
+      this.searchQuery(field)
+    }
+
+
+    //     //alert(1)
+    //     // this._toggleCheckBoxes(this.filter, this.sortFirst, this._filter)
+    //     // this._toggleCheckBoxes(this.sortLast, this.sortFirst, this._sortLast)
+    //     // this._toggleCheckBoxes(this.toggleCalendar, this.sortFirst, this._handleSelectDateOption)
+    //     //
+    //     // setTimeout(() => {
+    //     //   this.setState({ sortFirst: !this.state.sortFirst}, () => {
+    //     //     this.navChild._updateState()
+    //     //   })
+    //     //
+    // //    console.log(this.props.items);
+    //        if (this.importantItemsFirst.checked) {
+    //     //     setTimeout(() => {
+    //            let sortedArray = this.props.items.slice();
+    //            sortedArray.sort(function(a, b) {
+    //              let x = a.rating.toLowerCase();
+    //              let y = b.rating.toLowerCase();
+    //              return x > y ? -1 : x < y ? 1 : 0;
+    //            });
+    //
+    //            this.props.onUpdateState(sortedArray)
+    //     //
+    //     //       this.setState({ items: sortedArray }, () => {
+    //     //         this._updateLocalStorage(sortedArray, 'sortedArrayFirst')
+    //     //       })
+    //     //
+    //     //       this.searchFilter()
+    //     //     })
+    //        }
+    //        else {
+    //          console.log(this.props.items);
+    //
+    //          this.props.onUpdateState(this.props.items)
+    //     //     this.setState({ items: (this.filter.checked || this.sortLast.checked || this.toggleCalendar.checked) ? this.state.items : this.state.itemsForDateFilter }, () => {
+    //     //       this.searchChild.handleUpdateState(this.state.items)
+    //     //       this.searchFilter()
+    //     //     })
+    //        }
+    //     // })
+  }
+
+  _importantItemsLastFilter = field => {
+
+    field =
+    this.props.route === 'all' ? this.state.itemsCollection : '' ||
+    this.props.route === 'finished' ? this.state.finishedItems : '' ||
+    this.props.route === 'new' ? this.state.unfinishedItems : ''
+
+    const filter  = this.filters.state.importantItemsLastCheckbox
+    this.setState({ importantLastCheckbox: filter}, ()=> {
+    })
+
+    if (filter) {
+      let sortedArray = field.slice();
+      sortedArray.sort(function(a, b) {
+        let x = a.rating.toLowerCase();
+        let y = b.rating.toLowerCase();
+        return x < y ? -1 : x > y ? 1 : 0;
+      });
+
+      this.setState({ importantItemsLast: sortedArray})
+      this.searchQuery(sortedArray)
+    }
+    else {
+      this.searchQuery(field)
+    }
+
+
+    //     //alert(1)
+    //     // this._toggleCheckBoxes(this.filter, this.sortFirst, this._filter)
+    //     // this._toggleCheckBoxes(this.sortLast, this.sortFirst, this._sortLast)
+    //     // this._toggleCheckBoxes(this.toggleCalendar, this.sortFirst, this._handleSelectDateOption)
+    //     //
+    //     // setTimeout(() => {
+    //     //   this.setState({ sortFirst: !this.state.sortFirst}, () => {
+    //     //     this.navChild._updateState()
+    //     //   })
+    //     //
+    // //    console.log(this.props.items);
+    //        if (this.importantItemsFirst.checked) {
+    //     //     setTimeout(() => {
+    //            let sortedArray = this.props.items.slice();
+    //            sortedArray.sort(function(a, b) {
+    //              let x = a.rating.toLowerCase();
+    //              let y = b.rating.toLowerCase();
+    //              return x > y ? -1 : x < y ? 1 : 0;
+    //            });
+    //
+    //            this.props.onUpdateState(sortedArray)
+    //     //
+    //     //       this.setState({ items: sortedArray }, () => {
+    //     //         this._updateLocalStorage(sortedArray, 'sortedArrayFirst')
+    //     //       })
+    //     //
+    //     //       this.searchFilter()
+    //     //     })
+    //        }
+    //        else {
+    //          console.log(this.props.items);
+    //
+    //          this.props.onUpdateState(this.props.items)
+    //     //     this.setState({ items: (this.filter.checked || this.sortLast.checked || this.toggleCalendar.checked) ? this.state.items : this.state.itemsForDateFilter }, () => {
+    //     //       this.searchChild.handleUpdateState(this.state.items)
+    //     //       this.searchFilter()
+    //     //     })
+    //        }
+    //     // })
+  }
+
+  sortFunction = sortItems => {
+
+
+    const filter  = this.filters.state.importantItemsCheckbox
+    this.setState({ checkbox: filter})
+
+    if (filter) {
+      let importantItems = sortItems.filter(el => {
+        return el.important === "Высокий";
+      })
+
+      this.setState({ importantItems: importantItems})
+      this.searchQuery(importantItems)
+    }
+    else {
+      this.searchQuery(sortItems)
+    }
   }
 
   _updateState = items => {
@@ -358,8 +588,8 @@ class TodoList extends React.Component {
   }
 
   render() {
-    //console.log(this.state.itemsCollection);
-    //  console.log(this.state.currentItems);
+    console.log(this.state.checkbox);
+    //  console.log(this.state.importantFirstCheckbox);
     const classes = classNames({
       "d-block no-task-message": this.state.itemsToDisplay.length == 0,
       "d-none": this.state.itemsToDisplay.length > 0
@@ -369,17 +599,32 @@ class TodoList extends React.Component {
         marginLeft:'5px'
       }
     }
+    const { route: routing } = this.props
     return (
       <main className="d-flex justify-content-between">
         <div className="main__content">
           <TodoNav
             ref={instance => { this.TodoNav = instance }}
-            itemsArray = {(!this.state.checkbox) ?
-              (this.props.route === 'all' ? this.state.itemsCollection : '') ||
-              (this.props.route === 'finished' ? this.state.finishedItems : '') ||
-              (this.props.route === 'new' ? this.state.unfinishedItems : '')
-              :
+            itemsArray = {(this.state.checkbox)
+              ?
               this.state.importantItems
+              :
+
+              (this.state.importantFirstCheckbox)
+              ?
+              this.state.importantItemsFirst
+              :
+
+
+              (this.state.importantLastCheckbox)
+              ?
+              this.state.importantItemsLast
+              :
+
+
+              (routing === 'all' ? this.state.itemsCollection : '') ||
+              (routing === 'finished' ? this.state.finishedItems : '') ||
+              (routing === 'new' ? this.state.unfinishedItems : '')
             }
             handleUpdateState={this._updateState}
           />
@@ -450,7 +695,10 @@ class TodoList extends React.Component {
         <div className="filtes">
           <SortFilters
             ref={instance => { this.filters = instance }}
-            sort={this.sortFilter}
+            showImportantItems={this.sortFilter}
+            items={this.state.itemsCollection}
+            handleImportantItemsUp={this._importantItemsFirstFilter}
+            handleImportantItemsDown={this._importantItemsLastFilter}
           />
         </div>
       </main>
