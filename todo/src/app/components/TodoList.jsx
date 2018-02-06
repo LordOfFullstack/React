@@ -3,6 +3,7 @@ import AdBlock from './AdBlock.jsx'
 import TodoNav from './TodoNav.jsx'
 import SortFilters from './SortFilters.jsx'
 import classNames from 'classnames';
+import moment from 'moment';
 
 import TextareaAutosize from "react-textarea-autosize";
 import PropTypes from 'prop-types';
@@ -32,10 +33,12 @@ class TodoList extends React.Component {
     if (itemStorage) {
       this.setState({ itemsCollection: itemStorage }, () => {
         let status = JSON.parse(localStorage.getItem('checkboxStatus'))
-
-        status.importantItemsCheckbox ? this.sortFilter() : ''
-        status.importantItemsFirstCheckbox ? this._importantItemsFirstFilter() : ''
-        status.importantItemsLastCheckbox ? this._importantItemsLastFilter() : ''
+        if (status) {
+          status.importantItemsCheckbox ? this.sortFilter() : ''
+          status.importantItemsFirstCheckbox ? this._importantItemsFirstFilter() : ''
+          status.importantItemsLastCheckbox ? this._importantItemsLastFilter() : ''
+          status.calendarCheckbox ? this.calendarFilter() : ''
+        }
       })
     }
 
@@ -104,6 +107,7 @@ class TodoList extends React.Component {
       display: 'block'
     }, ()=> {
       this.handleItemsFilter()
+      //this.filters.handleChangeDate()
 
       if(this.props.route === 'all') {
         this.setState(prevState => ({ itemsToDisplay: prevState.itemsToDisplay.concat(item) }), () => {
@@ -444,6 +448,39 @@ class TodoList extends React.Component {
     }
   }
 
+  calendarFilter = () => {
+    const filter  = this.filters.state.calendarCheckbox
+
+    this.setState({ calendarCheckbox: filter})
+
+    let status = JSON.parse(localStorage.getItem('checkboxStatus'))
+
+console.log(status.selectedDate)
+
+    let y = moment(status).format()
+    
+    console.log(y)
+
+    //const selectedDate = moment(date).format('DD.MM.YYYY')
+
+    //this.setState({ selectedDate: date }, ()=> {
+    //this.props.onUpdateLocalStorage(this.state, 'checkboxStatus')
+    //  let itemDate = this.itemsCollection.filter(item => {
+    //    return item.date === selectedDate;
+    //});
+
+    //this.changeState(itemDate)
+    // console.log(itemDate);
+    //
+    //   this.setState({ items: itemDate }, () => {
+    //     this.searchFilter()
+    //     this._updateLocalStorage(this.state.items, 'currentItems')
+    //   })
+    //  })
+
+
+  }
+
   _updateState = items => {
     this.setState({ itemsToDisplay: items })
   }
@@ -565,6 +602,8 @@ class TodoList extends React.Component {
             handleImportantItemsUp={this._importantItemsFirstFilter}
             handleImportantItemsDown={this._importantItemsLastFilter}
             onUpdateLocalStorage={this._updateLocalStorage}
+            handleUpdateState={this._updateState}
+            handleCalendarFilter={this.calendarFilter}
           />
         </div>
       </main>

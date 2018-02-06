@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+import DatePicker from 'react-datepicker';
+import moment from 'moment';
 
-import '../css/SortFilters.less'
+import '../css/SortFilters.less';
+import '../css/DatePicker.less';
 
 class SortFilters extends Component {
   constructor(props) {
@@ -8,18 +11,24 @@ class SortFilters extends Component {
     this.state = {
       importantItemsCheckbox: false,
       importantItemsFirstCheckbox: false,
-      importantItemsLastCheckbox: false
+      importantItemsLastCheckbox: false,
+      calendarCheckbox: false,
+      selectedDate: moment()
     }
   }
 
   componentWillMount() {
     let status = JSON.parse(localStorage.getItem('checkboxStatus'))
 
-    this.setState({
-      importantItemsCheckbox: status.importantItemsCheckbox,
-      importantItemsFirstCheckbox: status.importantItemsFirstCheckbox,
-      importantItemsLastCheckbox: status.importantItemsLastCheckbox
-    })
+    if (status) {
+      this.setState({
+        importantItemsCheckbox: status.importantItemsCheckbox,
+        importantItemsFirstCheckbox: status.importantItemsFirstCheckbox,
+        importantItemsLastCheckbox: status.importantItemsLastCheckbox,
+        calendarCheckbox: status.calendarCheckbox,
+        selectedDate: moment(status.selectedDate)
+      })
+    }
   }
 
   _filter = () => {
@@ -33,7 +42,15 @@ class SortFilters extends Component {
       this._importantItemsLast()
     }
 
-    this.setState({ importantItemsCheckbox: this.filter.checked }, () => {
+    if (this.calendarCheckbox.checked && this.filter.checked) {
+      this.calendarCheckbox.checked = !this.calendarCheckbox.checked
+      this._toggleCalendar()
+    }
+
+    this.setState({
+      calendarDisplay: 'none',
+      importantItemsCheckbox: this.filter.checked
+    }, () => {
       this.props.onUpdateLocalStorage(this.state, 'checkboxStatus')
       this.props.showImportantItems()
     })
@@ -50,7 +67,15 @@ class SortFilters extends Component {
       this._importantItemsLast()
     }
 
-    this.setState({ importantItemsFirstCheckbox: this.importantItemsFirst.checked }, () => {
+    if (this.calendarCheckbox.checked && this.importantItemsFirst.checked) {
+      this.calendarCheckbox.checked = !this.calendarCheckbox.checked
+      this._toggleCalendar()
+    }
+
+    this.setState({
+      calendarDisplay: 'none',
+      importantItemsFirstCheckbox: this.importantItemsFirst.checked
+    }, () => {
       this.props.onUpdateLocalStorage(this.state, 'checkboxStatus')
       this.props.handleImportantItemsUp()
     })
@@ -67,9 +92,102 @@ class SortFilters extends Component {
       this._importantItemsFirst()
     }
 
-    this.setState({ importantItemsLastCheckbox: this.importantItemsLast.checked }, () => {
+    if (this.calendarCheckbox.checked && this.importantItemsLast.checked) {
+      this.calendarCheckbox.checked = !this.calendarCheckbox.checked
+      this._toggleCalendar()
+    }
+
+    this.setState({
+      calendarDisplay: 'none',
+      importantItemsLastCheckbox: this.importantItemsLast.checked
+    }, () => {
       this.props.onUpdateLocalStorage(this.state, 'checkboxStatus')
       this.props.handleImportantItemsDown()
+    })
+  }
+
+  _toggleCalendar = () => {
+    if (this.filter.checked && this.calendarCheckbox.checked) {
+      this.filter.checked = !this.filter.checked
+      this._filter()
+    }
+
+    if (this.importantItemsFirst.checked && this.calendarCheckbox.checked) {
+      this.importantItemsFirst.checked = !this.importantItemsFirst.checked
+      this._importantItemsFirst()
+    }
+
+    if (this.importantItemsLast.checked && this.calendarCheckbox.checked) {
+      this.importantItemsLast.checked = !this.importantItemsLast.checked
+      this._importantItemsLast()
+    }
+
+    this.setState({ calendarCheckbox: this.calendarCheckbox.checked }, () => {
+      this.props.onUpdateLocalStorage(this.state, 'checkboxStatus')
+      this._handleSelectDateOption()
+      this.props.handleCalendarFilter()
+    })
+  }
+
+
+
+
+  // _toggleCheckBoxes = (prev, cur) => {
+  //   if (prev.checked && cur.checked) {
+  //     prev.checked = !prev.checked
+  //     //func()
+  //   }
+  // }
+  //
+  // _toggleCalendar = () => {
+  //   this._toggleCheckBoxes(this.filter, this.calendarCheckbox)
+  //   this._toggleCheckBoxes(this.importantItemsFirst, this.calendarCheckbox)
+  //   this._toggleCheckBoxes(this.importantItemsLast, this.calendarCheckbox)
+  //   this._handleSelectDateOption()
+  // }
+
+  _handleSelectDateOption = () => {
+    const selectedDate = moment().format('DD.MM.YYYY')
+
+    this.setState({ selectedDate: moment() }, ()=> {
+      let itemDate = this.props.items.filter(item => {
+        return item.date === selectedDate;
+      });
+      this.props.handleUpdateState(itemDate)
+      //
+      //   this.setState({ items: itemDate }, () => {
+      //     this.searchFilter()
+      //     this._updateLocalStorage(this.state.items, 'currentItems')
+      //   })
+    })
+
+    // if(!this.calendarCheckbox.checked) {
+    //   this.setState({
+    //     selectedDate: undefined,
+    //     items: (this.filter.checked || this.sortFirst.checked || this.sortLast.checked) ? this.state.items : this.state.itemsForDateFilter
+    //   }, () => {
+    //     this.searchFilter()
+    //     this._updateLocalStorage(this.state.items, 'currentItems')
+    //   })
+    // }
+  }
+
+  handleChangeDate = date => {
+    const selectedDate = moment(date).format('DD.MM.YYYY')
+
+    this.setState({ selectedDate: date }, ()=> {
+      this.props.onUpdateLocalStorage(this.state, 'checkboxStatus')
+      let itemDate = this.props.items.filter(item => {
+        return item.date === selectedDate;
+      });
+
+      this.props.handleUpdateState(itemDate)
+      // console.log(itemDate);
+      //
+      //   this.setState({ items: itemDate }, () => {
+      //     this.searchFilter()
+      //     this._updateLocalStorage(this.state.items, 'currentItems')
+      //   })
     })
   }
 
@@ -110,24 +228,31 @@ class SortFilters extends Component {
           />
           <label htmlFor="importantLast">По возрастанию приоритета</label>
         </div>
-        {/* <div className='flex'>
-        <input id="toggle__calendar" name="sort" ref={instance => { this.toggleCalendar = instance }} onChange={this._toggleCalendar} type="checkbox" />
-        <label htmlFor="toggle__calendar">Выбрать задания по дате</label>
+        <div className='d-flex'>
+          <input
+            id="toggle__calendar"
+            name="sort"
+            defaultChecked={this.state.calendarCheckbox}
+            ref={instance => { this.calendarCheckbox = instance }}
+            onChange={this._toggleCalendar}
+            type="checkbox"
+          />
+          <label htmlFor="toggle__calendar">Выбрать задания по дате</label>
+        </div>
+        <div className="calendar" style={{display: this.state.calendarCheckbox ? 'block' : 'none'}}>
+          <DatePicker
+            inline
+            disabledKeyboardNavigation
+            selected={this.state.selectedDate}
+            onChange={this.handleChangeDate}
+            locale="ru"
+            maxDate={moment()}
+            todayButton={"Сегодня"}
+          />
+        </div>
       </div>
-      <div className="calendar" style={{display: this.state.calendarDisplay}}>
-      <DatePicker
-      inline
-      disabledKeyboardNavigation
-      selected={this.state.selectedDate}
-      onChange={this.handleChangeDate}
-      locale="ru"
-      maxDate={moment()}
-      todayButton={"Сегодня"}
-    />
-  </div> */}
-</div>
-);
-}
+    );
+  }
 }
 
 export default SortFilters;
