@@ -5,9 +5,22 @@ import '../css/SortFilters.less'
 class SortFilters extends Component {
   constructor(props) {
     super(props);
-    this.state = { importantItemsCheckbox: false }
+    this.state = {
+      importantItemsCheckbox: false,
+      importantItemsFirstCheckbox: false,
+      importantItemsLastCheckbox: false
+    }
   }
 
+  componentWillMount() {
+    let status = JSON.parse(localStorage.getItem('checkboxStatus'))
+
+    this.setState({
+      importantItemsCheckbox: status.importantItemsCheckbox,
+      importantItemsFirstCheckbox: status.importantItemsFirstCheckbox,
+      importantItemsLastCheckbox: status.importantItemsLastCheckbox
+    })
+  }
 
   _filter = () => {
     if (this.importantItemsFirst.checked && this.filter.checked) {
@@ -20,11 +33,13 @@ class SortFilters extends Component {
       this._importantItemsLast()
     }
 
-    this.setState({ importantItemsCheckbox: this.filter.checked }, () => this.props.showImportantItems())
+    this.setState({ importantItemsCheckbox: this.filter.checked }, () => {
+      this.props.onUpdateLocalStorage(this.state, 'checkboxStatus')
+      this.props.showImportantItems()
+    })
   }
 
   _importantItemsFirst = () => {
-
     if (this.filter.checked && this.importantItemsFirst.checked) {
       this.filter.checked = !this.filter.checked
       this._filter()
@@ -35,50 +50,13 @@ class SortFilters extends Component {
       this._importantItemsLast()
     }
 
-    this.setState({ importantItemsFirstCheckbox: this.importantItemsFirst.checked }, () => this.props.handleImportantItemsUp())
-
-    //     //alert(1)
-    //     // this._toggleCheckBoxes(this.filter, this.sortFirst, this._filter)
-    //     // this._toggleCheckBoxes(this.sortLast, this.sortFirst, this._sortLast)
-    //     // this._toggleCheckBoxes(this.toggleCalendar, this.sortFirst, this._handleSelectDateOption)
-    //     //
-    //     // setTimeout(() => {
-    //     //   this.setState({ sortFirst: !this.state.sortFirst}, () => {
-    //     //     this.navChild._updateState()
-    //     //   })
-    //     //
-    // //    console.log(this.props.items);
-    //        if (this.importantItemsFirst.checked) {
-    //     //     setTimeout(() => {
-    //            let sortedArray = this.props.items.slice();
-    //            sortedArray.sort(function(a, b) {
-    //              let x = a.rating.toLowerCase();
-    //              let y = b.rating.toLowerCase();
-    //              return x > y ? -1 : x < y ? 1 : 0;
-    //            });
-    //
-    //            this.props.onUpdateState(sortedArray)
-    //     //
-    //     //       this.setState({ items: sortedArray }, () => {
-    //     //         this._updateLocalStorage(sortedArray, 'sortedArrayFirst')
-    //     //       })
-    //     //
-    //     //       this.searchFilter()
-    //     //     })
-    //        }
-    //        else {
-    //          console.log(this.props.items);
-    //
-    //          this.props.onUpdateState(this.props.items)
-    //     //     this.setState({ items: (this.filter.checked || this.sortLast.checked || this.toggleCalendar.checked) ? this.state.items : this.state.itemsForDateFilter }, () => {
-    //     //       this.searchChild.handleUpdateState(this.state.items)
-    //     //       this.searchFilter()
-    //     //     })
-    //        }
-    //     // })
+    this.setState({ importantItemsFirstCheckbox: this.importantItemsFirst.checked }, () => {
+      this.props.onUpdateLocalStorage(this.state, 'checkboxStatus')
+      this.props.handleImportantItemsUp()
+    })
   }
-  _importantItemsLast = () => {
 
+  _importantItemsLast = () => {
     if (this.filter.checked && this.importantItemsLast.checked) {
       this.filter.checked = !this.filter.checked
       this._filter()
@@ -89,47 +67,10 @@ class SortFilters extends Component {
       this._importantItemsFirst()
     }
 
-    this.setState({ importantItemsLastCheckbox: this.importantItemsLast.checked }, () => this.props.handleImportantItemsDown())
-
-    //     //alert(1)
-    //     // this._toggleCheckBoxes(this.filter, this.sortFirst, this._filter)
-    //     // this._toggleCheckBoxes(this.sortLast, this.sortFirst, this._sortLast)
-    //     // this._toggleCheckBoxes(this.toggleCalendar, this.sortFirst, this._handleSelectDateOption)
-    //     //
-    //     // setTimeout(() => {
-    //     //   this.setState({ sortFirst: !this.state.sortFirst}, () => {
-    //     //     this.navChild._updateState()
-    //     //   })
-    //     //
-    // //    console.log(this.props.items);
-    //        if (this.importantItemsFirst.checked) {
-    //     //     setTimeout(() => {
-    //            let sortedArray = this.props.items.slice();
-    //            sortedArray.sort(function(a, b) {
-    //              let x = a.rating.toLowerCase();
-    //              let y = b.rating.toLowerCase();
-    //              return x > y ? -1 : x < y ? 1 : 0;
-    //            });
-    //
-    //            this.props.onUpdateState(sortedArray)
-    //     //
-    //     //       this.setState({ items: sortedArray }, () => {
-    //     //         this._updateLocalStorage(sortedArray, 'sortedArrayFirst')
-    //     //       })
-    //     //
-    //     //       this.searchFilter()
-    //     //     })
-    //        }
-    //        else {
-    //          console.log(this.props.items);
-    //
-    //          this.props.onUpdateState(this.props.items)
-    //     //     this.setState({ items: (this.filter.checked || this.sortLast.checked || this.toggleCalendar.checked) ? this.state.items : this.state.itemsForDateFilter }, () => {
-    //     //       this.searchChild.handleUpdateState(this.state.items)
-    //     //       this.searchFilter()
-    //     //     })
-    //        }
-    //     // })
+    this.setState({ importantItemsLastCheckbox: this.importantItemsLast.checked }, () => {
+      this.props.onUpdateLocalStorage(this.state, 'checkboxStatus')
+      this.props.handleImportantItemsDown()
+    })
   }
 
   render() {
@@ -139,6 +80,7 @@ class SortFilters extends Component {
         <div className='d-flex align-items-center'>
           <input
             id="important"
+            defaultChecked={this.state.importantItemsCheckbox}
             name="filter"
             ref={instance => { this.filter = instance }}
             onChange={this._filter}
@@ -149,6 +91,7 @@ class SortFilters extends Component {
         <div className='d-flex align-items-center'>
           <input
             id="importantFirst"
+            defaultChecked={this.state.importantItemsFirstCheckbox}
             name="sort"
             ref={instance => { this.importantItemsFirst = instance }}
             onChange={this._importantItemsFirst}
@@ -158,6 +101,7 @@ class SortFilters extends Component {
         </div>
         <div className='flex'>
           <input
+            defaultChecked={this.state.importantItemsLastCheckbox}
             id="importantLast"
             name="sort"
             ref={instance => { this.importantItemsLast = instance }}

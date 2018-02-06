@@ -30,7 +30,13 @@ class TodoList extends React.Component {
 
     let itemStorage = JSON.parse(localStorage.getItem('items'));
     if (itemStorage) {
-      this.setState({ itemsCollection: itemStorage })
+      this.setState({ itemsCollection: itemStorage }, () => {
+        let status = JSON.parse(localStorage.getItem('checkboxStatus'))
+
+        status.importantItemsCheckbox ? this.sortFilter() : ''
+        status.importantItemsFirstCheckbox ? this._importantItemsFirstFilter() : ''
+        status.importantItemsLastCheckbox ? this._importantItemsLastFilter() : ''
+      })
     }
 
     let finishedItemsStorage = JSON.parse(localStorage.getItem('finishedItems'));
@@ -266,7 +272,13 @@ class TodoList extends React.Component {
       this.setState({
         finished_tasks: finishedArray,
         new_tasks: unFinishedArray
-      }, () => { this._updateLocalStorage(this.state.itemsCollection, 'items') })
+      }, () => {
+        this._updateLocalStorage(this.state.itemsCollection, 'items')
+
+        this.state.checkbox ? this.sortFilter() : this.searchQuery(this.state.unfinishedItems) ||
+        this.state.importantFirstCheckbox ? this._importantItemsFirstFilter() : this.searchQuery(this.state.unfinishedItems) ||
+        this.state.importantLastCheckbox ? this._importantItemsLastFilter() : this.searchQuery(this.state.unfinishedItems)
+      })
     })
   }
 
@@ -379,7 +391,7 @@ class TodoList extends React.Component {
         let x = a.rating.toLowerCase();
         let y = b.rating.toLowerCase();
         return x > y ? -1 : x < y ? 1 : 0;
-      });
+      })
 
       this.setState({ importantItemsFirst: sortedArray})
       this.searchQuery(sortedArray)
@@ -478,6 +490,7 @@ class TodoList extends React.Component {
               (routing === 'new' ? this.state.unfinishedItems : '')
             }
             handleUpdateState={this._updateState}
+            onUpdateLocalStorage={this._updateLocalStorage}
           />
           <div className="alert alert-success" style={{display:this.state.display}} role="alert">
             Задание добавлено
@@ -551,6 +564,7 @@ class TodoList extends React.Component {
             items={this.state.itemsCollection}
             handleImportantItemsUp={this._importantItemsFirstFilter}
             handleImportantItemsDown={this._importantItemsLastFilter}
+            onUpdateLocalStorage={this._updateLocalStorage}
           />
         </div>
       </main>
