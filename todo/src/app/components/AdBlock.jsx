@@ -69,7 +69,6 @@ class AdBlock extends Component {
       items: prevState.items.concat(newItem),
       text: ''
     }), () => {
-      //this.props.onItemsFilter()
       this.props.onUpdateLocalStorage(this.state.items)
       this.props.onAddItem(newItem)
     })

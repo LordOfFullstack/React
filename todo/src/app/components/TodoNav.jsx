@@ -8,17 +8,9 @@ class TodoNav extends Component {
     super(props);
     this.state = {
       itemsList: [],
-        searchQuery: ''
+      searchQuery: ''
     }
   }
-
-  // componentDidMount() {
-  //   let itemStorage = JSON.parse(localStorage.getItem('currentItems'));
-  //
-  //   if (itemStorage) {
-  //     this.setState({ items: itemStorage });
-  //   }
-  // }
 
   componentWillMount() {
     let searchQuery = JSON.parse(localStorage.getItem('searchQuery'))
@@ -33,7 +25,7 @@ class TodoNav extends Component {
         return searchValue.indexOf(searchQuery) !== -1;
       })
 
-     this.props.handleUpdateState(displayedTasks)
+      this.props.handleUpdateState(displayedTasks)
     })
   }
 
@@ -55,7 +47,6 @@ class TodoNav extends Component {
   }
 
   render() {
-    //console.log(this.state.itemsList);
     return (
       <nav className="navbar navbar-dark bg-primary">
         <ul className="nav navbar-nav justify-content-center nav-pills nav-fill w-50">

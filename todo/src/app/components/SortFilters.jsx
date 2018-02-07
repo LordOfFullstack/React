@@ -122,54 +122,15 @@ class SortFilters extends Component {
       this._importantItemsLast()
     }
 
-    this.setState({ calendarCheckbox: this.calendarCheckbox.checked }, () => {
+    this.setState({
+      selectedDate: moment(),
+      calendarCheckbox: this.calendarCheckbox.checked
+    }, () => {
+
       this.props.onUpdateLocalStorage(this.state, 'checkboxStatus')
-      this._handleSelectDateOption()
-      this.props.handleCalendarFilter()
+      const selectedDate = moment().format('DD.MM.YYYY')
+      this.props.handleCalendarFilter(selectedDate)
     })
-  }
-
-
-
-
-  // _toggleCheckBoxes = (prev, cur) => {
-  //   if (prev.checked && cur.checked) {
-  //     prev.checked = !prev.checked
-  //     //func()
-  //   }
-  // }
-  //
-  // _toggleCalendar = () => {
-  //   this._toggleCheckBoxes(this.filter, this.calendarCheckbox)
-  //   this._toggleCheckBoxes(this.importantItemsFirst, this.calendarCheckbox)
-  //   this._toggleCheckBoxes(this.importantItemsLast, this.calendarCheckbox)
-  //   this._handleSelectDateOption()
-  // }
-
-  _handleSelectDateOption = () => {
-    const selectedDate = moment().format('DD.MM.YYYY')
-
-    this.setState({ selectedDate: moment() }, ()=> {
-      let itemDate = this.props.items.filter(item => {
-        return item.date === selectedDate;
-      });
-      this.props.handleUpdateState(itemDate)
-      //
-      //   this.setState({ items: itemDate }, () => {
-      //     this.searchFilter()
-      //     this._updateLocalStorage(this.state.items, 'currentItems')
-      //   })
-    })
-
-    // if(!this.calendarCheckbox.checked) {
-    //   this.setState({
-    //     selectedDate: undefined,
-    //     items: (this.filter.checked || this.sortFirst.checked || this.sortLast.checked) ? this.state.items : this.state.itemsForDateFilter
-    //   }, () => {
-    //     this.searchFilter()
-    //     this._updateLocalStorage(this.state.items, 'currentItems')
-    //   })
-    // }
   }
 
   handleChangeDate = date => {
@@ -181,13 +142,9 @@ class SortFilters extends Component {
         return item.date === selectedDate;
       });
 
+      this.props.onHandleChangeCalendarFilteredItems(itemDate)
       this.props.handleUpdateState(itemDate)
-      // console.log(itemDate);
-      //
-      //   this.setState({ items: itemDate }, () => {
-      //     this.searchFilter()
-      //     this._updateLocalStorage(this.state.items, 'currentItems')
-      //   })
+      this.props.onSearchQuery(itemDate)
     })
   }
 

@@ -34,10 +34,12 @@ class TodoList extends React.Component {
       this.setState({ itemsCollection: itemStorage }, () => {
         let status = JSON.parse(localStorage.getItem('checkboxStatus'))
         if (status) {
+          let selectedDate = moment(status.selectedDate).format('DD.MM.YYYY')
+
           status.importantItemsCheckbox ? this.sortFilter() : ''
           status.importantItemsFirstCheckbox ? this._importantItemsFirstFilter() : ''
           status.importantItemsLastCheckbox ? this._importantItemsLastFilter() : ''
-          status.calendarCheckbox ? this.calendarFilter() : ''
+          status.calendarCheckbox ? this.calendarFilter(selectedDate) : ''
         }
       })
     }
@@ -107,7 +109,6 @@ class TodoList extends React.Component {
       display: 'block'
     }, ()=> {
       this.handleItemsFilter()
-      //this.filters.handleChangeDate()
 
       if(this.props.route === 'all') {
         this.setState(prevState => ({ itemsToDisplay: prevState.itemsToDisplay.concat(item) }), () => {
@@ -115,6 +116,12 @@ class TodoList extends React.Component {
           (this.state.checkbox) ? (this.searchQuery(this.state.importantItems)) : (this.searchQuery(this.state.itemsCollection)) ||
           (this.state.importantFirstCheckbox) ? (this.searchQuery(this.state.importantItemsFirst)) : (this.searchQuery(this.state.itemsCollection)) ||
           (this.state.importantLastCheckbox) ? (this.searchQuery(this.state.importantItemsLast)) : (this.searchQuery(this.state.itemsCollection))
+
+          if (this.state.calendarCheckbox) {
+            let status = JSON.parse(localStorage.getItem('checkboxStatus'))
+            let selectedDate = moment(status.selectedDate).format('DD.MM.YYYY')
+            this.calendarFilter(selectedDate)
+          }
         })
       }
 
@@ -126,6 +133,12 @@ class TodoList extends React.Component {
           (this.state.checkbox) ? (this.searchQuery(this.state.importantItems)) : (this.searchQuery(this.state.unfinishedItems)) ||
           (this.state.importantFirstCheckbox) ? (this.searchQuery(this.state.importantItemsFirst)) : (this.searchQuery(this.state.unfinishedItems)) ||
           (this.state.importantLastCheckbox) ? (this.searchQuery(this.state.importantItemsLast)) : (this.searchQuery(this.state.unfinishedItems))
+
+          if (this.state.calendarCheckbox) {
+            let status = JSON.parse(localStorage.getItem('checkboxStatus'))
+            let selectedDate = moment(status.selectedDate).format('DD.MM.YYYY')
+            this.calendarFilter(selectedDate)
+          }
         })
       }
     })
@@ -184,6 +197,12 @@ class TodoList extends React.Component {
         this.state.checkbox ? this.sortFilter() : this.searchQuery(this.state.itemsCollection) ||
         this.state.importantFirstCheckbox ? this._importantItemsFirstFilter() : this.searchQuery(this.state.itemsCollection) ||
         this.state.importantLastCheckbox ? this._importantItemsLastFilter() : this.searchQuery(this.state.itemsCollection)
+
+        if (this.state.calendarCheckbox) {
+          let status = JSON.parse(localStorage.getItem('checkboxStatus'))
+          let selectedDate = moment(status.selectedDate).format('DD.MM.YYYY')
+          this.calendarFilter(selectedDate)
+        }
       })
     }
 
@@ -201,6 +220,12 @@ class TodoList extends React.Component {
         this.state.checkbox ? this.sortFilter() : this.searchQuery(this.state.finishedItems) ||
         this.state.importantFirstCheckbox ? this._importantItemsFirstFilter() : this.searchQuery(this.state.finishedItems) ||
         this.state.importantLastCheckbox ? this._importantItemsLastFilter() : this.searchQuery(this.state.finishedItems)
+
+        if (this.state.calendarCheckbox) {
+          let status = JSON.parse(localStorage.getItem('checkboxStatus'))
+          let selectedDate = moment(status.selectedDate).format('DD.MM.YYYY')
+          this.calendarFilter(selectedDate)
+        }
       })
     }
 
@@ -218,6 +243,12 @@ class TodoList extends React.Component {
         this.state.checkbox ? this.sortFilter() : this.searchQuery(this.state.unfinishedItems) ||
         this.state.importantFirstCheckbox ? this._importantItemsFirstFilter() : this.searchQuery(this.state.unfinishedItems) ||
         this.state.importantLastCheckbox ? this._importantItemsLastFilter() : this.searchQuery(this.state.unfinishedItems)
+
+        if (this.state.calendarCheckbox) {
+          let status = JSON.parse(localStorage.getItem('checkboxStatus'))
+          let selectedDate = moment(status.selectedDate).format('DD.MM.YYYY')
+          this.calendarFilter(selectedDate)
+        }
       })
     }
   }
@@ -282,6 +313,12 @@ class TodoList extends React.Component {
         this.state.checkbox ? this.sortFilter() : this.searchQuery(this.state.unfinishedItems) ||
         this.state.importantFirstCheckbox ? this._importantItemsFirstFilter() : this.searchQuery(this.state.unfinishedItems) ||
         this.state.importantLastCheckbox ? this._importantItemsLastFilter() : this.searchQuery(this.state.unfinishedItems)
+
+        if (this.state.calendarCheckbox) {
+          let status = JSON.parse(localStorage.getItem('checkboxStatus'))
+          let selectedDate = moment(status.selectedDate).format('DD.MM.YYYY')
+          this.calendarFilter(selectedDate)
+        }
       })
     })
   }
@@ -412,8 +449,7 @@ class TodoList extends React.Component {
     this.props.route === 'new' ? this.state.unfinishedItems : ''
 
     const filter  = this.filters.state.importantItemsLastCheckbox
-    this.setState({ importantLastCheckbox: filter}, ()=> {
-    })
+    this.setState({ importantLastCheckbox: filter })
 
     if (filter) {
       let sortedArray = field.slice();
@@ -448,36 +484,35 @@ class TodoList extends React.Component {
     }
   }
 
-  calendarFilter = () => {
-    const filter  = this.filters.state.calendarCheckbox
+  handleChangeCalendarFilteredItems = items =>{
+    this.setState({ calendarFilteredItems: items })
+  }
 
+  calendarFilter = (selectedDate) => {
+    let field =
+    (this.props.route === 'all' ? this.state.itemsCollection : '') ||
+    (this.props.route === 'finished' ? this.state.finishedItems : '') ||
+    (this.props.route === 'new' ? this.state.unfinishedItems : '')
+
+    const filter  = this.filters.state.calendarCheckbox
     this.setState({ calendarCheckbox: filter})
 
-    let status = JSON.parse(localStorage.getItem('checkboxStatus'))
+    if (filter) {
+      this.setState({ selectedDate: selectedDate }, ()=> {
 
-console.log(status.selectedDate)
+        let itemDate = field.filter(item => {
+          return item.date === selectedDate;
+        });
 
-    let y = moment(status).format()
-    
-    console.log(y)
-
-    //const selectedDate = moment(date).format('DD.MM.YYYY')
-
-    //this.setState({ selectedDate: date }, ()=> {
-    //this.props.onUpdateLocalStorage(this.state, 'checkboxStatus')
-    //  let itemDate = this.itemsCollection.filter(item => {
-    //    return item.date === selectedDate;
-    //});
-
-    //this.changeState(itemDate)
-    // console.log(itemDate);
-    //
-    //   this.setState({ items: itemDate }, () => {
-    //     this.searchFilter()
-    //     this._updateLocalStorage(this.state.items, 'currentItems')
-    //   })
-    //  })
-
+        this.setState({ calendarFilteredItems: itemDate})
+        this._updateState(itemDate)
+        this.searchQuery(itemDate)
+      })
+    }
+    else {
+      this._updateState(field)
+      this.searchQuery(field)
+    }
 
   }
 
@@ -520,6 +555,11 @@ console.log(status.selectedDate)
               (this.state.importantLastCheckbox)
               ?
               this.state.importantItemsLast
+              :
+
+              (this.state.calendarCheckbox)
+              ?
+              this.state.calendarFilteredItems
               :
 
               (routing === 'all' ? this.state.itemsCollection : '') ||
@@ -604,6 +644,8 @@ console.log(status.selectedDate)
             onUpdateLocalStorage={this._updateLocalStorage}
             handleUpdateState={this._updateState}
             handleCalendarFilter={this.calendarFilter}
+            onSearchQuery={this.searchQuery}
+            onHandleChangeCalendarFilteredItems={this.handleChangeCalendarFilteredItems}
           />
         </div>
       </main>
