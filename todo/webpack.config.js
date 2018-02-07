@@ -10,7 +10,8 @@ module.exports = {
   entry: SRC_DIR + '/app/index.js',
   output: {
     path: DIST_DIR + '/app',
-    filename: 'bundle.js'
+    filename: 'bundle.js',
+    publicPath: '/'
   },
   module: {
     rules: [
@@ -51,6 +52,10 @@ module.exports = {
         })
       }
     ]
+  },
+  devServer: {
+    historyApiFallback: true,
+    contentBase: './'
   },
   plugins: [
     new HtmlWebpackPlugin({
