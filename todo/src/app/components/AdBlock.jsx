@@ -37,8 +37,9 @@ class AdBlock extends Component {
   handleSubmit = e => {
     e.preventDefault();
 
-    if (!this.state.text.length) {
+    if (this.state.text.trim() === "") {
       this.setState({
+        text: '',
         warningMessage: 'Введите задание',
         boxShadow: 'box-shadow'
       })
@@ -72,6 +73,11 @@ class AdBlock extends Component {
       this.props.onUpdateLocalStorage(this.state.items)
       this.props.onAddItem(newItem)
     })
+
+    setTimeout(()=>{
+      let listItem = document.getElementById("list");
+      listItem.lastChild.classList.add('item-highlight')
+    })
   }
 
   setPriority = (event, item) => {
@@ -92,10 +98,10 @@ class AdBlock extends Component {
             aria-describedby="basic-addon2"
           />
           <div className="input-group-append">
-            <button className="btn btn-outline-info" type="button" title="Добавить задание" onClick={this.handleSubmit}><i className="fa fa-plus" aria-hidden="true"></i></button>
+            <button id="ad_item" className="btn btn-outline-info" type="button" title="Добавить задание" onClick={this.handleSubmit}><i className="fa fa-plus" aria-hidden="true"></i></button>
           </div>
         </div>
-        <div className="d-flex justify-content-between">
+        <div className="d-flex justify-content-between additional-text">
           <span className='warning__message'>{this.state.warningMessage}</span>
           <div className='priority-block d-flex justify-content-end align-items-center' onChange={this.setPriority}>
             <span>Приоритет:</span>

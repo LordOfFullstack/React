@@ -83,6 +83,7 @@
   border-radius: 0.3rem;
   display: inline-block;
   position: relative;
+  margin-top: 5px;
 }
 .react-datepicker__triangle {
   position: absolute;
@@ -141,6 +142,11 @@
   width: 0;
   border: 0.45rem solid transparent;
   z-index: 1;
+  background-color: transparent;
+
+  &:focus {
+    outline: none;
+  }
 }
 .react-datepicker__navigation--previous {
   left: 10px;
@@ -275,16 +281,16 @@
 .react-datepicker__day-name {
   color: @black;
   display: inline-block;
-  width: 2.7rem;
-  line-height: 2.7rem;
+  width: 1.7rem;
+  line-height: 1.7rem;
   text-align: center;
   margin: 0.166rem;
 }
 .react-datepicker__day {
   color: @black;
   display: inline-block;
-  width: 2.7rem;
-  line-height: 2.7rem;
+  width: 1.7rem;
+  line-height: 1.7rem;
   text-align: center;
   margin: 0.166rem;
   cursor: pointer;

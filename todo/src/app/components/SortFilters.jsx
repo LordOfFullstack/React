@@ -174,7 +174,7 @@ class SortFilters extends Component {
           />
           <label htmlFor="importantFirst">По снижению приоритета</label>
         </div>
-        <div className='flex'>
+        <div className='d-flex align-items-center'>
           <input
             defaultChecked={this.state.importantItemsLastCheckbox}
             id="importantLast"
@@ -185,7 +185,7 @@ class SortFilters extends Component {
           />
           <label htmlFor="importantLast">По возрастанию приоритета</label>
         </div>
-        <div className='d-flex'>
+        <div className='d-flex align-items-center'>
           <input
             id="toggle__calendar"
             name="sort"

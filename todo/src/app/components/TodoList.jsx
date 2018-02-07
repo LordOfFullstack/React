@@ -282,7 +282,7 @@ class TodoList extends React.Component {
       return item.id === itemId;
     })
 
-    if(!editedText) {
+    if(editedText.trim() === "") {
       this.setState({ textareaClass: 'box-shadow' })
       return
     }
@@ -513,7 +513,6 @@ class TodoList extends React.Component {
       this._updateState(field)
       this.searchQuery(field)
     }
-
   }
 
   _updateState = items => {
@@ -573,7 +572,7 @@ class TodoList extends React.Component {
             Задание добавлено
           </div>
           <p className={classes}>Нет заданий</p>
-          <ol className="todo__list">
+          <ol id="list" className="todo__list">
             {this.state.itemsToDisplay.map(item => (
               <li className={`d-flex ${item.class} ${item.background}`} key={item.id}>
                 <div className={`item d-flex flex-column ${item.done}`}>
