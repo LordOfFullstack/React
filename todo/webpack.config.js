@@ -11,7 +11,7 @@ module.exports = {
   output: {
     path: DIST_DIR + '/app',
     filename: 'bundle.js',
-    publicPath: '/'
+    //publicPath: '/'
   },
   module: {
     rules: [
@@ -55,7 +55,7 @@ module.exports = {
   },
   devServer: {
     historyApiFallback: true,
-    contentBase: './'
+    //contentBase: './'
   },
   plugins: [
     new HtmlWebpackPlugin({
