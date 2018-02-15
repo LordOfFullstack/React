@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-import '../css/TodoNav.less'
+import '../css/TodoNav.less';
 
 class TodoNav extends Component {
   constructor(props) {
@@ -9,41 +10,41 @@ class TodoNav extends Component {
     this.state = {
       itemsList: [],
       searchQuery: ''
-    }
+    };
   }
 
   componentWillMount() {
-    let searchQuery = JSON.parse(localStorage.getItem('searchQuery'))
-    this.setState({ searchQuery: (searchQuery) ? searchQuery : this.state.searchQuery })
+    let searchQuery = JSON.parse(localStorage.getItem('searchQuery'));
+    this.setState({ searchQuery: (searchQuery) ? searchQuery : this.state.searchQuery });
   }
 
   componentDidMount() {
     this.setState({ searchQuery: this.state.searchQuery }, ()=> {
-      const searchQuery = this.state.searchQuery.toLowerCase()
+      const searchQuery = this.state.searchQuery.toLowerCase();
       const displayedTasks = this.state.itemsList.filter(el => {
         const searchValue = el.text.toLowerCase();
         return searchValue.indexOf(searchQuery) !== -1;
-      })
+      });
 
-      this.props.handleUpdateState(displayedTasks)
-    })
+      this.props.handleUpdateState(displayedTasks);
+    });
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ itemsList: nextProps.itemsArray })
+    this.setState({ itemsList: nextProps.itemsArray });
   }
 
   handleSearchKey = event => {
-    const searchQuery = event.target.value.toLowerCase()
-    this.props.onUpdateLocalStorage(searchQuery, 'searchQuery')
-    this.setState({ searchQuery: searchQuery })
+    const searchQuery = event.target.value.toLowerCase();
+    this.props.onUpdateLocalStorage(searchQuery, 'searchQuery');
+    this.setState({ searchQuery: searchQuery });
 
     const displayedTasks = this.state.itemsList.filter(el => {
       const searchValue = el.text.toLowerCase();
       return searchValue.indexOf(searchQuery) !== -1;
-    })
+    });
 
-    this.props.handleUpdateState(displayedTasks)
+    this.props.handleUpdateState(displayedTasks);
   }
 
   render() {
@@ -69,3 +70,9 @@ class TodoNav extends Component {
 }
 
 export default TodoNav;
+
+TodoNav.propTypes = {
+  onUpdateLocalStorage: PropTypes.func,
+  handleUpdateState: PropTypes.func,
+  itemsArray: PropTypes.array
+};

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
+import PropTypes from 'prop-types';
 
 import '../css/SortFilters.less';
 import '../css/DatePicker.less';
@@ -14,11 +15,11 @@ class SortFilters extends Component {
       importantItemsLastCheckbox: false,
       calendarCheckbox: false,
       selectedDate: moment()
-    }
+    };
   }
 
   componentWillMount() {
-    let status = JSON.parse(localStorage.getItem('checkboxStatus'))
+    let status = JSON.parse(localStorage.getItem('checkboxStatus'));
 
     if (status) {
       this.setState({
@@ -27,99 +28,99 @@ class SortFilters extends Component {
         importantItemsLastCheckbox: status.importantItemsLastCheckbox,
         calendarCheckbox: status.calendarCheckbox,
         selectedDate: moment(status.selectedDate)
-      })
+      });
     }
   }
 
   _filter = () => {
     if (this.importantItemsFirst.checked && this.filter.checked) {
-      this.importantItemsFirst.checked = !this.importantItemsFirst.checked
-      this._importantItemsFirst()
+      this.importantItemsFirst.checked = !this.importantItemsFirst.checked;
+      this._importantItemsFirst();
     }
 
     if (this.importantItemsLast.checked && this.filter.checked) {
-      this.importantItemsLast.checked = !this.importantItemsLast.checked
-      this._importantItemsLast()
+      this.importantItemsLast.checked = !this.importantItemsLast.checked;
+      this._importantItemsLast();
     }
 
     if (this.calendarCheckbox.checked && this.filter.checked) {
-      this.calendarCheckbox.checked = !this.calendarCheckbox.checked
-      this._toggleCalendar()
+      this.calendarCheckbox.checked = !this.calendarCheckbox.checked;
+      this._toggleCalendar();
     }
 
     this.setState({
       calendarDisplay: 'none',
       importantItemsCheckbox: this.filter.checked
     }, () => {
-      this.props.onUpdateLocalStorage(this.state, 'checkboxStatus')
-      this.props.showImportantItems()
-    })
+      this.props.onUpdateLocalStorage(this.state, 'checkboxStatus');
+      this.props.showImportantItems();
+    });
   }
 
   _importantItemsFirst = () => {
     if (this.filter.checked && this.importantItemsFirst.checked) {
-      this.filter.checked = !this.filter.checked
-      this._filter()
+      this.filter.checked = !this.filter.checked;
+      this._filter();
     }
 
     if (this.importantItemsLast.checked && this.importantItemsFirst.checked) {
-      this.importantItemsLast.checked = !this.importantItemsLast.checked
-      this._importantItemsLast()
+      this.importantItemsLast.checked = !this.importantItemsLast.checked;
+      this._importantItemsLast();
     }
 
     if (this.calendarCheckbox.checked && this.importantItemsFirst.checked) {
-      this.calendarCheckbox.checked = !this.calendarCheckbox.checked
-      this._toggleCalendar()
+      this.calendarCheckbox.checked = !this.calendarCheckbox.checked;
+      this._toggleCalendar();
     }
 
     this.setState({
       calendarDisplay: 'none',
       importantItemsFirstCheckbox: this.importantItemsFirst.checked
     }, () => {
-      this.props.onUpdateLocalStorage(this.state, 'checkboxStatus')
-      this.props.handleImportantItemsUp()
-    })
+      this.props.onUpdateLocalStorage(this.state, 'checkboxStatus');
+      this.props.handleImportantItemsUp();
+    });
   }
 
   _importantItemsLast = () => {
     if (this.filter.checked && this.importantItemsLast.checked) {
-      this.filter.checked = !this.filter.checked
-      this._filter()
+      this.filter.checked = !this.filter.checked;
+      this._filter();
     }
 
     if (this.importantItemsFirst.checked && this.importantItemsLast.checked) {
-      this.importantItemsFirst.checked = !this.importantItemsFirst.checked
-      this._importantItemsFirst()
+      this.importantItemsFirst.checked = !this.importantItemsFirst.checked;
+      this._importantItemsFirst();
     }
 
     if (this.calendarCheckbox.checked && this.importantItemsLast.checked) {
-      this.calendarCheckbox.checked = !this.calendarCheckbox.checked
-      this._toggleCalendar()
+      this.calendarCheckbox.checked = !this.calendarCheckbox.checked;
+      this._toggleCalendar();
     }
 
     this.setState({
       calendarDisplay: 'none',
       importantItemsLastCheckbox: this.importantItemsLast.checked
     }, () => {
-      this.props.onUpdateLocalStorage(this.state, 'checkboxStatus')
-      this.props.handleImportantItemsDown()
-    })
+      this.props.onUpdateLocalStorage(this.state, 'checkboxStatus');
+      this.props.handleImportantItemsDown();
+    });
   }
 
   _toggleCalendar = () => {
     if (this.filter.checked && this.calendarCheckbox.checked) {
-      this.filter.checked = !this.filter.checked
-      this._filter()
+      this.filter.checked = !this.filter.checked;
+      this._filter();
     }
 
     if (this.importantItemsFirst.checked && this.calendarCheckbox.checked) {
-      this.importantItemsFirst.checked = !this.importantItemsFirst.checked
-      this._importantItemsFirst()
+      this.importantItemsFirst.checked = !this.importantItemsFirst.checked;
+      this._importantItemsFirst();
     }
 
     if (this.importantItemsLast.checked && this.calendarCheckbox.checked) {
-      this.importantItemsLast.checked = !this.importantItemsLast.checked
-      this._importantItemsLast()
+      this.importantItemsLast.checked = !this.importantItemsLast.checked;
+      this._importantItemsLast();
     }
 
     this.setState({
@@ -127,25 +128,23 @@ class SortFilters extends Component {
       calendarCheckbox: this.calendarCheckbox.checked
     }, () => {
 
-      this.props.onUpdateLocalStorage(this.state, 'checkboxStatus')
-      const selectedDate = moment().format('DD.MM.YYYY')
-      this.props.handleCalendarFilter(selectedDate)
-    })
+      this.props.onUpdateLocalStorage(this.state, 'checkboxStatus');
+      const selectedDate = moment().format('DD.MM.YYYY');
+      this.props.handleCalendarFilter(selectedDate);
+    });
   }
 
   handleChangeDate = date => {
-    const selectedDate = moment(date).format('DD.MM.YYYY')
+    const selectedDate = moment(date).format('DD.MM.YYYY');
 
     this.setState({ selectedDate: date }, ()=> {
-      this.props.onUpdateLocalStorage(this.state, 'checkboxStatus')
-      let itemDate = this.props.items.filter(item => {
-        return item.date === selectedDate;
-      });
+      this.props.onUpdateLocalStorage(this.state, 'checkboxStatus');
+      let itemDate = this.props.items.filter(item => item.date === selectedDate);
 
-      this.props.onHandleChangeCalendarFilteredItems(itemDate)
-      this.props.handleUpdateState(itemDate)
-      this.props.onSearchQuery(itemDate)
-    })
+      this.props.onHandleChangeCalendarFilteredItems(itemDate);
+      this.props.handleUpdateState(itemDate);
+      this.props.onSearchQuery(itemDate);
+    });
   }
 
   render() {
@@ -157,7 +156,7 @@ class SortFilters extends Component {
             id="important"
             defaultChecked={this.state.importantItemsCheckbox}
             name="filter"
-            ref={instance => { this.filter = instance }}
+            ref={instance => { this.filter = instance; }}
             onChange={this._filter}
             type="checkbox"
           />
@@ -168,7 +167,7 @@ class SortFilters extends Component {
             id="importantFirst"
             defaultChecked={this.state.importantItemsFirstCheckbox}
             name="sort"
-            ref={instance => { this.importantItemsFirst = instance }}
+            ref={instance => { this.importantItemsFirst = instance; }}
             onChange={this._importantItemsFirst}
             type="checkbox"
           />
@@ -179,7 +178,7 @@ class SortFilters extends Component {
             defaultChecked={this.state.importantItemsLastCheckbox}
             id="importantLast"
             name="sort"
-            ref={instance => { this.importantItemsLast = instance }}
+            ref={instance => { this.importantItemsLast = instance; }}
             onChange={this._importantItemsLast}
             type="checkbox"
           />
@@ -190,7 +189,7 @@ class SortFilters extends Component {
             id="toggle__calendar"
             name="sort"
             defaultChecked={this.state.calendarCheckbox}
-            ref={instance => { this.calendarCheckbox = instance }}
+            ref={instance => { this.calendarCheckbox = instance; }}
             onChange={this._toggleCalendar}
             type="checkbox"
           />
@@ -204,7 +203,7 @@ class SortFilters extends Component {
             onChange={this.handleChangeDate}
             locale="ru"
             maxDate={moment()}
-            todayButton={"Сегодня"}
+            todayButton={'Сегодня'}
           />
         </div>
       </div>
@@ -213,3 +212,15 @@ class SortFilters extends Component {
 }
 
 export default SortFilters;
+
+SortFilters.propTypes = {
+  items: PropTypes.array,
+  onSearchQuery: PropTypes.func,
+  handleUpdateState: PropTypes.func,
+  onHandleChangeCalendarFilteredItems: PropTypes.func,
+  handleCalendarFilter: PropTypes.func,
+  handleImportantItemsDown: PropTypes.func,
+  handleImportantItemsUp: PropTypes.func,
+  showImportantItems: PropTypes.func,
+  onUpdateLocalStorage: PropTypes.func
+};

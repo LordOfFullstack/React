@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {BrowserRouter, NavLink, Switch, Redirect, Route} from 'react-router-dom'
+import {BrowserRouter, Switch, Redirect, Route} from 'react-router-dom';
 
-import StartPage from './components/StartPage.jsx'
-import All from './components/All.jsx'
-import Finished from './components/Finished.jsx'
-import New from './components/New.jsx'
+import StartPage from './components/StartPage.jsx';
+import All from './components/All.jsx';
+import Finished from './components/Finished.jsx';
+import New from './components/New.jsx';
 
 import './index.less';
 
@@ -20,11 +20,10 @@ class App extends React.Component {
             <Route path="/all" component={All} />
             <Route path="/finished" component={Finished} />
             <Route path="/new" component={New} />
-
           </Switch>
         </div>
       </BrowserRouter>
-    )
+    );
   }
 }
 
